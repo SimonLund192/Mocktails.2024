@@ -30,17 +30,22 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <!-- Main Content Section -->
+    <div class="container flex-grow-1">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <!-- Footer Section -->
+    <footer class="border-top footer text-muted mt-auto">
         <div class="container">
             &copy; 2024 - Mocktails.Website - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
+    <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

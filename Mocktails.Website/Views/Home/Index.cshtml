@@ -1,8 +1,49 @@
-﻿@{
+﻿@model IEnumerable<Mocktails.ApiClient.Mocktails.DTOs.MocktailDTO>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+    <!-- Header Image -->
+    <div class="header-image-container mb-5">
+        <img src="~/images/MocktailsHeader.jpeg" class="img-fluid w-100" alt="Mocktail Header Image" />
+    </div>
+
+    <!-- Landing Page Intro -->
+    <div class="row text-center mb-5">
+        <h1 class="display-4">Welcome to the Mocktail Shop</h1>
+        <p>Discover refreshing mocktail drinks to suit every taste. Browse our selection below!</p>
+    </div>
+
+    <!-- Product Grid -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            @foreach (var mocktail in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <!-- Product Card -->
+                    <div class="card shadow-sm">
+                        <img src="~/images/@mocktail.ImageUrl" class="card-img-top" alt="@mocktail.Name" />
+                        <div class="card-body">
+                            <h5 class="card-title">@mocktail.Name</h5>
+                            <p class="card-text">@mocktail.Description</p>
+                            <p class="card-text font-weight-bold">$@mocktail.Price</p>
+                            <a href="@Url.Action("Details", "Mocktails", new { id = mocktail.Id })" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No products available at the moment.</p>
+    }
 </div>
+
+<!-- Footer will be pushed to the bottom -->
+<footer>
+    <p>&copy; @DateTime.Now.Year - Mocktail Shop</p>
+</footer>

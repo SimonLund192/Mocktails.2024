@@ -1,3 +1,5 @@
+using Mocktails.ApiClient.Mocktails.RestClient;
+
 namespace Mocktails.Website
 {
     public class Program
@@ -8,6 +10,10 @@ namespace Mocktails.Website
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // Register the RestClientStub as the IRestClient implementation
+            builder.Services.AddSingleton<IRestClient, RestClientStub>();  // Use RestClientStub for now
+            builder.Services.AddSingleton<MocktailsApiClient>();
 
             var app = builder.Build();
 

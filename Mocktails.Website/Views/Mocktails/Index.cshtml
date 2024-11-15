@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Mocktails.ApiClient.Mocktails.DTOs.MocktailDTO>
+
+<h1>Our Mocktails</h1>
+
+<div>
+    @foreach (var mocktail in Model)
+    {
+        <div>
+            <h3>@mocktail.Name</h3>
+            <p>@mocktail.Description</p>
+            <p>Price: @mocktail.Price</p>
+            <img src="~/images/@mocktail.ImageUrl" alt="@mocktail.Name" />
+            <a href="@Url.Action("Details", "Mocktails", new { id = mocktail.Id })">View Details</a>
+        </div>
+    }
+</div>

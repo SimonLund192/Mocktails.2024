@@ -1,22 +1,88 @@
-html {
-  font-size: 14px;
+/* Ensure the page uses full height */
+html, body {
+    height: 100%;
+    margin: 0;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
+/* Flexbox layout for the entire page */
 body {
-  margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Ensure content starts at the top */
+    height: 100vh; /* Make sure the body takes full height */
+}
+
+/* Ensure the main content fills the available space */
+.container {
+    flex-grow: 1; /* This ensures the container stretches to fill available space */
+}
+
+/* Header image container */
+.header-image-container img {
+    max-height: 400px; /* Set the height of the header image */
+    object-fit: cover; /* Ensures the image maintains its aspect ratio and covers the container */
+    border-radius: 10px; /* Optional: Add rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+}
+
+/* Header image spacing */
+.header-image-container {
+    margin-bottom: 30px; /* Optional: Adds some spacing below the header image */
+}
+
+/* Card image styling */
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Card hover effect */
+.card:hover {
+    transform: translateY(-10px);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Card body styling */
+.card-body {
+    text-align: center;
+}
+
+/* Card title styling */
+.card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Primary button styling */
+.btn-primary {
+    background-color: #f39c12;
+    border-color: #f39c12;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-primary:hover {
+        background-color: #e67e22;
+        border-color: #e67e22;
+    }
+
+/* Footer styling */
+footer {
+    background-color: #2c3e50;
+    color: white;
+    padding: 10px;
+    margin-top: auto; /* This will push the footer to the bottom */
+    text-align: center;
+    width: 100%;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for some depth */
+}
+
+/* Optional: Additional responsiveness for large screens */
+@media (max-width: 768px) {
+    .header-image-container img {
+        max-height: 300px; /* Reduce header image height for smaller screens */
+    }
+
+    .card-img-top {
+        height: 180px; /* Adjust card image size for smaller screens */
+    }
 }
