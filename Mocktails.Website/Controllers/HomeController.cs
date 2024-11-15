@@ -1,31 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
 using Mocktails.ApiClient.Mocktails.RestClient;
-using Mocktails.ApiClient.Mocktails.DTOs;
-using System.Collections.Generic;
 using Mocktails.Website.Models;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Mocktails.Website.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly MocktailsApiClient _apiClient;  // Add MocktailApiClient
+        private readonly MocktailsApiClient _apiClient;
 
-        // Inject MocktailApiClient in the constructor
-        public HomeController(ILogger<HomeController> logger, MocktailsApiClient apiClient)
+        public HomeController(MocktailsApiClient apiClient)
         {
-            _logger = logger;
             _apiClient = apiClient;
         }
 
-        // Modify the Index action to fetch mocktails
-        public IActionResult Index()
+        // Mark Index method as async
+        public async Task<IActionResult> Index()
         {
-            // Get the list of mocktails from the API
-            var mocktails = _apiClient.GetMocktails();
+            // Get the list of mocktails from the API asynchronously
+            var mocktails = await _apiClient.GetMocktailsAsync(); // Use await for async method
 
-            // Pass the mocktails data to the view
+            // Return the view with the list of mocktails
             return View(mocktails);
         }
 

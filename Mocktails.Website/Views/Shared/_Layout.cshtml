@@ -38,12 +38,12 @@
         </main>
     </div>
 
-    <!-- Footer Section -->
+@*     <!-- Footer Section -->
     <footer class="border-top footer text-muted mt-auto">
         <div class="container">
             &copy; 2024 - Mocktails.Website - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
-    </footer>
+    </footer> *@
 
     <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -52,3 +52,16 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Mocktails.Website</title>
+
+    <!-- Google Fonts link -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Mocktails.Website.styles.css" asp-append-version="true" />
+</head>
