@@ -8,6 +8,13 @@ using Mocktails.ApiClient.Mocktails.DTOs;
 namespace Mocktails.ApiClient.Mocktails.RestClient;
 public interface IRestClient
 {
-    IEnumerable<MocktailDTO> GetMocktails();
-    MocktailDTO GetMocktailById(int id);
+    Task<IEnumerable<MocktailDTO>> GetMocktailsAsync();
+    Task<IEnumerable<MocktailDTO>> GetTenLatestMocktailsAsync();
+    Task<int> CreateMocktailAsync(MocktailDTO entity);
+    Task<bool> UpdateMocktailAsync(MocktailDTO entity);
+    Task<bool> DeleteMocktailAsync(int id);
+    // Get a specific mocktail by ID asynchronously
+    Task<MocktailDTO> GetMocktailByIdAsync(int id);
+    
+
 }

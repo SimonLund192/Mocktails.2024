@@ -32,14 +32,37 @@ public class RestClientStub : IRestClient
     new MocktailDTO(){ Id = 20, Name = "Apple Orchard", Description = "A crisp apple and cinnamon mocktail with a touch of caramel.", Price = 5.29M, ImageUrl = "/Images/MocktailProductImages/appleorchard.jpg" }
 };
 
-
-    public IEnumerable<MocktailDTO> GetMocktails()
+    public Task<int> CreateMocktailAsync(MocktailDTO entity)
     {
-        return _mocktails;
+        throw new NotImplementedException();
     }
 
-    public MocktailDTO GetMocktailById(int id)
+    public Task<bool> DeleteMocktailAsync(int id)
     {
-        return _mocktails.FirstOrDefault(mocktail => mocktail.Id == id);
+        throw new NotImplementedException();
+    }
+
+    // Implement GetMocktailByIdAsync to fetch a specific mocktail by ID
+    public async Task<MocktailDTO> GetMocktailByIdAsync(int id)
+    {
+        // Simulate fetching a mocktail by ID
+        var mocktail = _mocktails.FirstOrDefault(m => m.Id == id);
+        return await Task.FromResult(mocktail);
+    }
+
+    public async Task<IEnumerable<MocktailDTO>> GetMocktailsAsync()
+    {
+        // Simulate an async operation and return the mocktail list
+        return await Task.FromResult(_mocktails);
+    }
+
+    public Task<IEnumerable<MocktailDTO>> GetTenLatestMocktailsAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> UpdateMocktailAsync(MocktailDTO entity)
+    {
+        throw new NotImplementedException();
     }
 }
