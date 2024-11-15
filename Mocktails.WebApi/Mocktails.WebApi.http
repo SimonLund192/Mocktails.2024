@@ -1,0 +1,6 @@
+@Mocktails.WebApi_HostAddress = http://localhost:5011
+
+GET {{Mocktails.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
