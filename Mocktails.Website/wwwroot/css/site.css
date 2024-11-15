@@ -7,82 +7,49 @@ html, body {
 /* Flexbox layout for the entire page */
 body {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start; /* Ensure content starts at the top */
-    height: 100vh; /* Make sure the body takes full height */
+    flex-direction: column;  /* Stack elements vertically */
+    height: 100vh;  /* Ensure the body takes up the entire viewport height */
 }
 
-/* Ensure the main content fills the available space */
-.container {
-    flex-grow: 1; /* This ensures the container stretches to fill available space */
+/* Main content container (this takes up the available space) */
+.main-content {
+    flex-grow: 1;  /* Allow this content to grow and take the available space */
 }
-
-/* Header image container */
-.header-image-container img {
-    max-height: 400px; /* Set the height of the header image */
-    object-fit: cover; /* Ensures the image maintains its aspect ratio and covers the container */
-    border-radius: 10px; /* Optional: Add rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
-}
-
-/* Header image spacing */
-.header-image-container {
-    margin-bottom: 30px; /* Optional: Adds some spacing below the header image */
-}
-
-/* Card image styling */
-.card-img-top {
-    height: 200px;
-    object-fit: cover;
-}
-
-/* Card hover effect */
-.card:hover {
-    transform: translateY(-10px);
-    transition: all 0.3s ease-in-out;
-}
-
-/* Card body styling */
-.card-body {
-    text-align: center;
-}
-
-/* Card title styling */
-.card-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-
-/* Primary button styling */
-.btn-primary {
-    background-color: #f39c12;
-    border-color: #f39c12;
-    transition: background-color 0.3s ease;
-}
-
-    .btn-primary:hover {
-        background-color: #e67e22;
-        border-color: #e67e22;
-    }
 
 /* Footer styling */
 footer {
     background-color: #2c3e50;
     color: white;
     padding: 10px;
-    margin-top: auto; /* This will push the footer to the bottom */
+    margin-top: auto;  /* This will push the footer to the bottom */
     text-align: center;
     width: 100%;
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for some depth */
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);  /* Optional: Add a shadow for some depth */
 }
 
-/* Optional: Additional responsiveness for large screens */
-@media (max-width: 768px) {
-    .header-image-container img {
-        max-height: 300px; /* Reduce header image height for smaller screens */
-    }
-
-    .card-img-top {
-        height: 180px; /* Adjust card image size for smaller screens */
-    }
+/* Apply festive font to homepage */
+body {
+    font-family: 'Arial', sans-serif; /* Default font */
 }
+
+/* Customizing the Welcome text */
+.display-4 {
+    font-size: 4rem; /* Increase the font size */
+    color: #151622; /* Add a festive color */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Optional: Add a subtle shadow */
+}
+
+/* Increase the font size for all <p> tags */
+p {
+    font-size: 1.25rem;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Dancing Script'/*, cursive*/; /* Apply the festive font */
+}
+
+/* Optionally, apply the font to other elements for a more cohesive design */
+/*.card-title, .navbar-brand, .display-4 {
+    font-family: 'Dancing Script', cursive;
+}*/
+

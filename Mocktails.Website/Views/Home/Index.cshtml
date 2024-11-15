@@ -25,7 +25,8 @@
                 <div class="col-md-4 mb-4">
                     <!-- Product Card -->
                     <div class="card shadow-sm">
-                        <img src="~/images/@mocktail.ImageUrl" class="card-img-top" alt="@mocktail.Name" />
+                        <!-- Image with correct path -->
+                        <img src="@mocktail.ImageUrl" class="card-img-top" alt="@mocktail.Name" />
                         <div class="card-body">
                             <h5 class="card-title">@mocktail.Name</h5>
                             <p class="card-text">@mocktail.Description</p>
@@ -43,7 +44,9 @@
     }
 </div>
 
-<!-- Footer will be pushed to the bottom -->
-<footer>
-    <p>&copy; @DateTime.Now.Year - Mocktail Shop</p>
+<!-- Footer Section -->
+<footer class="border-top footer text-muted mt-auto">
+    <div class="container">
+        &copy; 2024 - Mocktails Shop - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
 </footer>
