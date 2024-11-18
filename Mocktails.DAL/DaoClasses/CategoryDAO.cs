@@ -67,6 +67,11 @@ public class CategoryDAO : BaseDAO, ICategoryDAO
         }
     }
 
+    public Task<Category> GetCategoryByIdAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<IEnumerable<CategoryDAO>> GetCategoryByPartOfName(string partOfName)
     {
         throw new NotImplementedException();

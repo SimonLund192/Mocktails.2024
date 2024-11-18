@@ -50,6 +50,16 @@ namespace Mocktails.DAL.DaoClasses
             }
         }
 
+        public Task<IEnumerable<Mocktail>> GetCategoryByIdAsync(int categoryId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Mocktail> GetMocktailByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         // Get Mocktails by part of their name or description (this method is not implemented)
         public async Task<IEnumerable<Mocktail>> GetMocktailByPartOfNameOrDescription(string partOfNameOrDescription)
         {
