@@ -6,10 +6,17 @@ using System.Threading.Tasks;
 using Mocktails.DAL.Model;
 
 namespace Mocktails.DAL.DaoClasses;
+
 public interface IMocktailDAO
 {
     Task<IEnumerable<Mocktail>> GetMocktailsAsync();
     Task<IEnumerable<Mocktail>> GetTenLatestMocktailsAsync();
+
+    /// <summary>
+    /// Create a new Mocktail
+    /// </summary>
+    /// <param name="entity">The entity to create</param>
+    /// <returns>The entity ID</returns>
     Task<int> CreateMocktailAsync(Mocktail entity);
     Task<bool> UpdateMocktailAsync(Mocktail entity);
     Task<bool> DeleteMocktailAsync(int id);

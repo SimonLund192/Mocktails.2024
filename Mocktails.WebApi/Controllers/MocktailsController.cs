@@ -1,25 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Mocktails.WebApi.DTOs;
-using Mocktails.WebApi.Services;
+using Mocktails.DAL.DaoClasses;
 
 namespace Mocktails.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class MocktailsController : ControllerBase
     {
-        private readonly IMocktailService _mocktailService;
+        private readonly IMocktailDAO _mocktailDAO;
 
-        public MocktailsController(IMocktailService mocktailService)
+        public MocktailsController(IMocktailDAO mocktailDAO)
         {
-            _mocktailService = mocktailService;
+            _mocktailDAO = mocktailDAO;
         }
 
         // GET: api/mocktails
         [HttpGet]
         public async Task<IActionResult> GetMocktails()
         {
-            var mocktails = await _mocktailService.GetMocktailsAsync();
+            var mocktails = await _mocktailDAO.GetMocktailsAsync();
             return Ok(mocktails);
         }
 
@@ -27,7 +26,7 @@ namespace Mocktails.WebApi.Controllers
         [HttpGet("search")]
         public async Task<IActionResult> GetMocktailsBySearch([FromQuery] string partOfNameOrDescription)
         {
-            var mocktails = await _mocktailService.GetMocktailByPartOfNameOrDescription(partOfNameOrDescription);
+            var mocktails = await _mocktailDAO.GetMocktailByPartOfNameOrDescription(partOfNameOrDescription);
             return Ok(mocktails);
         }
 

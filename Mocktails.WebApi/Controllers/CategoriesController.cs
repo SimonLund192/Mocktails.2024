@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Mocktails.WebApi.DTOs;
-using Mocktails.WebApi.Services;
+using Mocktails.DAL.DaoClasses;
 using Mocktails.WebApi.Converters;
+using Mocktails.WebApi.DTOs;
 
 namespace Mocktails.WebApi.Controllers
 {
@@ -9,17 +9,17 @@ namespace Mocktails.WebApi.Controllers
     [Route("api/[controller]")]
     public class CategoriesController : ControllerBase
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ICategoryDAO _categoryDAO;
 
-        public CategoriesController(ICategoryService categoryService)
+        public CategoriesController(ICategoryDAO categoryDAO)
         {
-            _categoryService = categoryService;
+            _categoryDAO = categoryDAO;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetCategories()
         {
-            var categories = await _categoryService.GetCategoriesAsync();
+            var categories = await _categoryDAO.GetCategoriesAsync();
             var categoryDTOs = categories.Select(CategoryConverter.ToDTO);
             return Ok(categoryDTOs);
         }
@@ -27,7 +27,7 @@ namespace Mocktails.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCategoryById(int id)
         {
-            var category = await _categoryService.GetCategoryByIdAsync(id);
+            var category = await _categoryDAO.GetCategoryByIdAsync(id);
             if (category == null) return NotFound();
 
             return Ok(CategoryConverter.ToDTO(category));
@@ -37,7 +37,7 @@ namespace Mocktails.WebApi.Controllers
         public async Task<IActionResult> CreateCategory([FromBody] CategoryDTO categoryDTO)
         {
             var category = CategoryConverter.ToModel(categoryDTO);
-            var categoryId = await _categoryService.CreateCategoryAsync(category);
+            var categoryId = await _categoryDAO.CreateCategoryAsync(category);
             return CreatedAtAction(nameof(GetCategoryById), new { id = categoryId }, categoryDTO);
         }
 
@@ -47,7 +47,7 @@ namespace Mocktails.WebApi.Controllers
             var category = CategoryConverter.ToModel(categoryDTO);
             category.Id = id;
 
-            var success = await _categoryService.UpdateCategoryAsync(category);
+            var success = await _categoryDAO.UpdateCategoryAsync(category);
             if (!success) return NotFound();
 
             return NoContent();
@@ -56,7 +56,7 @@ namespace Mocktails.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            var success = await _categoryService.DeleteCategoryAsync(id);
+            var success = await _categoryDAO.DeleteCategoryAsync(id);
             if (!success) return NotFound();
 
             return NoContent();
