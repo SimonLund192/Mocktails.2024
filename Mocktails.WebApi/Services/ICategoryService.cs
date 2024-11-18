@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Mocktails.DAL.DaoClasses;
 using Mocktails.DAL.Model;
 
-namespace Mocktails.DAL.DaoClasses;
-public interface ICategoryDAO
+namespace Mocktails.WebApi.Services;
+
+public interface ICategoryService
 {
     Task<IEnumerable<Category>> GetCategoriesAsync();
     Task<int> CreateCategoryAsync(Category entity);

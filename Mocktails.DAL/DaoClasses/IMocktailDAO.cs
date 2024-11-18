@@ -14,4 +14,7 @@ public interface IMocktailDAO
     Task<bool> UpdateMocktailAsync(Mocktail entity);
     Task<bool> DeleteMocktailAsync(int id);
     Task<IEnumerable<Mocktail>> GetMocktailByPartOfNameOrDescription(string partOfNameOrDescription);
+
+    Task<IEnumerable<Mocktail>> GetCategoryByIdAsync(int categoryId);
+    Task<Mocktail> GetMocktailByIdAsync(int id);
 }

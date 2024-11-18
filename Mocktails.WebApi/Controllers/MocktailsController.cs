@@ -1,36 +1,38 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Mocktails.ApiClient.Mocktails.DTOs;
-using Mocktails.DAL.DaoClasses;
+using Mocktails.WebApi.DTOs;
+using Mocktails.WebApi.Services;
 
-namespace Mocktails.WebApi.Controllers;
-
-/// <summary>
-/// This class provides basic CRUD functionality for BlogPosts in the system.
-/// The controller receives a blogposts repository in its constructor, thereby lowering the coupling
-/// and enabling the class responsible for creating the controller to provide any implementation of IBlogPostRepository
-/// for testing purposes or for using a specific persistence mechanism (database/file/service/etc.)
-/// </summary>
-/// 
-
-[Route("api/[controller]")]
-[ApiController]
-public class MocktailsController : ControllerBase
+namespace Mocktails.WebApi.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
+    public class MocktailsController : ControllerBase
+    {
+        private readonly IMocktailService _mocktailService;
 
-    #region Repository and constructor
-    //The repository the controller should use for persistence
-    IMocktailDAO _mocktailRepository;
+        public MocktailsController(IMocktailService mocktailService)
+        {
+            _mocktailService = mocktailService;
+        }
 
-    public MocktailsController(IMocktailDAO mocktailRepository) => _mocktailRepository = mocktailRepository;
+        // GET: api/mocktails
+        [HttpGet]
+        public async Task<IActionResult> GetMocktails()
+        {
+            var mocktails = await _mocktailService.GetMocktailsAsync();
+            return Ok(mocktails);
+        }
 
-    #endregion
+        // GET: api/mocktails/search?partOfNameOrDescription=orange
+        [HttpGet("search")]
+        public async Task<IActionResult> GetMocktailsBySearch([FromQuery] string partOfNameOrDescription)
+        {
+            var mocktails = await _mocktailService.GetMocktailByPartOfNameOrDescription(partOfNameOrDescription);
+            return Ok(mocktails);
+        }
 
-    #region Default CRUD actions
+        // Other methods for POST, PUT, DELETE...
+    }
 
-    //public async Task<ActionResult<IEnumerable<MocktailDTO>>> GET([FromQuery] int? )
-    //{
-    //    return View();
-    //}
-
-    #endregion
 }
+
