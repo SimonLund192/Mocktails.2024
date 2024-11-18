@@ -19,6 +19,7 @@ public static class DAOFactory
     public static T CreateRepository<T> (string connectionString) where T : class
     {
         if (typeof(T) == typeof(IMocktailDAO)) return new MocktailDAO(connectionString) as T;
+        if (typeof(T) == typeof(ICategoryDAO)) return new CategoryDAO(connectionString) as T;
 
         throw new ArgumentException($"Unknown type {typeof(T).FullName}");
     }
