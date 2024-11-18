@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Mocktails.ApiClient.Mocktails.DTOs;
+using Mocktails.ApiClient.Products.DTOs;
 
-namespace Mocktails.ApiClient.Mocktails.RestClient;
-public class RestClientStub : IRestClient
+namespace Mocktails.ApiClient.Products;
+public class RestClientStub : IMocktailApiClient
 {
     private static List<MocktailDTO> _mocktails = new List<MocktailDTO>()
 {

@@ -18,7 +18,7 @@ namespace Mocktails.DAL.DaoClasses
             try
             {
                 // SQL query to insert a new mocktail into the Mocktail table (without the Category field)
-                var query = "INSERT INTO Mocktail (Name, Description, Price, ImageUrl) OUTPUT INSERTED.Id VALUES (@Name, @Description, @Price, @ImageUrl);";
+                var query = "INSERT INTO Mocktails (Name, Description, Price, ImageUrl) OUTPUT INSERTED.Id VALUES (@Name, @Description, @Price, @ImageUrl);";
 
                 // Create connection and execute the query
                 using var connection = CreateConnection();
@@ -27,7 +27,7 @@ namespace Mocktails.DAL.DaoClasses
             catch (Exception ex)
             {
                 // Handle any exceptions during the insertion process
-                throw new Exception($"Error inserting new Mocktail: '{ex.Message}'.", ex);
+                throw new Exception($"Error inserting new Mocktails: '{ex.Message}'.", ex);
             }
         }
 
@@ -37,7 +37,7 @@ namespace Mocktails.DAL.DaoClasses
             try
             {
                 // SQL query to delete the mocktail by its ID
-                var query = "DELETE FROM Mocktail where Id=@Id";
+                var query = "DELETE FROM Mocktails where Id=@Id";
 
                 // Create connection and execute the query
                 using var connection = CreateConnection();
@@ -65,7 +65,7 @@ namespace Mocktails.DAL.DaoClasses
         {
             try
             {
-                var query = "SELECT * FROM Mocktail WHERE Name LIKE @partOfNameOrDescription OR Description LIKE @partOfNameOrDescription";
+                var query = "SELECT * FROM Mocktails WHERE Name LIKE @partOfNameOrDescription OR Description LIKE @partOfNameOrDescription";
                 using var connection = CreateConnection();
                 return await connection.QueryAsync<Mocktail>(query, new { partOfNameOrDescription = $"%{partOfNameOrDescription}%" });
             }
@@ -81,7 +81,7 @@ namespace Mocktails.DAL.DaoClasses
             try
             {
                 // SQL query to select all mocktails from the Mocktail table
-                var query = "SELECT * FROM Mocktail";
+                var query = "SELECT * FROM Mocktails";
 
                 // Create connection and execute the query
                 using var connection = CreateConnection();

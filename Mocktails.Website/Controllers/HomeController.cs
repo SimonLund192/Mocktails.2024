@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Mocktails.ApiClient.Mocktails.RestClient;
+using Mocktails.ApiClient.Products;
 using Mocktails.Website.Models;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -8,9 +8,9 @@ namespace Mocktails.Website.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly MocktailsApiClient _apiClient;
+        private readonly IMocktailApiClient _apiClient;
 
-        public HomeController(MocktailsApiClient apiClient)
+        public HomeController(IMocktailApiClient apiClient)
         {
             _apiClient = apiClient;
         }

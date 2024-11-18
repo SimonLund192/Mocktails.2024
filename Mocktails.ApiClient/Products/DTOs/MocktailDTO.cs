@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mocktails.ApiClient.Mocktails.DTOs;
+namespace Mocktails.ApiClient.Products.DTOs;
 public class MocktailDTO
 {
     public int Id { get; set; }

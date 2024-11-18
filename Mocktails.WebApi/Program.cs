@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Mocktails.ApiClient.Mocktails.RestClient;
 using Mocktails.WebApi.Data;
+using Mocktails.DAL.DaoClasses;
 using Mocktails.WebApi.Services;
-using Mocktails.DAL.DaoClasses;  // Add the DAO classes
 
 namespace Mocktails.WebApi
 {
@@ -22,15 +21,13 @@ namespace Mocktails.WebApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Mocktails API", Version = "v1" });
             });
 
-            // Register DAO classes with the container
-            builder.Services.AddScoped<IMocktailDAO>(provider =>
-                new MocktailDAO(builder.Configuration.GetConnectionString("MocktailsDb")));  // Use your database connection string
-            builder.Services.AddScoped<ICategoryDAO>(provider =>
-                new CategoryDAO(builder.Configuration.GetConnectionString("MocktailsDb")));  // Use your database connection string
+            const string connectionString = "Data Source=.;Initial Catalog=BlogSharp;Integrated Security=True";
+            builder.Services.AddSingleton<IMocktailDAO>((_) => new MocktailDAO(connectionString));
+            builder.Services.AddSingleton<ICategoryDAO>((_) => new CategoryDAO(connectionString));
 
-            // Register Service classes
-            builder.Services.AddScoped<IMocktailService, MocktailService>();
-            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            //// Register Service classes
+            //builder.Services.AddScoped<IMocktailService, MocktailService>();
+            //builder.Services.AddScoped<ICategoryService, CategoryService>();
 
             // Add DbContext for Entity Framework (MocktailsDbContext)
             builder.Services.AddDbContext<MocktailsDbContext>(options =>

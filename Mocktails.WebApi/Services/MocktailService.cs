@@ -1,49 +1,103 @@
 ﻿using Mocktails.DAL.DaoClasses;
 using Mocktails.DAL.Model;
 using Mocktails.WebApi.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-public class MocktailService : IMocktailService
+namespace Mocktails.WebApi.Services
 {
-    private readonly IMocktailDAO _mocktailDAO; // Assuming you're using your DAO layer for data fetching.
-
-    public MocktailService(IMocktailDAO mocktailDAO)
+    public class MocktailService : IMocktailService
     {
-        _mocktailDAO = mocktailDAO;
-    }
+        private readonly IMocktailDAO _mocktailDAO; // DAO instance for database operations
 
-    public async Task<IEnumerable<Mocktail>> GetMocktailsAsync()
-    {
-        // Fetch all mocktails
-        return await _mocktailDAO.GetMocktailsAsync();
-    }
+        // Constructor injection to get the mocktailDAO
+        public MocktailService(IMocktailDAO mocktailDAO)
+        {
+            _mocktailDAO = mocktailDAO;
+        }
 
-    public async Task<IEnumerable<Mocktail>> GetTenLatestMocktailsAsync()
-    {
-        // Fetch top 10 latest mocktails
-        return await _mocktailDAO.GetTenLatestMocktailsAsync();
-    }
+        // Get all mocktails from the database
+        public async Task<IEnumerable<Mocktail>> GetMocktailsAsync()
+        {
+            try
+            {
+                return await _mocktailDAO.GetMocktailsAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the error (you can implement logging)
+                throw new Exception("Error fetching mocktails from the database.", ex);
+            }
+        }
 
-    public async Task<int> CreateMocktailAsync(Mocktail entity)
-    {
+        // Get top 10 latest mocktails based on some criteria (like most recent based on date or price)
+        public async Task<IEnumerable<Mocktail>> GetTenLatestMocktailsAsync()
+        {
+            try
+            {
+                return await _mocktailDAO.GetTenLatestMocktailsAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the error (you can implement logging)
+                throw new Exception("Error fetching latest mocktails from the database.", ex);
+            }
+        }
+
         // Create a new mocktail
-        return await _mocktailDAO.CreateMocktailAsync(entity);
-    }
+        public async Task<int> CreateMocktailAsync(Mocktail entity)
+        {
+            try
+            {
+                return await _mocktailDAO.CreateMocktailAsync(entity);
+            }
+            catch (Exception ex)
+            {
+                // Log the error (you can implement logging)
+                throw new Exception("Error creating new mocktail.", ex);
+            }
+        }
 
-    public async Task<bool> UpdateMocktailAsync(Mocktail entity)
-    {
-        // Update existing mocktail
-        return await _mocktailDAO.UpdateMocktailAsync(entity);
-    }
+        // Update an existing mocktail
+        public async Task<bool> UpdateMocktailAsync(Mocktail entity)
+        {
+            try
+            {
+                return await _mocktailDAO.UpdateMocktailAsync(entity);
+            }
+            catch (Exception ex)
+            {
+                // Log the error (you can implement logging)
+                throw new Exception("Error updating the mocktail.", ex);
+            }
+        }
 
-    public async Task<bool> DeleteMocktailAsync(int id)
-    {
-        // Delete mocktail by ID
-        return await _mocktailDAO.DeleteMocktailAsync(id);
-    }
+        // Delete a mocktail by ID
+        public async Task<bool> DeleteMocktailAsync(int id)
+        {
+            try
+            {
+                return await _mocktailDAO.DeleteMocktailAsync(id);
+            }
+            catch (Exception ex)
+            {
+                // Log the error (you can implement logging)
+                throw new Exception($"Error deleting mocktail with id {id}.", ex);
+            }
+        }
 
-    public async Task<IEnumerable<Mocktail>> GetMocktailByPartOfNameOrDescription(string partOfNameOrDescription)
-    {
-        // Fetch mocktails that match the part of their name or description
-        return await _mocktailDAO.GetMocktailByPartOfNameOrDescription(partOfNameOrDescription);
+        // Get mocktails that match part of their name or description
+        public async Task<IEnumerable<Mocktail>> GetMocktailByPartOfNameOrDescription(string partOfNameOrDescription)
+        {
+            try
+            {
+                return await _mocktailDAO.GetMocktailByPartOfNameOrDescription(partOfNameOrDescription);
+            }
+            catch (Exception ex)
+            {
+                // Log the error (you can implement logging)
+                throw new Exception("Error fetching mocktails by name or description.", ex);
+            }
+        }
     }
 }

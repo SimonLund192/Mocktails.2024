@@ -18,7 +18,7 @@ public class CategoryDAO : BaseDAO, ICategoryDAO
         try
         {
             // SQL query to insert a new mocktail into the Mocktail table (without the Category field)
-            var query = "INSERT INTO Category (CategoryName) OUTPUT INSERTED.Id VALUES (@CategoryName);";
+            var query = "INSERT INTO Categories (CategoryName) OUTPUT INSERTED.Id VALUES (@CategoryName);";
 
             // Create connection and execute the query
             using var connection = CreateConnection();
@@ -27,7 +27,7 @@ public class CategoryDAO : BaseDAO, ICategoryDAO
         catch (Exception ex)
         {
             // Handle any exceptions during the insertion process
-            throw new Exception($"Error inserting new Category: '{ex.Message}'.", ex);
+            throw new Exception($"Error inserting new Categories: '{ex.Message}'.", ex);
         }
     }
 
@@ -36,7 +36,7 @@ public class CategoryDAO : BaseDAO, ICategoryDAO
         try
         {
             // SQL query to delete the mocktail by its ID
-            var query = "DELETE FROM Category where Id=@Id";
+            var query = "DELETE FROM Categories where Id=@Id";
 
             // Create connection and execute the query
             using var connection = CreateConnection();
@@ -45,7 +45,7 @@ public class CategoryDAO : BaseDAO, ICategoryDAO
         catch (Exception ex)
         {
             // Handle any exceptions during the deletion process
-            throw new Exception($"Error deleting Category with id {id}: '{ex.Message}'.", ex);
+            throw new Exception($"Error deleting Categories with id {id}: '{ex.Message}'.", ex);
         }
     }
 
@@ -54,7 +54,7 @@ public class CategoryDAO : BaseDAO, ICategoryDAO
         try
         {
             // SQL query to select all mocktails from the Mocktail table
-            var query = "SELECT * FROM Category";
+            var query = "SELECT * FROM Categories";
 
             // Create connection and execute the query
             using var connection = CreateConnection();
@@ -63,7 +63,7 @@ public class CategoryDAO : BaseDAO, ICategoryDAO
         catch (Exception ex)
         {
             // Handle any exceptions during the fetch process
-            throw new Exception($"Error getting all categories: '{ex.Message}'.", ex);
+            throw new Exception($"Error getting all Categories: '{ex.Message}'.", ex);
         }
     }
 
@@ -87,7 +87,7 @@ public class CategoryDAO : BaseDAO, ICategoryDAO
         }
         catch (Exception ex)
         {
-            throw new Exception($"Error updating category: '{ex.Message}'.", ex);
+            throw new Exception($"Error updating Categories: '{ex.Message}'.", ex);
         }
     }
 }

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mocktails.ApiClient.Mocktails.DTOs;
-
-namespace Mocktails.WebApi.DTOs.Converters;
+﻿namespace Mocktails.WebApi.DTOs.Converters;
 
 /// <summary>
 /// Tool class for storing extension methods for converting DTOs to Model objects and back

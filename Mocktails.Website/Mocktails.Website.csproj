@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="RestSharp" Version="112.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Mocktails.ApiClient\Mocktails.ApiClient.csproj" />
+
   </ItemGroup>
 
 </Project>
