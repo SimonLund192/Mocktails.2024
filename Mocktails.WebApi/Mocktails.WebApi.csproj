@@ -7,7 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mocktails.ApiClient\Mocktails.ApiClient.csproj" />
+    <ProjectReference Include="..\Mocktails.DAL\Mocktails.DAL.csproj" />
   </ItemGroup>
 
 </Project>

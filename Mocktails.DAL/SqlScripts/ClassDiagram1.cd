@@ -1,0 +1,65 @@
+﻿﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="DataAccess.Model.Author">
+    <Position X="0.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>Model\Author.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DataAccess.Model.BlogPost">
+    <Position X="3.25" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AABCAAAAAAAAAAAAAEAAAAAAAgAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Model\BlogPost.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DataAccess.DaoClasses.BaseRepository">
+    <Position X="6" Y="3" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Repositories\BaseRepository.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DataAccess.DaoClasses.BlogPostRepository">
+    <Position X="9.25" Y="5.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAIAAIIA=</HashCode>
+      <FileName>Repositories\BlogPostRepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DataAccess.DaoClasses.AuthorRepository">
+    <Position X="3" Y="5.75" Width="5.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="DataAccess.DaoClasses.AuthorRepository.AuthorTuple" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Repositories\AuthorRepository.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AgEAAAAAAAAAAAAAAAAAAAQAAAAAAAgAAAAAAIAAIIA=</HashCode>
+      <FileName>Repositories\AuthorRepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="DataAccess.DaoClasses.IAuthorRepository">
+    <Position X="0.5" Y="3" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AgEAAAAAAAAAAAAAAAAAAAQAAAAAAAgAAAAAAIAAIIA=</HashCode>
+      <FileName>Repositories\IAuthorRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DataAccess.DaoClasses.IBlogPostRepository">
+    <Position X="9.75" Y="3" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAIAAIIA=</HashCode>
+      <FileName>Repositories\IBlogPostRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
