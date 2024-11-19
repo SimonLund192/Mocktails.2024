@@ -4,16 +4,43 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.AspNet.Identity;
 using Mocktails.DAL.Model;
 
 namespace Mocktails.DAL.DaoClasses;
 public class UserDAO : BaseDAO, IUserDAO
 {
-    public UserDAO(string connectionString) : base(connectionString) { }
-
+    private readonly PasswordHasher _passwordHasher;
+    public UserDAO(string connectionString) : base(connectionString) 
+    {
+        _passwordHasher = new PasswordHasher();
+    }
+    #region CRUD
     public Task<int> CreateUserAsync(User entity)
     {
+
         throw new NotImplementedException();
+        //try
+        //{
+        //    // Hash the user's password
+        //    var hashedPassword = _passwordHasher.HashPassword(entity, entity.PasswordHash);
+
+        //    // Now set the PasswordHash property to the hashed password
+        //    entity.PasswordHash = hashedPassword;
+
+        //    var query = "INSERT INTO Users (FirstName, LastName, Email, PasswordHash) VALUES (@FirstName, @LastName, @Email, @PasswordHash); SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
+        //    using var connection = CreateConnection();
+        //    var userId = await connection.QuerySingleAsync<int>(query, new { entity.FirstName, entity.LastName, entity.Email, entity.PasswordHash });
+
+        //    return userId;
+        //}
+        //catch (Exception ex)
+        //{
+        //    throw new Exception($"Error creating user: {ex.Message}", ex);
+        //}
+
+
     }
 
     public Task<bool> DeleteUserAsync(int id)
@@ -57,4 +84,5 @@ public class UserDAO : BaseDAO, IUserDAO
     {
         throw new NotImplementedException();
     }
+    #endregion
 }
