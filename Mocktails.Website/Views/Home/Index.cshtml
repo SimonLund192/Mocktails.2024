@@ -32,6 +32,10 @@
                             <p class="card-text">@mocktail.Description</p>
                             <p class="card-text font-weight-bold">$@mocktail.Price</p>
                             <a href="@Url.Action("Details", "Mocktails", new { id = mocktail.Id })" class="btn btn-primary">View Details</a>
+
+                            <!-- Add to Cart button -->
+                            <button class="btn btn-success add-to-cart" data-id="@mocktail.Id">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
                         </div>
                     </div>
                 </div>
@@ -42,6 +46,45 @@
     {
         <p>No products available at the moment.</p>
     }
+
+
+    <script>
+    // Function to handle adding items to the cart
+    $(document).ready(function () {
+        $('.add-to-cart').on('click', function () {
+            var mocktailId = $(this).data('id');
+            var cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            // Check if the item is already in the cart
+            var existingItem = cart.find(item => item.id === mocktailId);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ id: mocktailId, quantity: 1 });
+            }
+
+            // Save the cart back to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            // Optionally, show a notification or update cart icon
+            alert('Item added to the cart!');
+            updateCartIcon();
+        });
+    });
+
+    // Function to update the cart icon with the number of items in the cart
+    function updateCartIcon() {
+        var cart = JSON.parse(localStorage.getItem('cart')) || [];
+        var cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+        // Update the cart count in the button or header (you can also use a badge or similar element)
+        $('#cart-count').text(cartCount);
+    }
+
+    // Initialize the cart icon on page load
+    updateCartIcon();
+</script>
+
 </div>
 
 <!-- Footer Section -->
@@ -50,3 +93,4 @@
         &copy; 2024 - Mocktails Shop - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
 </footer>
+
