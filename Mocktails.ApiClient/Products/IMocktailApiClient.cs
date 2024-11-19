@@ -4,6 +4,10 @@ namespace Mocktails.ApiClient.Products;
 
 public interface IMocktailApiClient
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     Task<IEnumerable<MocktailDTO>> GetMocktailsAsync();
     Task<IEnumerable<MocktailDTO>> GetTenLatestMocktailsAsync();
     Task<int> CreateMocktailAsync(MocktailDTO entity);

@@ -35,5 +35,20 @@ namespace Mocktails.Website.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        // Mark Details method as async
+        public async Task<IActionResult> Details(int id)
+        {
+            // Get the specific mocktail by ID asynchronously
+            var mocktails = await _apiClient.GetMocktailByIdAsync(id); // Use await for async method
+
+            if (mocktails == null)
+            {
+                return NotFound(); // Return 404 if mocktail not found
+            }
+
+            // Return the view with the mocktail details
+            return View(mocktails); // The view expects a MocktailDTO model
+        }
     }
 }

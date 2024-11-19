@@ -40,9 +40,28 @@ public class MocktailDAO : BaseDAO, IMocktailDAO
         throw new NotImplementedException();
     }
 
-    public Task<Mocktail> GetMocktailByIdAsync(int id)
+    public async Task<Mocktail> GetMocktailByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            // SQL query to fetch mocktail by its ID
+            var query = "SELECT * FROM Mocktails WHERE Id = @Id";
+
+            // Create a connection and execute the query
+            using var connection = CreateConnection();
+            var result = await connection.QuerySingleOrDefaultAsync<Mocktail>(query, new { Id = id });
+
+            if (result == null)
+            {
+                throw new Exception("Mocktail not found.");
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error getting mocktail by ID: '{ex.Message}'.", ex);
+        }
     }
 
     // Get Mocktails by part of their name or description (this method is not implemented)

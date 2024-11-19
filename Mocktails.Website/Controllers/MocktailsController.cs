@@ -6,9 +6,9 @@ namespace Mocktails.Website.Controllers
 {
     public class MocktailsController : Controller
     {
-        private readonly MocktailsApiClient _apiClient;
+        private readonly IMocktailApiClient _apiClient;
 
-        public MocktailsController(MocktailsApiClient apiClient)
+        public MocktailsController(IMocktailApiClient apiClient)
         {
             _apiClient = apiClient;
         }
@@ -27,15 +27,15 @@ namespace Mocktails.Website.Controllers
         public async Task<IActionResult> Details(int id)
         {
             // Get the specific mocktail by ID asynchronously
-            var mocktail = await _apiClient.GetMocktailByIdAsync(id); // Use await for async method
+            var mocktails = await _apiClient.GetMocktailByIdAsync(id); // Use await for async method
 
-            if (mocktail == null)
+            if (mocktails == null)
             {
                 return NotFound(); // Return 404 if mocktail not found
             }
 
             // Return the view with the mocktail details
-            return View(mocktail); // The view expects a MocktailDTO model
+            return View(mocktails); // The view expects a MocktailDTO model
         }
     }
 }

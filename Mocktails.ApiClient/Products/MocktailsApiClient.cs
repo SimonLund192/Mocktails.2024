@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Mocktails.ApiClient.Products.DTOs;
+﻿using Mocktails.ApiClient.Products.DTOs;
 using RestSharp;
 
 namespace Mocktails.ApiClient.Products
@@ -14,72 +12,87 @@ namespace Mocktails.ApiClient.Products
             _restClient = new RestClient(baseUrl);
         }
 
-        public Task<int> CreateMocktailAsync(MocktailDTO entity)
+        // Create a new mocktail asynchronously
+        public async Task<int> CreateMocktailAsync(MocktailDTO entity)
         {
-            throw new NotImplementedException();
+            var request = new RestRequest("/api/v1/mocktails", Method.Post); // Adjust the endpoint as needed
+            request.AddJsonBody(entity); // Adding the MocktailDTO object as the body of the request
+
+            var response = await _restClient.ExecuteAsync<int>(request); // Assuming the API returns an ID or status code as an integer
+            if (response.IsSuccessful)
+            {
+                return response.Data; // Return the ID or whatever is returned from the API
+            }
+            else
+            {
+                throw new Exception($"Failed to create mocktail: {response.ErrorMessage}");
+            }
         }
 
-        public Task<bool> DeleteMocktailAsync(int id)
+        // Delete a mocktail asynchronously
+        public async Task<bool> DeleteMocktailAsync(int id)
         {
-            throw new NotImplementedException();
+            var request = new RestRequest($"/api/v1/mocktails/{id}", Method.Delete); // Use DELETE method
+            var response = await _restClient.ExecuteAsync(request);
+            return response.IsSuccessful;
         }
 
-        public Task<MocktailDTO> GetMocktailByIdAsync(int id)
+        // Get a specific mocktail by ID asynchronously
+        public async Task<MocktailDTO> GetMocktailByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var request = new RestRequest($"/api/v1/mocktails/{id}", Method.Get);
+            var response = await _restClient.ExecuteAsync<MocktailDTO>(request);
+
+            if (response.IsSuccessful)
+            {
+                return response.Data;  // Return a single MocktailDTO object
+            }
+            else
+            {
+                throw new Exception($"Failed to get mocktail by ID: {response.ErrorMessage}");
+            }
         }
-
-        // Get all mocktails
-        public async Task<IEnumerable<MocktailDTO>> GetMocktailsAsync()
-        {
-            var request = new RestRequest("/api/v1/mocktails", Method.Get);
-            var response = await _restClient.ExecuteAsync<List<MocktailDTO>>(request);
-            return response.Data ?? new List<MocktailDTO>();
-        }
-
-        public Task<IEnumerable<MocktailDTO>> GetTenLatestMocktailsAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> UpdateMocktailAsync(MocktailDTO entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        //// Get the latest mocktails asynchronously
-        //public async Task<IEnumerable<MocktailDTO>> GetTenLatestMocktailsAsync()
-        //{
-        //    var mocktails = await _restClient.GetTenLatestMocktailsAsync();
-        //    return mocktails;
-        //}
-
-        //// Create a new mocktail asynchronously
-        //public async Task<int> CreateMocktailAsync(MocktailDTO entity)
-        //{
-        //    var response = await _restClient.CreateMocktailAsync(entity);
-        //    return response; // Assuming the response is an integer or status code
-        //}
-
-        //// Update a mocktail asynchronously
-        //public async Task<bool> UpdateMocktailAsync(MocktailDTO entity)
-        //{
-        //    var response = await _restClient.UpdateMocktailAsync(entity);
-        //    return response;
-        //}
-
-        //// Delete a mocktail asynchronously
-        //public async Task<bool> DeleteMocktailAsync(int id)
-        //{
-        //    var response = await _restClient.DeleteMocktailAsync(id);
-        //    return response;
-        //}
 
         //// Get a specific mocktail by ID asynchronously
         //public async Task<MocktailDTO> GetMocktailByIdAsync(int id)
         //{
-        //    var mocktail = await _restClient.GetMocktailByIdAsync(id); // Use IRestClient to fetch by ID
-        //    return mocktail;
+        //    var request = new RestRequest($"/api/v1/mocktails/{id}", Method.Get);
+        //    var response = await _restClient.ExecuteAsync<MocktailDTO>(request);
+        //    return response.Data ?? new MocktailDTO();
         //}
+
+        // Get all mocktails asynchronously
+        public async Task<IEnumerable<MocktailDTO>> GetMocktailsAsync()
+        {
+            var request = new RestRequest("/api/v1/mocktails", Method.Get); // Adjust the endpoint as needed
+            var response = await _restClient.ExecuteAsync<List<MocktailDTO>>(request);
+            return response.Data ?? new List<MocktailDTO>(); // Return an empty list if no data is found
+        }
+
+        // Get the latest 10 mocktails asynchronously
+        public async Task<IEnumerable<MocktailDTO>> GetTenLatestMocktailsAsync()
+        {
+            var request = new RestRequest("/api/v1/mocktails/latest", Method.Get); // Assuming the endpoint for the latest mocktails is different
+            var response = await _restClient.ExecuteAsync<List<MocktailDTO>>(request);
+
+            if (response.IsSuccessful)
+            {
+                return response.Data; // Return the latest 10 mocktails
+            }
+            else
+            {
+                throw new Exception($"Failed to get the latest mocktails: {response.ErrorMessage}");
+            }
+        }
+
+        // Update a mocktail asynchronously
+        public async Task<bool> UpdateMocktailAsync(MocktailDTO entity)
+        {
+            var request = new RestRequest($"/api/v1/mocktails/{entity.Id}", Method.Put); // Adjust the endpoint as needed
+            request.AddJsonBody(entity); // Add the MocktailDTO as the request body
+
+            var response = await _restClient.ExecuteAsync(request);
+            return response.IsSuccessful; // Return true if the update was successful
+        }
     }
 }

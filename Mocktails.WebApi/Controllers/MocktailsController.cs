@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mocktails.DAL.DaoClasses;
+using Mocktails.WebApi.DTOs;
 
 namespace Mocktails.WebApi.Controllers
 {
@@ -30,6 +31,16 @@ namespace Mocktails.WebApi.Controllers
             return Ok(mocktails);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<MocktailDTO>> GetMocktailByIdAsync(int id)
+        {
+            var mocktail = await _mocktailDAO.GetMocktailByIdAsync(id); // Assuming this service call works
+            if (mocktail == null)
+            {
+                return NotFound();
+            }
+            return Ok(mocktail);
+        }
         // Other methods for POST, PUT, DELETE...
     }
 
