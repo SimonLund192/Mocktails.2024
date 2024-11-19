@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mocktails.ApiClient.Mocktails.DTOs;
+﻿using Mocktails.ApiClient.Products.DTOs;
 
-namespace Mocktails.ApiClient.Mocktails.RestClient;
-public interface IRestClient
+namespace Mocktails.ApiClient.Products;
+
+public interface IMocktailApiClient
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     Task<IEnumerable<MocktailDTO>> GetMocktailsAsync();
     Task<IEnumerable<MocktailDTO>> GetTenLatestMocktailsAsync();
     Task<int> CreateMocktailAsync(MocktailDTO entity);
@@ -15,6 +15,4 @@ public interface IRestClient
     Task<bool> DeleteMocktailAsync(int id);
     // Get a specific mocktail by ID asynchronously
     Task<MocktailDTO> GetMocktailByIdAsync(int id);
-    
-
 }

@@ -7,15 +7,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocktails.Website", "Mockta
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocktails.Employee.App", "Employee.App\Mocktails.Employee.App.csproj", "{BAB1291C-5820-4DFD-B5F6-03B529D9BCBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocktails.WebApi", "Mocktails.WebApi\Mocktails.WebApi.csproj", "{AB1AE60B-8385-458E-8863-703032C0D811}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocktails.WebApi", "Mocktails.WebApi\Mocktails.WebApi.csproj", "{AB1AE60B-8385-458E-8863-703032C0D811}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocktails.DAL", "Mocktails.DAL\Mocktails.DAL.csproj", "{4A4B6D17-2072-44E7-9A9F-F6E94B4F6F36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocktails.DAL", "Mocktails.DAL\Mocktails.DAL.csproj", "{4A4B6D17-2072-44E7-9A9F-F6E94B4F6F36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocktails.Test", "Mocktails.Test\Mocktails.Test.csproj", "{DA26CCA3-D532-42AF-BA94-9CC16A483B97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocktails.Test", "Mocktails.Test\Mocktails.Test.csproj", "{DA26CCA3-D532-42AF-BA94-9CC16A483B97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocktails.ApiClient", "Mocktails.ApiClient\Mocktails.ApiClient.csproj", "{76C3679B-2819-4AFF-B231-EC6F45A16FF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mocktails.ApiClient", "Mocktails.ApiClient\Mocktails.ApiClient.csproj", "{76C3679B-2819-4AFF-B231-EC6F45A16FF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocktails.Shared", "Mocktails.Shared\Mocktails.Shared.csproj", "{10881551-A2EB-4C75-8ACD-FF5E7201DC7F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{35CCD962-8AE9-4269-A3CE-3E9CCF0005D4}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{20EC2100-AC2B-4A72-B616-2162A8D8B8E7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{7F698C98-A2C1-4217-8211-2AF34A71DC68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,13 +57,17 @@ Global
 		{76C3679B-2819-4AFF-B231-EC6F45A16FF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76C3679B-2819-4AFF-B231-EC6F45A16FF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76C3679B-2819-4AFF-B231-EC6F45A16FF8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{10881551-A2EB-4C75-8ACD-FF5E7201DC7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10881551-A2EB-4C75-8ACD-FF5E7201DC7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10881551-A2EB-4C75-8ACD-FF5E7201DC7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{10881551-A2EB-4C75-8ACD-FF5E7201DC7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CB6C770C-658E-403C-965C-8617635EAD95} = {20EC2100-AC2B-4A72-B616-2162A8D8B8E7}
+		{BAB1291C-5820-4DFD-B5F6-03B529D9BCBF} = {20EC2100-AC2B-4A72-B616-2162A8D8B8E7}
+		{AB1AE60B-8385-458E-8863-703032C0D811} = {20EC2100-AC2B-4A72-B616-2162A8D8B8E7}
+		{4A4B6D17-2072-44E7-9A9F-F6E94B4F6F36} = {20EC2100-AC2B-4A72-B616-2162A8D8B8E7}
+		{DA26CCA3-D532-42AF-BA94-9CC16A483B97} = {7F698C98-A2C1-4217-8211-2AF34A71DC68}
+		{76C3679B-2819-4AFF-B231-EC6F45A16FF8} = {20EC2100-AC2B-4A72-B616-2162A8D8B8E7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {37E53176-DD4D-4001-AC2A-69A9532C5DD2}

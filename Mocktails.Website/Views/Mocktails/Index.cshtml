@@ -1,16 +1,36 @@
-﻿@model IEnumerable<Mocktails.ApiClient.Mocktails.DTOs.MocktailDTO>
+﻿@model IEnumerable<Mocktails.ApiClient.Products.DTOs.MocktailDTO>
 
 <h1>Our Mocktails</h1>
 
 <div>
-    @foreach (var mocktail in Model)
+    <!-- Product Grid -->
+    @if (Model != null && Model.Any())
     {
-        <div>
-            <h3>@mocktail.Name</h3>
-            <p>@mocktail.Description</p>
-            <p>Price: @mocktail.Price</p>
-            <img src="~/images/@mocktail.ImageUrl" alt="@mocktail.Name" />
-            <a href="@Url.Action("Details", "Mocktails", new { id = mocktail.Id })">View Details</a>
+        <div class="row">
+            @foreach (var mocktail in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <!-- Product Card -->
+                    <div class="card shadow-sm">
+                        <!-- Image with correct path -->
+                        <img src="@mocktail.ImageUrl" class="card-img-top" alt="@mocktail.Name" />
+                        <div class="card-body">
+                            <h5 class="card-title">@mocktail.Name</h5>
+                            <p class="card-text">@mocktail.Description</p>
+                            <p class="card-text font-weight-bold">$@mocktail.Price</p>
+                            <a href="@Url.Action("Details", "Mocktails", new { id = mocktail.Id })" class="btn btn-primary">View Details</a>
+
+                            <!-- Add to Cart button -->
+                            <button class="btn btn-success add-to-cart" data-id="@mocktail.Id">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
+    }
+    else
+    {
+        <p>No products available at the moment.</p>
     }
 </div>

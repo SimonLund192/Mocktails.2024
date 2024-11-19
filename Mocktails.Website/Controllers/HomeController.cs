@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Mocktails.ApiClient.Mocktails.RestClient;
+using Mocktails.ApiClient.Products;
 using Mocktails.Website.Models;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -8,9 +8,9 @@ namespace Mocktails.Website.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly MocktailsApiClient _apiClient;
+        private readonly IMocktailApiClient _apiClient;
 
-        public HomeController(MocktailsApiClient apiClient)
+        public HomeController(IMocktailApiClient apiClient)
         {
             _apiClient = apiClient;
         }
@@ -34,6 +34,21 @@ namespace Mocktails.Website.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        // Mark Details method as async
+        public async Task<IActionResult> Details(int id)
+        {
+            // Get the specific mocktail by ID asynchronously
+            var mocktails = await _apiClient.GetMocktailByIdAsync(id); // Use await for async method
+
+            if (mocktails == null)
+            {
+                return NotFound(); // Return 404 if mocktail not found
+            }
+
+            // Return the view with the mocktail details
+            return View(mocktails); // The view expects a MocktailDTO model
         }
     }
 }

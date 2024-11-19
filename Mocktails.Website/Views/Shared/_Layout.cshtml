@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Mocktails.Website.styles.css" asp-append-version="true" />
+    <!-- Add Font Awesome for shopping cart icon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -23,8 +25,13 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Mocktails" asp-action="Index">Mocktails</a>
                         </li>
+
+                        <!-- Shopping Cart Button moved to the right -->
+                        <a href="/ShoppingCart" class="btn btn-outline-primary ml-auto">
+                            <i class="fas fa-shopping-cart"></i> Cart <span id="cart-count">0</span>
+                        </a>
                     </ul>
                 </div>
             </div>
@@ -38,11 +45,11 @@
         </main>
     </div>
 
-@*     <!-- Footer Section -->
+    @*     <!-- Footer Section -->
     <footer class="border-top footer text-muted mt-auto">
-        <div class="container">
-            &copy; 2024 - Mocktails.Website - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+    <div class="container">
+    &copy; 2024 - Mocktails.Website - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
     </footer> *@
 
     <!-- Scripts -->

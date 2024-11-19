@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Mocktails.WebApi.DTOs;
 
-namespace Mocktails.ApiClient.Mocktails.DTOs;
 public class MocktailDTO
 {
     public int Id { get; set; }

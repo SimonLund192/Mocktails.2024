@@ -13,4 +13,5 @@ public interface ICategoryDAO
     Task<bool> UpdateCategoryAsync(Category entity);
     Task<bool> DeleteCategoryAsync(int id);
     Task<IEnumerable<CategoryDAO>> GetCategoryByPartOfName(string partOfName);
+    Task<Category> GetCategoryByIdAsync(int id);
 }

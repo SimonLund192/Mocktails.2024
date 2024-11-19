@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mocktails.ApiClient.Mocktails.Services;
-internal class MocktailService
+namespace Mocktails.DAL.Model;
+public class User
 {
 }

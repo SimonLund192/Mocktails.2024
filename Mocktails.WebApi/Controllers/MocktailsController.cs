@@ -1,36 +1,48 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Mocktails.ApiClient.Mocktails.DTOs;
 using Mocktails.DAL.DaoClasses;
+using Mocktails.WebApi.DTOs;
 
-namespace Mocktails.WebApi.Controllers;
-
-/// <summary>
-/// This class provides basic CRUD functionality for BlogPosts in the system.
-/// The controller receives a blogposts repository in its constructor, thereby lowering the coupling
-/// and enabling the class responsible for creating the controller to provide any implementation of IBlogPostRepository
-/// for testing purposes or for using a specific persistence mechanism (database/file/service/etc.)
-/// </summary>
-/// 
-
-[Route("api/[controller]")]
-[ApiController]
-public class MocktailsController : ControllerBase
+namespace Mocktails.WebApi.Controllers
 {
+    [Route("api/v1/[controller]")]
+    [ApiController]
+    public class MocktailsController : ControllerBase
+    {
+        private readonly IMocktailDAO _mocktailDAO;
 
-    #region Repository and constructor
-    //The repository the controller should use for persistence
-    IMocktailDAO _mocktailRepository;
+        public MocktailsController(IMocktailDAO mocktailDAO)
+        {
+            _mocktailDAO = mocktailDAO;
+        }
 
-    public MocktailsController(IMocktailDAO mocktailRepository) => _mocktailRepository = mocktailRepository;
+        // GET: api/mocktails
+        [HttpGet]
+        public async Task<IActionResult> GetMocktails()
+        {
+            var mocktails = await _mocktailDAO.GetMocktailsAsync();
+            return Ok(mocktails);
+        }
 
-    #endregion
+        // GET: api/mocktails/search?partOfNameOrDescription=orange
+        [HttpGet("search")]
+        public async Task<IActionResult> GetMocktailsBySearch([FromQuery] string partOfNameOrDescription)
+        {
+            var mocktails = await _mocktailDAO.GetMocktailByPartOfNameOrDescription(partOfNameOrDescription);
+            return Ok(mocktails);
+        }
 
-    #region Default CRUD actions
+        [HttpGet("{id}")]
+        public async Task<ActionResult<MocktailDTO>> GetMocktailByIdAsync(int id)
+        {
+            var mocktail = await _mocktailDAO.GetMocktailByIdAsync(id); // Assuming this service call works
+            if (mocktail == null)
+            {
+                return NotFound();
+            }
+            return Ok(mocktail);
+        }
+        // Other methods for POST, PUT, DELETE...
+    }
 
-    //public async Task<ActionResult<IEnumerable<MocktailDTO>>> GET([FromQuery] int? )
-    //{
-    //    return View();
-    //}
-
-    #endregion
 }
+

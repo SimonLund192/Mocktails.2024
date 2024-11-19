@@ -16,6 +16,11 @@ body {
     flex-grow: 1;  /* Allow this content to grow and take the available space */
 }
 
+/* Ensure the shopping cart button is aligned to the right */
+.navbar .ml-auto {
+    margin-left: auto;
+}
+
 /* Footer styling */
 footer {
     background-color: #2c3e50;
