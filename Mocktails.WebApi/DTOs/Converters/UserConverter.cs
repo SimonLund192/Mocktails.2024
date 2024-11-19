@@ -13,8 +13,8 @@ public static class UserConverter
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email,
-            PasswordHash = user.PasswordHash,
-            Role = user.Role
+            //PasswordHash = user.PasswordHash,
+            //Role = user.Role
 
         };
     }
@@ -27,7 +27,7 @@ public static class UserConverter
             FirstName = userDTO.FirstName,
             LastName = userDTO.LastName,
             Email = userDTO.Email,
-            PasswordHash = userDTO.PasswordHash,
+            //PasswordHash = userDTO.PasswordHash,
             //Role = userDTO.Role
 
         };
