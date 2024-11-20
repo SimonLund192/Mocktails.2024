@@ -50,6 +50,11 @@ public class RestClientStub : IMocktailApiClient
         return await Task.FromResult(mocktail);
     }
 
+    public Task<IEnumerable<MocktailDTO>> GetMocktailByPartOfNameOrDescription(string partOfNameOrDescription)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<IEnumerable<MocktailDTO>> GetMocktailsAsync()
     {
         // Simulate an async operation and return the mocktail list

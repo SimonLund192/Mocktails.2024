@@ -5,15 +5,48 @@
 }
 
 <div class="container">
+    @* <!-- Hero Section -->
+    <section class="hero-section mb-5">
+        <img src="~/images/MocktailsHeader.jpeg" class="img-fluid w-100 hero-image" alt="Mocktail Header Image" />
+        <div class="hero-text text-center">
+            <h1 class="display-4 text-white">Welcome to the Mocktail Shop</h1>
+            <p class="lead text-white">Discover refreshing mocktail drinks to suit every taste. Browse our selection below!</p>
+        </div>
+    </section> *@
+
+
+
+
     <!-- Header Image -->
+    <section class="hero-section mb-5">
+        <img src="~/images/MocktailsHeader.jpeg" class="img-fluid w-100 hero-image" alt="Mocktail Header Image" />
+    </section>
+
+
+
+    @* <!-- Header Image -->
     <div class="header-image-container mb-5">
-        <img src="~/images/MocktailsHeader.jpeg" class="img-fluid w-100" alt="Mocktail Header Image" />
-    </div>
+        <img src="~/images/MocktailsHeader.jpeg" class="img-fluid w-100 hero-image" alt="Mocktail Header Image" />
+    </div> *@
 
     <!-- Landing Page Intro -->
     <div class="row text-center mb-5">
-        <h1 class="display-4">Welcome to the Mocktail Shop</h1>
+        <h2 class="display-4">Welcome to the Mocktail Shop</h2>
         <p>Discover refreshing mocktail drinks to suit every taste. Browse our selection below!</p>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8 col-lg-6">
+            <form method="get" action="@Url.Action("Search", "Home")">
+                <div class="input-group input-group-lg">
+                    <input type="text" name="query" class="form-control rounded-pill" placeholder="Search for mocktails..." aria-label="Search for mocktails">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary rounded-pill" type="submit"><i class="fas fa-search"></i> Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- Product Grid -->
@@ -22,20 +55,17 @@
         <div class="row">
             @foreach (var mocktail in Model)
             {
-                <div class="col-md-4 mb-4">
-                    <!-- Product Card -->
-                    <div class="card shadow-sm">
-                        <!-- Image with correct path -->
-                        <img src="@mocktail.ImageUrl" class="card-img-top" alt="@mocktail.Name" />
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card shadow-lg rounded-3 product-card">
+                        <img src="@mocktail.ImageUrl" class="card-img-top rounded-top" alt="@mocktail.Name" />
                         <div class="card-body">
-                            <h5 class="card-title">@mocktail.Name</h5>
-                            <p class="card-text">@mocktail.Description</p>
-                            <p class="card-text font-weight-bold">$@mocktail.Price</p>
-                            <a href="@Url.Action("Details", "Mocktails", new { id = mocktail.Id })" class="btn btn-primary">View Details</a>
-
-                            <!-- Add to Cart button -->
-                            <button class="btn btn-success add-to-cart" data-id="@mocktail.Id">
-                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                            <h5 class="card-title text-center">@mocktail.Name</h5>
+                            <p class="card-text text-muted text-center" style="font-size: 0.9rem;">@mocktail.Description</p>
+                            <p class="font-weight-bold text-center">$@mocktail.Price</p>
+                            <div class="d-flex justify-content-between">
+                                <a href="@Url.Action("Details", "Mocktails", new { id = mocktail.Id })" class="btn btn-outline-primary btn-sm">View Details</a>
+                                <button class="btn btn-success btn-sm add-to-cart" data-id="@mocktail.Id"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -44,53 +74,53 @@
     }
     else
     {
-        <p>No products available at the moment.</p>
+        <p class="text-center">No mocktails available at the moment.</p>
     }
-
 
     <script>
-    // Function to handle adding items to the cart
-    $(document).ready(function () {
-        $('.add-to-cart').on('click', function () {
-            var mocktailId = $(this).data('id');
-            var cart = JSON.parse(localStorage.getItem('cart')) || [];
+        // Function to handle adding items to the cart
+        $(document).ready(function () {
+            $('.add-to-cart').on('click', function () {
+                var mocktailId = $(this).data('id');
+                var cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-            // Check if the item is already in the cart
-            var existingItem = cart.find(item => item.id === mocktailId);
-            if (existingItem) {
-                existingItem.quantity++;
-            } else {
-                cart.push({ id: mocktailId, quantity: 1 });
-            }
+                // Check if the item is already in the cart
+                var existingItem = cart.find(item => item.id === mocktailId);
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    cart.push({ id: mocktailId, quantity: 1 });
+                }
 
-            // Save the cart back to localStorage
-            localStorage.setItem('cart', JSON.stringify(cart));
+                // Save the cart back to localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
 
-            // Optionally, show a notification or update cart icon
-            alert('Item added to the cart!');
-            updateCartIcon();
+                // Optionally, show a notification or update cart icon
+                alert('Item added to the cart!');
+                updateCartIcon();
+            });
         });
-    });
 
-    // Function to update the cart icon with the number of items in the cart
-    function updateCartIcon() {
-        var cart = JSON.parse(localStorage.getItem('cart')) || [];
-        var cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+        // Function to update the cart icon with the number of items in the cart
+        function updateCartIcon() {
+            var cart = JSON.parse(localStorage.getItem('cart')) || [];
+            var cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
-        // Update the cart count in the button or header (you can also use a badge or similar element)
-        $('#cart-count').text(cartCount);
-    }
+            // Update the cart count in the button or header (you can also use a badge or similar element)
+            $('#cart-count').text(cartCount);
+        }
 
-    // Initialize the cart icon on page load
-    updateCartIcon();
-</script>
-
+        // Initialize the cart icon on page load
+        updateCartIcon();
+    </script>
 </div>
 
 <!-- Footer Section -->
-<footer class="border-top footer text-muted mt-auto">
-    <div class="container">
-        &copy; 2024 - Mocktails Shop - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+<footer class="footer bg-dark text-white mt-5 pt-4 pb-4">
+    <div class="container text-center">
+        &copy; 2024 - Mocktails Shop - <a href="@Url.Action("Privacy", "Home")" class="text-white">Privacy</a>
     </div>
 </footer>
 
+
+}

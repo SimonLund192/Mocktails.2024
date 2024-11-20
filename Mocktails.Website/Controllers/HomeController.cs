@@ -1,8 +1,7 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Mocktails.ApiClient.Products;
 using Mocktails.Website.Models;
-using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace Mocktails.Website.Controllers
 {
@@ -13,6 +12,20 @@ namespace Mocktails.Website.Controllers
         public HomeController(IMocktailApiClient apiClient)
         {
             _apiClient = apiClient;
+        }
+
+        public async Task<IActionResult> Search(string query)
+        {
+            var mocktails = await _apiClient.GetMocktailByPartOfNameOrDescription(query);
+
+            if (mocktails != null && mocktails.Any())
+            {
+                return RedirectToAction("Details", "Mocktails", new { id = mocktails.First().Id });
+            }
+
+            TempData["ErrorMessage"] = "No mocktails found with that name or description";
+
+            return RedirectToAction("Index");
         }
 
         // Mark Index method as async

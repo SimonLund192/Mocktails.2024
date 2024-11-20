@@ -10,7 +10,32 @@
             <h1>@Model.Name</h1>
             <p><strong>Description:</strong> @Model.Description</p>
             <p><strong>Price:</strong> $@Model.Price</p>
-            <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Back to List</a>
+            <a href="@Url.Action("Index", "Mocktails")" class="btn btn-secondary">Back to Mocktails</a>
         </div>
     </div>
 </div>
+
+
+@* @model Mocktails.ApiClient.Products.DTOs.MocktailDTO
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <!-- Product Details Card -->
+            <div class="card shadow-lg rounded-lg border-0">
+                <!-- Display the mocktail image -->
+                <img src="@Model.ImageUrl" class="card-img-top rounded-top" alt="@Model.Name" />
+                <div class="card-body">
+                    <h1 class="card-title text-center text-dark">@Model.Name</h1>
+                    <p class="card-text text-center text-muted mb-4" style="font-size: 1.2rem;">@Model.Description</p>
+                    <p class="text-center text-dark font-weight-bold" style="font-size: 1.5rem;">$@Model.Price</p>
+
+                    <div class="d-flex justify-content-center mt-4">
+                        <a href="@Url.Action("Index", "Mocktails")" class="btn btn-outline-dark btn-lg">Back to Mocktails</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ *@
