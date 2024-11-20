@@ -21,7 +21,6 @@ public class MocktailDAO : BaseDAO, IMocktailDAO
         return await connection.QuerySingleAsync<int>(query, entity);
     }
 
-    // Delete a Mocktail by its ID
     public async Task<bool> DeleteMocktailAsync(int id)
     {
         // SQL query to delete the mocktail by its ID
@@ -63,20 +62,18 @@ public class MocktailDAO : BaseDAO, IMocktailDAO
             throw new Exception($"Error getting mocktail by ID: '{ex.Message}'.", ex);
         }
     }
-
-    // Get Mocktails by part of their name or description (this method is not implemented)
     public async Task<IEnumerable<Mocktail>> GetMocktailByPartOfNameOrDescription(string partOfNameOrDescription)
     {
         const string query = """
             SELECT *
             FROM Mocktails
-            WHERE Name LIKE @partOfNameOrDescription OR Description LIKE @partOfNameOrDescription
+            WHERE Name LIKE @partOfNameOrDescription 
+            OR Description LIKE @partOfNameOrDescription
             """;
         using var connection = CreateConnection();
         return await connection.QueryAsync<Mocktail>(query, new { partOfNameOrDescription = $"%{partOfNameOrDescription}%" });
     }
 
-    // Get all Mocktails
     public async Task<IEnumerable<Mocktail>> GetMocktailsAsync()
     {
         // SQL query to select all mocktails from the Mocktail table
@@ -90,7 +87,6 @@ public class MocktailDAO : BaseDAO, IMocktailDAO
         return (await connection.QueryAsync<Mocktail>(query)).ToList();
     }
 
-    // Get the 10 latest Mocktails (this method is not implemented)
     public async Task<IEnumerable<Mocktail>> GetTenLatestMocktailsAsync()
     {
         const string query = """
@@ -102,11 +98,14 @@ public class MocktailDAO : BaseDAO, IMocktailDAO
         return await connection.QueryAsync<Mocktail>(query, new { amount = 10 });
     }
 
-    // Update a Mocktail (this method is not implemented)
     public async Task<bool> UpdateMocktailAsync(Mocktail entity)
     {
         const string query = """
-            UPDATE Mocktail SET Name=@Name, Description=@Description, Price=@Price , ImageUrl=@ImageUrl
+            UPDATE Mocktail 
+            SET Name=@Name, 
+            Description=@Description, 
+            Price=@Price , 
+            ImageUrl=@ImageUrl
             WHERE Id=@Id;
             """;
         using var connection = CreateConnection();

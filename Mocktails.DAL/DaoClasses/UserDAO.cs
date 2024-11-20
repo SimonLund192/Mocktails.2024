@@ -5,57 +5,102 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Identity;
 using Mocktails.DAL.Model;
 
 namespace Mocktails.DAL.DaoClasses;
 public class UserDAO : BaseDAO, IUserDAO
 {
-    private readonly PasswordHasher _passwordHasher;
-    public UserDAO(string connectionString) : base(connectionString) 
+    private readonly PasswordHasher<User> _passwordHasher;
+    public UserDAO(string connectionString) : base(connectionString)
     {
-        _passwordHasher = new PasswordHasher();
+        _passwordHasher = new PasswordHasher<User>();
     }
+
     #region CRUD
-    public Task<int> CreateUserAsync(User entity)
+
+    public async Task<bool> VerifyPasswordAsync(string email, string password)
     {
+        var query = "SELECT * FROM Users WHERE Email = @Email";
 
-        throw new NotImplementedException();
-        //try
-        //{
-        //    // Hash the user's password
-        //    var hashedPassword = _passwordHasher.HashPassword(entity, entity.PasswordHash);
+        using var connection = CreateConnection();
+        var user = await connection.QuerySingleOrDefaultAsync<User>(query, new { Email = email });
 
-        //    // Now set the PasswordHash property to the hashed password
-        //    entity.PasswordHash = hashedPassword;
+        if (user == null)
+        {
+            return false;
+        }
 
-        //    var query = "INSERT INTO Users (FirstName, LastName, Email, PasswordHash) VALUES (@FirstName, @LastName, @Email, @PasswordHash); SELECT CAST(SCOPE_IDENTITY() AS INT);";
-
-        //    using var connection = CreateConnection();
-        //    var userId = await connection.QuerySingleAsync<int>(query, new { entity.FirstName, entity.LastName, entity.Email, entity.PasswordHash });
-
-        //    return userId;
-        //}
-        //catch (Exception ex)
-        //{
-        //    throw new Exception($"Error creating user: {ex.Message}", ex);
-        //}
-
-
+        // Verifying the password using PasswordHasher
+        var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
+        return result == Microsoft.AspNetCore.Identity.PasswordVerificationResult.Success;
     }
 
-    public Task<bool> DeleteUserAsync(int id)
+    public async Task<int> CreateUserAsync(User entity)
     {
-        throw new NotImplementedException();
+        try
+        {
+            // Hash the plain text password before storing it
+            var hashedPassword = _passwordHasher.HashPassword(entity, entity.PasswordHash); // entity.Password contains the plain text password
+
+            // Store the hashed password in the entity's PasswordHash property
+            entity.PasswordHash = hashedPassword;
+
+            var query = """
+                "INSERT INTO Users 
+                (FirstName, LastName, Email, PasswordHash) 
+                VALUES (@FirstName, @LastName, @Email, @PasswordHash); 
+                SELECT CAST(SCOPE_IDENTITY() AS INT);";
+                """;
+            using var connection = CreateConnection();
+            var userId = await connection.QuerySingleAsync<int>(query, new
+            {
+                entity.FirstName,
+                entity.LastName,
+                entity.Email,
+                entity.PasswordHash
+            });
+
+            return userId;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error creating user: {ex.Message}", ex);
+        }
     }
 
-    public Task<IEnumerable<User>> GetAllUsersAsync()
+    public async Task<bool> DeleteUserAsync(int id)
     {
-        throw new NotImplementedException();
+        const string query = """
+            DELETE FROM Users
+            WHERE Id = @Id
+            """;
+
+        using var connection = CreateConnection();
+        return await connection.ExecuteAsync(query, new { id }) > 0;
     }
 
-    public Task<IEnumerable<User>> GetUserAsync()
+    public async Task<IEnumerable<User>> GetAllUsersAsync()
     {
-        throw new NotImplementedException();
+        const string query = """
+            SELECT *
+            FROM Users
+            """;
+
+        using var connection = CreateConnection();
+        return (await connection.QueryAsync<User>(query)).ToList();
+    }
+
+    public async Task<IEnumerable<User>> GetUserByPartOfNameAsync(string partOfName)
+    {
+        const string query = """
+            SELECT *
+            FROM Users
+            WHERE Name LIKE @partOfName
+            """;
+
+        using var connection = CreateConnection();
+        return await connection.QueryAsync<User>(query, new { partOfName = $"%{partOfName}%" });
     }
 
     public async Task<User> GetUserByIdAsync(int id)
@@ -67,7 +112,7 @@ public class UserDAO : BaseDAO, IUserDAO
             using var connection = CreateConnection();
             var result = await connection.QuerySingleOrDefaultAsync<User>(query, new { Id = id });
 
-            if ( result == null)
+            if (result == null)
             {
                 throw new Exception("User not found.");
             }
@@ -80,9 +125,41 @@ public class UserDAO : BaseDAO, IUserDAO
         }
     }
 
-    public Task<bool> UpdateUserAsync(User entity)
+    public async Task<bool> UpdateUserAsync(User entity)
     {
-        throw new NotImplementedException();
+        const string query = """
+            UPDATE User
+            SET FirstName = @FirstName,
+            LastName = @LastName,
+            Email = @Email,
+            PasswordHash = @PasswordHash;
+            """;
+
+        using var connection = CreateConnection();
+        return await connection.ExecuteAsync(query, entity) > 0;
     }
+
+    public async Task<User> GetUserByEmailAsync(string email)
+    {
+        try
+        {
+            var query = "SELECT * FROM Users WHERE Email = @Email";
+
+            using var connection = CreateConnection();
+            var result = await connection.QuerySingleOrDefaultAsync<User>(query, new { email });
+
+            if (result == null)
+            {
+                throw new Exception("User not found.");
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error getting user by Email: '{ex.Message}'.", ex);
+        }
+    }
+
     #endregion
 }

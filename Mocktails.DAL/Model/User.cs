@@ -24,8 +24,8 @@ namespace Mocktails.DAL.Model
         [StringLength(150, ErrorMessage = "Email must be a maximum of 150 characters")]
         public string Email { get; set; }
 
-        //[Required(ErrorMessage = "Password is required")]
-        //public string PasswordHash { get; set; }
+        [Required(ErrorMessage = "Password is required")]
+        public string PasswordHash { get; set; }
 
         //[Required(ErrorMessage = "Role is required")]
         //public UserRole Role { get; set; }
