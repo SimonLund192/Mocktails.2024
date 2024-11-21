@@ -15,4 +15,6 @@ public interface IMocktailApiClient
     Task<bool> DeleteMocktailAsync(int id);
     // Get a specific mocktail by ID asynchronously
     Task<MocktailDTO> GetMocktailByIdAsync(int id);
+
+    Task<IEnumerable<MocktailDTO>> GetMocktailByPartOfNameOrDescription(string partOfNameOrDescription);
 }

@@ -1,60 +1,65 @@
-/* Ensure the page uses full height */
-html, body {
-    height: 100%;
-    margin: 0;
+/* Hero Section */
+.hero-section {
+    position: relative;
+    height: 470px;
+    overflow: hidden;
 }
 
-/* Flexbox layout for the entire page */
-body {
-    display: flex;
-    flex-direction: column;  /* Stack elements vertically */
-    height: 100vh;  /* Ensure the body takes up the entire viewport height */
+    .hero-section .hero-image {
+        object-fit: cover;
+        object-position: center;
+        height: 100%;
+    }
+
+.hero-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-/* Main content container (this takes up the available space) */
-.main-content {
-    flex-grow: 1;  /* Allow this content to grow and take the available space */
+/* Product Cards */
+.product-card {
+    border: none;
+    border-radius: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Ensure the shopping cart button is aligned to the right */
-.navbar .ml-auto {
-    margin-left: auto;
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+.card-img-top {
+    width: 100%;
+    height: 200px; /* Set a fixed height for uniformity */
+    object-fit: contain; /* Make sure the whole image is visible without distortion */
+    border-radius: 15px 15px 0 0; /* Rounded corners for the top image */
 }
 
-/* Footer styling */
-footer {
+/* Footer Styling */
+.footer {
     background-color: #2c3e50;
     color: white;
-    padding: 10px;
-    margin-top: auto;  /* This will push the footer to the bottom */
     text-align: center;
-    width: 100%;
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);  /* Optional: Add a shadow for some depth */
+    padding: 10px;
 }
 
-/* Apply festive font to homepage */
-body {
-    font-family: 'Arial', sans-serif; /* Default font */
+footer a {
+    color: #3498db;
 }
 
-/* Customizing the Welcome text */
-.display-4 {
-    font-size: 4rem; /* Increase the font size */
-    color: #151622; /* Add a festive color */
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Optional: Add a subtle shadow */
-}
+    footer a:hover {
+        text-decoration: underline;
+    }
 
-/* Increase the font size for all <p> tags */
-p {
-    font-size: 1.25rem;
+/* Button Styling */
+.btn-outline-primary {
+    border-radius: 50px;
 }
 
 h2, h3, h4 {
-    font-family: 'Dancing Script'/*, cursive*/; /* Apply the festive font */
+    font-family: 'Dancing Script' /*, cursive*/; /* Apply the festive font */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Light text shadow for better readability */
 }
-
-/* Optionally, apply the font to other elements for a more cohesive design */
-/*.card-title, .navbar-brand, .display-4 {
-    font-family: 'Dancing Script', cursive;
-}*/
 

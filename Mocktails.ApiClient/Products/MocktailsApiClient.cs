@@ -53,6 +53,23 @@ namespace Mocktails.ApiClient.Products
             }
         }
 
+        public async Task<IEnumerable<MocktailDTO>> GetMocktailByPartOfNameOrDescription(string partOfNameOrDescription)
+        {
+            var request = new RestRequest("/api/v1/mocktails", Method.Get);
+            request.AddQueryParameter("partOfNameOrDescription", partOfNameOrDescription);
+
+            var response = await _restClient.ExecuteAsync<List<MocktailDTO>>(request);
+
+            if (response.IsSuccessful)
+            {
+                return response.Data ?? new List<MocktailDTO>();
+            }
+            else
+            {
+                throw new Exception($"Failed to retrieve mocktails: {response.ErrorMessage}");
+            }
+        }
+
         //// Get a specific mocktail by ID asynchronously
         //public async Task<MocktailDTO> GetMocktailByIdAsync(int id)
         //{
