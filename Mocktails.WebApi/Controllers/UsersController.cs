@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Mocktails.ApiClient.Users.DTOs;
+
 using Mocktails.DAL.DaoClasses;
 using Mocktails.DAL.Model;
 using Microsoft.AspNetCore.Identity;
+using Mocktails.WebApi.DTOs.Converters;
+using Microsoft.Extensions.Logging.Abstractions;
+using System.Diagnostics.Eventing.Reader;
+using Mocktails.WebApi.DTOs;
 
 namespace Mocktails.WebApi.Controllers
 {
@@ -11,60 +15,41 @@ namespace Mocktails.WebApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserDAO _userDAO;
-        private readonly PasswordHasher<User> _passwordHasher;  // Add the PasswordHasher
+
 
         public UsersController(IUserDAO userDAO)
         {
             _userDAO = userDAO;
-            _passwordHasher = new PasswordHasher<User>(); // Initialize PasswordHasher
+
         }
 
-        [HttpPost]
-        public async Task<ActionResult<int>> CreateUser([FromBody] UserDTO userDTO)
+        #region Default CRUD actions
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetAsync([FromQuery] string email)
         {
-            try
-            {
-                // Check if the email already exists in the database
-                var existingUser = await _userDAO.GetUserByEmailAsync(userDTO.Email);
-                if (existingUser != null)
-                {
-                    // Return a 400 Bad Request if the email already exists
-                    return BadRequest("Email is already in use.");
-                }
-
-                // Convert UserDTO to User entity
-                var user = new User
-                {
-                    FirstName = userDTO.FirstName,
-                    LastName = userDTO.LastName,
-                    Email = userDTO.Email,
-                    PasswordHash = userDTO.PasswordHash
-                };
-
-                // Hash the password before saving to the database
-                user.PasswordHash = _passwordHasher.HashPassword(user, user.PasswordHash);
-
-                // Save user to the database
-                var userId = await _userDAO.CreateUserAsync(user);
-
-                // Use CreatedAtAction to return the newly created user and a link to the GetUserById action
-                return CreatedAtAction(nameof(GetUserByIdAsync), new { id = userId }, user);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error creating user: {ex.Message}");
-            }
+            IEnumerable<User> users = null;
+            if (!string.IsNullOrEmpty(email)) { users = new List<User>() { await _userDAO.GetUserByEmailAsync(email) }; }
+            else { users = await _userDAO.GetAllUsersAsync(); }
+            return Ok(users.ToDtos());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDTO>> GetUserByIdAsync(int id)
+        public async Task<ActionResult<UserDTO>> GetAsync(int id)
         {
             var user = await _userDAO.GetUserByIdAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return Ok(user);
+            if (user == null) { return NotFound(); }
+            else { return Ok(user.ToDTO()); }
         }
+
+        [HttpPost]
+        public async Task<ActionResult<int>> Post([FromBody] UserDTO newUserDTO)
+        {
+            return Ok(await _userDAO.CreateUserAsync(newUserDTO.ToModel(), newUserDTO.Password));
+        }
+
+
+        #endregion
+
+
     }
 }
