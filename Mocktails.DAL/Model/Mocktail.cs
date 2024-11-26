@@ -16,6 +16,11 @@ public class Mocktail
     [Display(Name = "Price")]
     [Required]
     public decimal Price { get; set; }
+    [Display(Name = "Quantity")]
+    [Required]
+
+    public int Quantity { get; set; }
+
     [Display(Name = "ImageUrl")]
     [Required]
     public string ImageUrl { get; set; }

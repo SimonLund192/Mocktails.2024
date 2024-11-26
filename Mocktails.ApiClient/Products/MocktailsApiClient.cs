@@ -12,6 +12,8 @@ namespace Mocktails.ApiClient.Products
             _restClient = new RestClient(baseUrl);
         }
 
+        
+
         // Create a new mocktail asynchronously
         public async Task<int> CreateMocktailAsync(MocktailDTO entity)
         {
@@ -112,4 +114,6 @@ namespace Mocktails.ApiClient.Products
             return response.IsSuccessful; // Return true if the update was successful
         }
     }
+
+
 }

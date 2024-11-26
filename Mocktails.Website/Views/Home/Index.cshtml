@@ -62,6 +62,7 @@
                             <h5 class="card-title text-center">@mocktail.Name</h5>
                             <p class="card-text text-muted text-center" style="font-size: 0.9rem;">@mocktail.Description</p>
                             <p class="font-weight-bold text-center">$@mocktail.Price</p>
+                            
                             <div class="d-flex justify-content-between">
                                 <a href="@Url.Action("Details", "Mocktails", new { id = mocktail.Id })" class="btn btn-outline-primary btn-sm">View Details</a>
                                 <button class="btn btn-success btn-sm add-to-cart" data-id="@mocktail.Id"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
