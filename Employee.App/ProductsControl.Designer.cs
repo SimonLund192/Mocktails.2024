@@ -82,6 +82,7 @@
             dgvProducts.Name = "dgvProducts";
             dgvProducts.Size = new Size(621, 214);
             dgvProducts.TabIndex = 3;
+            dgvProducts.CellContentClick += dgvProducts_CellContentClick;
             // 
             // btnAdd
             // 

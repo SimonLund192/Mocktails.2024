@@ -247,7 +247,7 @@ public partial class ProductsControl : UserControl
     }
 
 
-    
+
 
     private void BtnSearch_Click(object sender, EventArgs e)
     {
@@ -340,5 +340,10 @@ public partial class ProductsControl : UserControl
                 DialogResult = dialogResult
             };
         }
+    }
+
+    private void dgvProducts_CellContentClick(object sender, DataGridViewCellEventArgs e)
+    {
+
     }
 }

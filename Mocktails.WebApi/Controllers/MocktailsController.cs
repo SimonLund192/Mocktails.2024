@@ -52,4 +52,27 @@ public class MocktailsController : ControllerBase
         // Return the newly created mocktail's location URL
         return CreatedAtAction(nameof(GetMocktailByIdAsync), new { id = mocktailId }, mocktailDTO);
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateMocktail(int id, [FromBody] MocktailDTO mocktailDTO)
+    {
+        var mocktail = MocktailConverter.ToModel(mocktailDTO);
+        mocktail.Id = id;
+
+        var success = await _mocktailDAO.UpdateMocktailAsync(mocktail);
+        if (!success) return NotFound();
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteMocktail(int id)
+    {
+        var success = await _mocktailDAO.DeleteMocktailAsync(id);
+        if (!success) return NotFound();
+
+        return NoContent();
+    }
+
+
 }
