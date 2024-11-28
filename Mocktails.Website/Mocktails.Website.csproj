@@ -13,11 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Mocktails.ApiClient\Mocktails.ApiClient.csproj" />
+    <ProjectReference Include="..\Shared\Mocktails.Shared.csproj" />
 
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

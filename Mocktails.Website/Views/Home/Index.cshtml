@@ -5,29 +5,12 @@
 }
 
 <div class="container">
-    @* <!-- Hero Section -->
-    <section class="hero-section mb-5">
-        <img src="~/images/MocktailsHeader.jpeg" class="img-fluid w-100 hero-image" alt="Mocktail Header Image" />
-        <div class="hero-text text-center">
-            <h1 class="display-4 text-white">Welcome to the Mocktail Shop</h1>
-            <p class="lead text-white">Discover refreshing mocktail drinks to suit every taste. Browse our selection below!</p>
-        </div>
-    </section> *@
-
-
-
 
     <!-- Header Image -->
     <section class="hero-section mb-5">
         <img src="~/images/MocktailsHeader.jpeg" class="img-fluid w-100 hero-image" alt="Mocktail Header Image" />
     </section>
 
-
-
-    @* <!-- Header Image -->
-    <div class="header-image-container mb-5">
-        <img src="~/images/MocktailsHeader.jpeg" class="img-fluid w-100 hero-image" alt="Mocktail Header Image" />
-    </div> *@
 
     <!-- Landing Page Intro -->
     <div class="row text-center mb-5">
@@ -62,7 +45,16 @@
                             <h5 class="card-title text-center">@mocktail.Name</h5>
                             <p class="card-text text-muted text-center" style="font-size: 0.9rem;">@mocktail.Description</p>
                             <p class="font-weight-bold text-center">$@mocktail.Price</p>
-                            
+
+                            @* <!-- Add to Cart Form -->
+                            <form asp-controller="ShoppingCartController" asp-action="AddToCart" method="post">
+                                <input type="hidden" name="MocktailId" value="@mocktail.Id" />
+                                <input type="hidden" name="Quantity" value="1" /> <!-- Default quantity -->
+                                <button type="submit" class="btn btn-success btn-sm">
+                                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                                </button>
+                            </form> *@
+
                             <div class="d-flex justify-content-between">
                                 <a href="@Url.Action("Details", "Mocktails", new { id = mocktail.Id })" class="btn btn-outline-primary btn-sm">View Details</a>
                                 <button class="btn btn-success btn-sm add-to-cart" data-id="@mocktail.Id"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
@@ -77,43 +69,6 @@
     {
         <p class="text-center">No mocktails available at the moment.</p>
     }
-
-    <script>
-        // Function to handle adding items to the cart
-        $(document).ready(function () {
-            $('.add-to-cart').on('click', function () {
-                var mocktailId = $(this).data('id');
-                var cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-                // Check if the item is already in the cart
-                var existingItem = cart.find(item => item.id === mocktailId);
-                if (existingItem) {
-                    existingItem.quantity++;
-                } else {
-                    cart.push({ id: mocktailId, quantity: 1 });
-                }
-
-                // Save the cart back to localStorage
-                localStorage.setItem('cart', JSON.stringify(cart));
-
-                // Optionally, show a notification or update cart icon
-                alert('Item added to the cart!');
-                updateCartIcon();
-            });
-        });
-
-        // Function to update the cart icon with the number of items in the cart
-        function updateCartIcon() {
-            var cart = JSON.parse(localStorage.getItem('cart')) || [];
-            var cartCount = cart.reduce((total, item) => total + item.quantity, 0);
-
-            // Update the cart count in the button or header (you can also use a badge or similar element)
-            $('#cart-count').text(cartCount);
-        }
-
-        // Initialize the cart icon on page load
-        updateCartIcon();
-    </script>
 </div>
 
 <!-- Footer Section -->

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Mocktails.DAL.DaoClasses;
 using Mocktails.WebApi.Data;
+using Mocktails.Shared.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,8 @@ builder.Services.AddSingleton<IMocktailDAO>((_) => new MocktailDAO(connectionStr
 builder.Services.AddSingleton<ICategoryDAO>((_) => new CategoryDAO(connectionString));
 builder.Services.AddSingleton<IUserDAO>((_) => new UserDAO(connectionString));
 builder.Services.AddSingleton<IShoppingCartDAO>((_) => new ShoppingCartDAO(connectionString));
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ShoppingCartService>();
 
 
 //// Add DbContext for Entity Framework (MocktailsDbContext)
