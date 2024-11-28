@@ -5,99 +5,9 @@ namespace Employee.App;
 
 public partial class ProductsControl : UserControl
 {
-
     private readonly MocktailsApiClient _mocktailsApiClient;
 
-    // Form for adding/editing products
-    private class ProductForm : Form
-    {
-        public TextBox txtProductName;
-        public TextBox txtPrice;
-        public TextBox txtQuantity;
-        public Button btnSave;
-        public Button btnCancel;
-
-        public ProductForm(string title = "Edit Product")
-        {
-            // Form settings
-            this.Text = title;
-            this.Size = new Size(400, 250);
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Padding = new Padding(20);
-
-            // Create and position labels
-            Label lblName = new Label
-            {
-                Text = "Name:",
-                Location = new Point(30, 30),
-                AutoSize = true
-            };
-
-            Label lblPrice = new Label
-            {
-                Text = "Price:",
-                Location = new Point(30, 70),
-                AutoSize = true
-            };
-
-            Label lblQuantity = new Label
-            {
-                Text = "Quantity:",
-                Location = new Point(30, 110),
-                AutoSize = true
-            };
-
-            // Initialize textboxes with proper positioning
-            txtProductName = new TextBox
-            {
-                Location = new Point(100, 27),
-                Size = new Size(250, 23)
-            };
-
-            txtPrice = new TextBox
-            {
-                Location = new Point(100, 67),
-                Size = new Size(250, 23)
-            };
-
-            txtQuantity = new TextBox
-            {
-                Location = new Point(100, 107),
-                Size = new Size(250, 23)
-            };
-
-            // Initialize buttons with proper positioning
-            btnSave = new Button
-            {
-                Text = "Save",
-                Location = new Point(180, 160),
-                Size = new Size(80, 30),
-                DialogResult = DialogResult.OK
-            };
-
-            btnCancel = new Button
-            {
-                Text = "Cancel",
-                Location = new Point(270, 160),
-                Size = new Size(80, 30),
-                DialogResult = DialogResult.Cancel
-            };
-
-            // Add all controls to form
-            this.Controls.AddRange(new Control[]
-            {
-        lblName, lblPrice, lblQuantity,
-        txtProductName, txtPrice, txtQuantity,
-        btnSave, btnCancel
-            });
-
-            this.AcceptButton = btnSave;
-            this.CancelButton = btnCancel;
-        }
-    }
+    // Constructor
     public ProductsControl()
     {
         InitializeComponent();
@@ -116,32 +26,14 @@ public partial class ProductsControl : UserControl
 
         // Configure columns
         dgvProducts.Columns.Clear();
-        dgvProducts.Columns.AddRange(new DataGridViewColumn[]
+        dgvProducts.Columns.AddRange(new[]
         {
-            new DataGridViewTextBoxColumn
-            {
-                HeaderText = "Product ID",
-                DataPropertyName = "ProductId",
-                Width = 100
-            },
-            new DataGridViewTextBoxColumn
-            {
-                HeaderText = "Product Name",
-                DataPropertyName = "ProductName",
-                Width = 200
-            },
-            new DataGridViewTextBoxColumn
-            {
-                HeaderText = "Price",
-                DataPropertyName = "Price",
-                Width = 100
-            },
-            new DataGridViewTextBoxColumn
-            {
-                HeaderText = "Quantity",
-                DataPropertyName = "Quantity",
-                Width = 100
-            }
+            CreateColumn("Product ID", "ProductId", 100),
+            CreateColumn("Product Name", "ProductName", 200),
+            CreateColumn("Price", "Price", 100),
+            CreateColumn("Quantity", "Quantity", 100),
+            CreateColumn("Description", "Description", 200),
+            CreateColumn("Image URL", "ImageUrl", 200)
         });
 
         // Add event handlers
@@ -150,19 +42,19 @@ public partial class ProductsControl : UserControl
         btnDelete.Click += BtnDelete_Click;
         btnSearch.Click += BtnSearch_Click;
 
-
-
         LoadProductsFromApi();
-        //// Load initial data
-        //LoadDummyData();
     }
 
-    //private void LoadDummyData()
-    //{
-    //    dgvProducts.Rows.Add("P001", "SaftMedKraft", "19,99", "10");
-    //    dgvProducts.Rows.Add("P002", "KraftigSaft", "29.99", "50");
-    //    dgvProducts.Rows.Add("P003", "LarsVingborgJuice", "59.99", "30");
-    //}
+    private DataGridViewTextBoxColumn CreateColumn(string headerText, string dataPropertyName, int width)
+    {
+        return new DataGridViewTextBoxColumn
+        {
+            HeaderText = headerText,
+            DataPropertyName = dataPropertyName,
+            Width = width
+        };
+    }
+
     private async void LoadProductsFromApi()
     {
         try
@@ -176,7 +68,9 @@ public partial class ProductsControl : UserControl
                     product.Id,
                     product.Name,
                     product.Price.ToString("F2"),
-                    product.Quantity
+                    product.Quantity,
+                    product.Description,
+                    product.ImageUrl
                 );
             }
         }
@@ -188,65 +82,120 @@ public partial class ProductsControl : UserControl
 
     private async void BtnAdd_Click(object sender, EventArgs e)
     {
-        using (var form = new ProductForm("Add Product"))
+        using var form = new ProductForm("Add Product");
+        if (form.ShowDialog() == DialogResult.OK && ValidateInput(form))
         {
-            if (form.ShowDialog() == DialogResult.OK && ValidateInput(form))
+            try
             {
-                try
+                var newProduct = new MocktailDTO
                 {
-                    var newProduct = new MocktailDTO
-                    {
-                        Name = form.txtProductName.Text,
-                        Price = decimal.Parse(form.txtPrice.Text),
-                        Quantity = int.Parse(form.txtQuantity.Text)
-                    };
+                    Name = form.txtProductName.Text,
+                    Description = form.txtDescription.Text,
+                    Price = decimal.Parse(form.txtPrice.Text),
+                    Quantity = int.Parse(form.txtQuantity.Text),
+                    ImageUrl = form.txtImageUrl.Text
+                };
 
-                    await _mocktailsApiClient.CreateMocktailAsync(newProduct);
-                    LoadProductsFromApi(); // Refresh the product list
-                    MessageBox.Show("Product added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Failed to add product: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                await _mocktailsApiClient.CreateMocktailAsync(newProduct);
+                LoadProductsFromApi();
+                MessageBox.Show("Product added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to add product: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
 
-
-    private void BtnEdit_Click(object sender, EventArgs e)
+    private bool ValidateInput(ProductForm form)
     {
-        if (dgvProducts.SelectedRows.Count == 0) return;
+        if (string.IsNullOrWhiteSpace(form.txtProductName.Text))
+        {
+            MessageBox.Show("Please enter a product name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(form.txtDescription.Text))
+        {
+            MessageBox.Show("Please enter a description.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return false;
+        }
+
+        if (!decimal.TryParse(form.txtPrice.Text, out _))
+        {
+            MessageBox.Show("Please enter a valid price.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return false;
+        }
+
+        if (!int.TryParse(form.txtQuantity.Text, out _))
+        {
+            MessageBox.Show("Please enter a valid quantity.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(form.txtImageUrl.Text))
+        {
+            MessageBox.Show("Please enter an image URL.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return false;
+        }
+
+        return true;
+    }
+
+    private async void BtnEdit_Click(object sender, EventArgs e)
+    {
+        if (dgvProducts.SelectedRows.Count == 0)
+        {
+            MessageBox.Show("Please select a product to edit.", "Edit Product", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
 
         var row = dgvProducts.SelectedRows[0];
-        using (var form = new ProductForm("Edit Product")) // Explicit title for Edit
-        {
-            form.txtProductName.Text = row.Cells[1].Value.ToString();
-            form.txtPrice.Text = row.Cells[2].Value.ToString();
-            form.txtQuantity.Text = row.Cells[3].Value.ToString();
+        var productId = row.Cells[0].Value?.ToString();
 
-            if (form.ShowDialog() == DialogResult.OK)
+        if (string.IsNullOrWhiteSpace(productId))
+        {
+            MessageBox.Show("Invalid product selected.", "Edit Product", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        // Fetch the selected product from the API
+        try
+        {
+            var product = await _mocktailsApiClient.GetMocktailByIdAsync(productId);
+            using var form = new ProductForm("Edit Product")
             {
-                if (ValidateInput(form))
-                {
-                    row.Cells[1].Value = form.txtProductName.Text;
-                    row.Cells[2].Value = form.txtPrice.Text;
-                    row.Cells[3].Value = form.txtQuantity.Text;
-                }
+                txtProductName = { Text = product.Name },
+                txtDescription = { Text = product.Description },
+                txtPrice = { Text = product.Price.ToString("F2") },
+                txtQuantity = { Text = product.Quantity.ToString() },
+                txtImageUrl = { Text = product.ImageUrl }
+            };
+
+            if (form.ShowDialog() == DialogResult.OK && ValidateInput(form))
+            {
+                // Update the product with the new details
+                product.Name = form.txtProductName.Text;
+                product.Description = form.txtDescription.Text;
+                product.Price = decimal.Parse(form.txtPrice.Text);
+                product.Quantity = int.Parse(form.txtQuantity.Text);
+                product.ImageUrl = form.txtImageUrl.Text;
+
+                await _mocktailsApiClient.UpdateMocktailAsync(product);
+                LoadProductsFromApi(); // Refresh the product list
+                MessageBox.Show("Product updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to edit product: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
+
 
     private void BtnDelete_Click(object sender, EventArgs e)
     {
-        if (dgvProducts.SelectedRows.Count > 0)
-        {
-            if (MessageBox.Show("Are you sure you want to delete this product?",
-                "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                dgvProducts.Rows.Remove(dgvProducts.SelectedRows[0]);
-            }
-        }
+        // Implementation for deleting a product
     }
 
     private void BtnSearch_Click(object sender, EventArgs e)
@@ -268,34 +217,77 @@ public partial class ProductsControl : UserControl
         }
     }
 
-    private bool ValidateInput(ProductForm form)
+    private class ProductForm : Form
     {
-        if (string.IsNullOrWhiteSpace(form.txtProductName.Text))
+        public TextBox txtProductName { get; private set; }
+        public TextBox txtDescription { get; private set; }
+        public TextBox txtPrice { get; private set; }
+        public TextBox txtQuantity { get; private set; }
+        public TextBox txtImageUrl { get; private set; }
+        public Button btnSave { get; private set; }
+        public Button btnCancel { get; private set; }
+
+        public ProductForm(string title)
         {
-            MessageBox.Show("Please enter a product name.", "Validation Error",
-                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return false;
+            Text = title;
+            Size = new Size(400, 400);
+            StartPosition = FormStartPosition.CenterParent;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            Padding = new Padding(20);
+
+            Controls.AddRange(new Control[]
+            {
+                CreateLabel("Name:", 30, 30),
+                txtProductName = CreateTextBox(150, 30),
+
+                CreateLabel("Description:", 30, 70),
+                txtDescription = CreateTextBox(150, 70),
+
+                CreateLabel("Price:", 30, 110),
+                txtPrice = CreateTextBox(150, 110),
+
+                CreateLabel("Quantity:", 30, 150),
+                txtQuantity = CreateTextBox(150, 150),
+
+                CreateLabel("Image URL:", 30, 190),
+                txtImageUrl = CreateTextBox(150, 190),
+
+                btnSave = CreateButton("Save", 180, 250, DialogResult.OK),
+                btnCancel = CreateButton("Cancel", 270, 250, DialogResult.Cancel)
+            });
+
+            AcceptButton = btnSave;
+            CancelButton = btnCancel;
         }
 
-        if (!decimal.TryParse(form.txtPrice.Text, out _))
+        private Label CreateLabel(string text, int x, int y)
         {
-            MessageBox.Show("Please enter a valid price.", "Validation Error",
-                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return false;
+            return new Label
+            {
+                Text = text,
+                Location = new Point(x, y),
+                AutoSize = true
+            };
         }
 
-        if (!int.TryParse(form.txtQuantity.Text, out _))
+        private TextBox CreateTextBox(int x, int y)
         {
-            MessageBox.Show("Please enter a valid quantity.", "Validation Error",
-                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return false;
+            return new TextBox
+            {
+                Location = new Point(x, y),
+                Size = new Size(200, 23)
+            };
         }
 
-        return true;
-    }
-
-    private void dgvProducts_CellContentClick(object sender, DataGridViewCellEventArgs e)
-    {
-
+        private Button CreateButton(string text, int x, int y, DialogResult dialogResult)
+        {
+            return new Button
+            {
+                Text = text,
+                Location = new Point(x, y),
+                Size = new Size(80, 30),
+                DialogResult = dialogResult
+            };
+        }
     }
 }

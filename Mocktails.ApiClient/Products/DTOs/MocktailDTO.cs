@@ -14,3 +14,4 @@ public class MocktailDTO
     public int Quantity { get; set; }
     public string ImageUrl { get; set; }
 }
+
