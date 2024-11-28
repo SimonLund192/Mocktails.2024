@@ -6,6 +6,7 @@
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
+        private System.Windows.Forms.Panel panelDataGrid;
 
         /// <summary> 
         /// Clean up any resources being used.
@@ -37,9 +38,11 @@
             btnDelete = new Button();
             panel1 = new Panel();
             panel2 = new Panel();
+            panelDataGrid = new Panel();
             ((System.ComponentModel.ISupportInitialize)dgvProducts).BeginInit();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
+            panelDataGrid.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -75,9 +78,9 @@
             // 
             dgvProducts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvProducts.Dock = DockStyle.Fill;
-            dgvProducts.Location = new Point(0, 30);
+            dgvProducts.Location = new Point(0, 0);
             dgvProducts.Name = "dgvProducts";
-            dgvProducts.Size = new Size(621, 282);
+            dgvProducts.Size = new Size(621, 214);
             dgvProducts.TabIndex = 3;
             dgvProducts.CellContentClick += dgvProducts_CellContentClick;
             // 
@@ -132,13 +135,23 @@
             panel2.Size = new Size(621, 23);
             panel2.TabIndex = 8;
             // 
+            // panelDataGrid
+            // 
+            panelDataGrid.AutoScroll = true;
+            panelDataGrid.Controls.Add(dgvProducts);
+            panelDataGrid.Dock = DockStyle.Fill;
+            panelDataGrid.Location = new Point(0, 53);
+            panelDataGrid.Name = "panelDataGrid";
+            panelDataGrid.Size = new Size(621, 214);
+            panelDataGrid.TabIndex = 9;
+            // 
             // ProductsControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(panelDataGrid);
             Controls.Add(panel2);
             Controls.Add(panel1);
-            Controls.Add(dgvProducts);
             Controls.Add(label1);
             Name = "ProductsControl";
             Size = new Size(621, 312);
@@ -146,9 +159,12 @@
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
+            panelDataGrid.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
+
+
 
         #endregion
 

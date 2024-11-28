@@ -1,7 +1,13 @@
-﻿namespace Employee.App;
+﻿using Mocktails.ApiClient.Products;
+using Mocktails.ApiClient.Products.DTOs;
+
+namespace Employee.App;
 
 public partial class ProductsControl : UserControl
 {
+
+    private readonly MocktailsApiClient _mocktailsApiClient;
+
     // Form for adding/editing products
     private class ProductForm : Form
     {
@@ -92,10 +98,10 @@ public partial class ProductsControl : UserControl
             this.CancelButton = btnCancel;
         }
     }
-
     public ProductsControl()
     {
         InitializeComponent();
+        _mocktailsApiClient = new MocktailsApiClient("https://localhost:7203");
         SetupProductsControl();
     }
 
@@ -144,34 +150,69 @@ public partial class ProductsControl : UserControl
         btnDelete.Click += BtnDelete_Click;
         btnSearch.Click += BtnSearch_Click;
 
-        // Load initial data
-        LoadDummyData();
+
+
+        LoadProductsFromApi();
+        //// Load initial data
+        //LoadDummyData();
     }
 
-    private void LoadDummyData()
+    //private void LoadDummyData()
+    //{
+    //    dgvProducts.Rows.Add("P001", "SaftMedKraft", "19,99", "10");
+    //    dgvProducts.Rows.Add("P002", "KraftigSaft", "29.99", "50");
+    //    dgvProducts.Rows.Add("P003", "LarsVingborgJuice", "59.99", "30");
+    //}
+    private async void LoadProductsFromApi()
     {
-        dgvProducts.Rows.Add("P001", "SaftMedKraft", "19,99", "10");
-        dgvProducts.Rows.Add("P002", "KraftigSaft", "29.99", "50");
-        dgvProducts.Rows.Add("P003", "LarsVingborgJuice", "59.99", "30");
-    }
-
-    private void BtnAdd_Click(object sender, EventArgs e)
-    {
-        using (var form = new ProductForm("Add Product")) // Changed title for Add
+        try
         {
-            if (form.ShowDialog() == DialogResult.OK)
+            var products = await _mocktailsApiClient.GetMocktailsAsync();
+            dgvProducts.Rows.Clear();
+
+            foreach (var product in products)
             {
-                if (ValidateInput(form))
+                dgvProducts.Rows.Add(
+                    product.Id,
+                    product.Name,
+                    product.Price.ToString("F2"),
+                    product.Quantity
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to load products: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private async void BtnAdd_Click(object sender, EventArgs e)
+    {
+        using (var form = new ProductForm("Add Product"))
+        {
+            if (form.ShowDialog() == DialogResult.OK && ValidateInput(form))
+            {
+                try
                 {
-                    string productId = $"P{dgvProducts.Rows.Count + 1:D3}";
-                    dgvProducts.Rows.Add(productId,
-                        form.txtProductName.Text,
-                        form.txtPrice.Text,
-                        form.txtQuantity.Text);
+                    var newProduct = new MocktailDTO
+                    {
+                        Name = form.txtProductName.Text,
+                        Price = decimal.Parse(form.txtPrice.Text),
+                        Quantity = int.Parse(form.txtQuantity.Text)
+                    };
+
+                    await _mocktailsApiClient.CreateMocktailAsync(newProduct);
+                    LoadProductsFromApi(); // Refresh the product list
+                    MessageBox.Show("Product added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to add product: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
     }
+
 
     private void BtnEdit_Click(object sender, EventArgs e)
     {
