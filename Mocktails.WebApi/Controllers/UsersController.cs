@@ -33,6 +33,13 @@ namespace Mocktails.WebApi.Controllers
             return Ok(users.ToDtos());
         }
 
+        [HttpGet("search")]
+        public async Task<IActionResult> GetUsersBySearch([FromQuery] string partOfName)
+        {
+            var users = await _userDAO.GetUserByPartOfNameAsync(partOfName);
+            return Ok(users);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDTO>> GetAsync(int id)
         {
@@ -48,6 +55,36 @@ namespace Mocktails.WebApi.Controllers
             return Created();
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser([FromRoute] int id, [FromBody] UserDTO userDTO)
+        {
+            if (id != userDTO.Id)
+            {
+                ModelState.AddModelError(nameof(id), "Id's must match");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = UserConverter.ToModel(userDTO);
+            user.Id = id;
+
+            var success = await _userDAO.UpdateUserAsync(user);
+            if (!success) return NotFound();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var success = await _userDAO.DeleteUserAsync(id);
+            if (!success) return NotFound();
+
+            return NoContent();
+        }
 
         #endregion
 

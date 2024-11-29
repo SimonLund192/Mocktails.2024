@@ -83,7 +83,7 @@ public class UserDAO : BaseDAO, IUserDAO
     public async Task<bool> UpdateUserAsync(User entity)
     {
         const string query = """
-            UPDATE User
+            UPDATE Users
             SET FirstName = @FirstName,
             LastName = @LastName,
             Email = @Email,
