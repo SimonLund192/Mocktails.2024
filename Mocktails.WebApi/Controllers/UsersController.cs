@@ -44,7 +44,8 @@ namespace Mocktails.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Post([FromBody] UserDTO newUserDTO)
         {
-            return Ok(await _userDAO.CreateUserAsync(newUserDTO.ToModel(), newUserDTO.Password));
+            await _userDAO.CreateUserAsync(newUserDTO.ToModel(), newUserDTO.PasswordHash);
+            return Created();
         }
 
 

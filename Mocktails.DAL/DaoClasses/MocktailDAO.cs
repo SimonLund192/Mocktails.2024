@@ -101,7 +101,7 @@ public class MocktailDAO : BaseDAO, IMocktailDAO
     public async Task<bool> UpdateMocktailAsync(Mocktail entity)
     {
         const string query = """
-            UPDATE Mocktail 
+            UPDATE Mocktails 
             SET Name=@Name, 
             Description=@Description, 
             Price=@Price , 
