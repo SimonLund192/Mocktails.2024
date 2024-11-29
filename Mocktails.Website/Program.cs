@@ -1,4 +1,5 @@
 using Mocktails.ApiClient.Products;
+using Mocktails.ApiClient.Users;
 using Mocktails.Shared.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +14,11 @@ builder.Services.AddSingleton<IMocktailApiClient>((_) =>
     return new MocktailsApiClient("https://localhost:7203");
 });
 
+// Register UsersApiClient
+builder.Services.AddSingleton<IUsersApiClient>((_) => new UsersApiClient("https://localhost:7203"));
+
 // Register ShoppingCartApiClient
-builder.Services.AddSingleton((_) => new ShoppingCartApiClient("https://localhost:7203/api/v1/")); // Replace with your actual Web API URL
+builder.Services.AddSingleton((_) => new ShoppingCartApiClient("https://localhost:7203")); // Replace with your actual Web API URL
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ShoppingCartService>();
 
