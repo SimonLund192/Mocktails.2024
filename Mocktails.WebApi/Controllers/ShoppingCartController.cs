@@ -51,6 +51,7 @@ public class ShoppingCartController : ControllerBase
             {
                 SessionId = cartItem.SessionId,
                 MocktailId = cartItem.MocktailId,
+                MocktailName = cartItem.MocktailName,
                 Quantity = cartItem.Quantity,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow

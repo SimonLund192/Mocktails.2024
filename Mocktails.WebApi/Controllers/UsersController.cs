@@ -49,10 +49,16 @@ namespace Mocktails.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Post([FromBody] UserDTO newUserDTO)
+        public async Task<ActionResult<int>> CreateUser([FromBody] UserDTO userDTO)
         {
-            await _userDAO.CreateUserAsync(newUserDTO.ToModel(), newUserDTO.PasswordHash);
+            var user = UserConverter.ToModel(userDTO);
+            var userId = await _userDAO.CreateUserAsync(user, user.PasswordHash);
+
             return Created();
+
+
+            //await _userDAO.CreateUserAsync(newUserDTO.ToModel(), newUserDTO.PasswordHash);
+            //return Created();
         }
 
         [HttpPut("{id}")]

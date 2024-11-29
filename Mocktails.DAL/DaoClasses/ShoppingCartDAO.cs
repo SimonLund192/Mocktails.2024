@@ -11,6 +11,13 @@ public class ShoppingCartDAO : BaseDAO, IShoppingCartDAO
 {
     public ShoppingCartDAO(string connectionString) : base(connectionString) { }
 
+    //public async Task<int> CreateShoppingCartAsync(ShoppingCartItem entity)
+    //{
+    //    const string query = """
+    //        INSERT INTO ShoppingCart (
+    //        """
+    //}
+
     public async Task<IEnumerable<ShoppingCartItem>> GetCartItemsAsync(string sessionId)
     {
         var query = "SELECT * FROM ShoppingCart WHERE SessionId = @SessionId";
