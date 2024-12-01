@@ -87,4 +87,20 @@ public class UsersApiClient : IUsersApiClient
         var response = await _restClient.ExecuteAsync(request);
         return response.IsSuccessful;
     }
+
+    public async Task<bool> LoginAsync(LoginDTO loginDTO)
+    {
+        var request = new RestRequest("/api/v1/users/login", Method.Post);
+        request.AddJsonBody(loginDTO);
+
+        var response = await _restClient.ExecuteAsync(request);
+        if (response.IsSuccessful)
+        {
+            return true;
+        }
+        else
+        {
+            throw new Exception($"Failed to login: {response.ErrorMessage}");
+        }
+    }
 }

@@ -63,5 +63,7 @@ namespace Mocktails.Website.Controllers
             // Return the view with the mocktail details
             return View(mocktails); // The view expects a MocktailDTO model
         }
+
+
     }
 }

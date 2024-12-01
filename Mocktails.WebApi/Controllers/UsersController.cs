@@ -7,6 +7,7 @@ using Mocktails.WebApi.DTOs.Converters;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Diagnostics.Eventing.Reader;
 using Mocktails.WebApi.DTOs;
+using Mocktails.DAL.Authentication;
 
 namespace Mocktails.WebApi.Controllers
 {
@@ -25,7 +26,7 @@ namespace Mocktails.WebApi.Controllers
 
         #region Default CRUD actions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDTO>>> GetAsync([FromQuery] string email)
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetByEmailAsync([FromQuery] string email)
         {
             IEnumerable<User> users = null;
             if (!string.IsNullOrEmpty(email)) { users = new List<User>() { await _userDAO.GetUserByEmailAsync(email) }; }
@@ -90,6 +91,26 @@ namespace Mocktails.WebApi.Controllers
             if (!success) return NotFound();
 
             return NoContent();
+        }
+
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
+        {
+            var user = await _userDAO.GetUserByEmailAsync(loginDTO.Email);
+
+            if (user == null || !VerifyPassword(loginDTO.Password, user.PasswordHash))
+            {
+                return Unauthorized(new { Message = "Invalid email or password" });
+            }
+
+            // Create a session or token if required
+            return Ok(new { Message = "Login successful", UserId = user.Id });
+        }
+
+        private bool VerifyPassword(string password, string passwordHash)
+        {
+            return BCryptTool.ValidatePassword(password, passwordHash);
         }
 
         #endregion

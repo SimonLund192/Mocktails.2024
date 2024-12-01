@@ -14,5 +14,6 @@ public interface IUsersApiClient
     Task<bool> UpdateUserAsync(UserDTO entity);
     Task<bool> DeleteUserAsync(int id);
     Task<UserDTO> GetUserByIdAsync(int id);
+    Task<bool> LoginAsync(LoginDTO loginDTO);
 
 }
