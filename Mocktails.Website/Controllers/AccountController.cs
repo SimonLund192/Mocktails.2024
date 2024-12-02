@@ -11,101 +11,52 @@ namespace Mocktails.Website.Controllers
     {
         private readonly IUsersApiClient _userApiClient;
 
-        public AccountController(IUsersApiClient usersApiClient)
+        public AccountController(IUsersApiClient userApiClient)
         {
-            _userApiClient = usersApiClient;
+            _userApiClient = userApiClient;
         }
 
-        // Login GET action: Show the login page
         [HttpGet]
         public IActionResult Login()
         {
-            return View(); // This view will contain your login form
+            return View(); // Displays the login form
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Login([FromForm] UserDTO loginInfo, [FromQuery] string returnUrl)
-        //{
-        //    //TODO: Consider changing the login signature to return the entire author?
-        //    int userId = await _userApiClient.LoginAsync(loginInfo);
-
-        //    if (userId > 0)
-        //    {
-        //        var user = await _userApiClient.GetUserByIdAsync(userId);
-        //        var claims = new List<Claim>
-        //        {
-        //            new Claim("user_id", user.Id.ToString()),
-        //            new Claim(ClaimTypes.Email, user.Email),
-        //            new Claim(ClaimTypes.Role, "User"),
-        //        };
-
-        //        await SignInUsingClaims(claims);
-        //        TempData["Message"] = $"You are logged in as {user.Email}";
-        //        if (string.IsNullOrEmpty(returnUrl))
-        //        {
-        //            return RedirectToAction("Index", "Home");
-        //        }
-        //        else
-        //        {
-        //            return Redirect(returnUrl);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        ViewBag.ErrorMessage = "Incorrect login or user does not exist";
-        //    }
-
-        //    return View();
-        //}
-
-        // Creates the authentication cookie with claims
-        private async Task SignInUsingClaims(List<Claim> claims)
+        [HttpPost]
+        public async Task<IActionResult> Login([FromForm] UserDTO loginInfo, [FromQuery] string returnUrl)
         {
-            //Create the container for all your claims
-            //These are stored in the cookie for easy retrieval on the server
-            var claimsIdentity = new ClaimsIdentity(
-                claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            var authProperties = new AuthenticationProperties
+            try
             {
-                #region often used options - to consider including in cookie
-                //AllowRefresh = <bool>,
-                // Refreshing the authentication session should be allowed.
+                int userId = await _userApiClient.LoginAsync(loginInfo);
+                var user = await _userApiClient.GetUserByIdAsync(userId);
 
-                //ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
-                // The time at which the authentication ticket expires. A 
-                // value set here overrides the ExpireTimeSpan option of 
-                // CookieAuthenticationOptions set with AddCookie.
+                var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName),
+            new Claim(ClaimTypes.Role, "User") // Set user roles as needed
+        };
 
-                //IsPersistent = true,
-                // Whether the authentication session is persisted across 
-                // multiple requests. When used with cookies, controls
-                // whether the cookie's lifetime is absolute (matching the
-                // lifetime of the authentication ticket) or session-based.
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                //IssuedUtc = <DateTimeOffset>,
-                // The time at which the authentication ticket was issued.
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity));
 
-                //RedirectUri = <string>
-                // The full path or absolute URI to be used as an http 
-                // redirect response value. 
-                #endregion"
-            };
-
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity),
-                authProperties);
+                return string.IsNullOrEmpty(returnUrl) ? RedirectToAction("Index", "Home") : Redirect(returnUrl);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View();
+            }
         }
 
-        // Deletes the authentication cookie
-        public async Task<IActionResult> LogOut()
+        [HttpPost]
+        public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            TempData["Message"] = "You are now logged out.";
-            return RedirectToAction("Index", "");
+            return RedirectToAction("Login", "Account");
         }
-
-        // Displayed if an area is off-limits, based on an authenticated user's claims
-        public IActionResult AccessDenied() => View();
     }
 }

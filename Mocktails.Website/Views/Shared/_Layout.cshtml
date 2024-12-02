@@ -27,9 +27,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Mocktails" asp-action="Index">Mocktails</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="LoginView">Login</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <!-- Logout Button -->
+                            <li class="nav-item">
+                                <a class="btn btn-outline-danger" asp-controller="Account" asp-action="Logout">Logout</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <!-- Login Button -->
+                            <li class="nav-item">
+                                <a class="btn btn-outline-primary" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                        }
 
                         <!-- Shopping Cart Button moved to the right -->
                         <a href="/ShoppingCart" class="btn btn-outline-primary ml-auto">
@@ -40,6 +51,8 @@
             </div>
         </nav>
     </header>
+
+
 
     <!-- Main Content Section -->
     <div class="container flex-grow-1">

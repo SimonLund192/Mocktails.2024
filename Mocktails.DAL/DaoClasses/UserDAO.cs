@@ -187,11 +187,10 @@ public class UserDAO : BaseDAO, IUserDAO
     {
         try
         {
-            var query = "SELECT Id, PasswordHash FROM Users WHERE Email = @Email";
+            var query = "SELECT Id, PasswordHash FROM Users WHERE Email=@Email";
             using var connection = CreateConnection();
 
             var userTuple = await connection.QueryFirstOrDefaultAsync<UserTuple>(query, new { Email = email });
-
             if (userTuple != null && BCryptTool.ValidatePassword(password, userTuple.PasswordHash))
             {
                 return userTuple.Id;
@@ -200,10 +199,8 @@ public class UserDAO : BaseDAO, IUserDAO
         }
         catch (Exception ex)
         {
-            throw new Exception($"Error logging in for user with email: {email}: '{ex.Message}'.", ex);
+            throw new Exception($"Error logging in for user with email {email}: '{ex.Message}'.", ex);
         }
-
-        //throw new NotImplementedException();
     }
 
     #endregion

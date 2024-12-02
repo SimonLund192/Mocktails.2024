@@ -88,19 +88,30 @@ public class UsersApiClient : IUsersApiClient
         return response.IsSuccessful;
     }
 
-    public async Task<bool> LoginAsync(LoginDTO loginDTO)
+    public async Task<int> LoginAsync(UserDTO user)
     {
         var request = new RestRequest("/api/v1/users/login", Method.Post);
-        request.AddJsonBody(loginDTO);
+        request.AddJsonBody(user);
 
-        var response = await _restClient.ExecuteAsync(request);
-        if (response.IsSuccessful)
+        // Execute the request and expect a JSON object with message and userId
+        var response = await _restClient.ExecuteAsync<LoginResponse>(request);
+
+        if (response.IsSuccessful && response.Data != null)
         {
-            return true;
+            // Return the user ID from the response
+            return response.Data.UserId;
         }
         else
         {
-            throw new Exception($"Failed to login: {response.ErrorMessage}");
+            // Detailed exception message for debugging
+            throw new Exception($"Failed to login: {response.Content ?? response.ErrorMessage}, " +
+                                $"Status Code: {response.StatusCode}");
         }
     }
+}
+
+public class LoginResponse
+{
+    public string Message { get; set; }
+    public int UserId { get; set; }
 }

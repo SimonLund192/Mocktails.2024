@@ -22,16 +22,16 @@ namespace Mocktails.Website.Controllers
 
         // Login POST action: Handle login form submission
         [HttpPost]
-        public async Task<IActionResult> Login(LoginDTO loginDTO)
+        public async Task<IActionResult> Login(UserDTO userDTO)
         {
             if (!ModelState.IsValid)
             {
-                return View(loginDTO);
+                return View(userDTO);
             }
 
             try
             {
-                var response = await _userApiClient.LoginAsync(loginDTO);
+                var response = await _userApiClient.LoginAsync(userDTO);
 
                 if (response != null)
                 {
@@ -41,13 +41,13 @@ namespace Mocktails.Website.Controllers
                 }
 
                 ModelState.AddModelError("", "Invalid email or password.");
-                return View(loginDTO);
+                return View(userDTO);
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "An error occurred while processing your request.");
                 Console.WriteLine(ex.Message);
-                return View(loginDTO);
+                return View(userDTO);
             }
         }
 
