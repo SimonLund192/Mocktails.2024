@@ -29,9 +29,11 @@
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <!-- Logout Button -->
                             <li class="nav-item">
-                                <a class="btn btn-outline-danger" asp-controller="Account" asp-action="Logout">Logout</a>
+                                <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline-danger">Logout</button>
+                                </form>
                             </li>
                         }
                         else
