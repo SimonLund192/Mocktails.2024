@@ -1,10 +1,16 @@
-﻿namespace Employee.App;
+﻿using Mocktails.ApiClient.Products;
+
+namespace Employee.App;
 
 public partial class DashboardControl : UserControl
 {
+
+    private readonly MocktailsApiClient _mocktailsApiClient;
+
     public DashboardControl()
     {
         InitializeComponent();
+        _mocktailsApiClient = new MocktailsApiClient("https://localhost:7203");
         SetupDashboard();
     }
 

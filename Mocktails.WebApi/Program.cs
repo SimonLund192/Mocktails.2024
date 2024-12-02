@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Mocktails.DAL.DaoClasses;
 using Mocktails.WebApi.Data;
+using Mocktails.Shared.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,15 +15,21 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Mocktails API", Version = "v1" });
 });
 
+//const string connectionString = "Data Source=hildur.ucn.dk;Initial Catalog=DMA-CSD-S231_10462161;User ID=DMA-CSD-S231_10462161;Password=Password1!;TrustServerCertificate=True;";
+
 const string connectionString = "Data Source=.;Initial Catalog=MocktailsDB;Integrated Security=True;Trusted_Connection=True;Encrypt=false;TrustServerCertificate=true;";
+
 builder.Services.AddSingleton<IMocktailDAO>((_) => new MocktailDAO(connectionString));
 builder.Services.AddSingleton<ICategoryDAO>((_) => new CategoryDAO(connectionString));
 builder.Services.AddSingleton<IUserDAO>((_) => new UserDAO(connectionString));
+builder.Services.AddSingleton<IShoppingCartDAO>((_) => new ShoppingCartDAO(connectionString));
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ShoppingCartService>();
 
 
-// Add DbContext for Entity Framework (MocktailsDbContext)
-builder.Services.AddDbContext<MocktailsDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MocktailsDb")));
+//// Add DbContext for Entity Framework (MocktailsDbContext)
+//builder.Services.AddDbContext<MocktailsDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("MocktailsDb")));
 
 var app = builder.Build();
 

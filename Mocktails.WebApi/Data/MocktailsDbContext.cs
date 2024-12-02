@@ -13,7 +13,7 @@ public class MocktailsDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
-    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+    public DbSet<ShoppingCartItem> ShoppingCarts { get; set; }
 
     // If you want to override any configurations, you can do so in OnModelCreating
     protected override void OnModelCreating(ModelBuilder modelBuilder)

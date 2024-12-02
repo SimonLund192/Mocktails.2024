@@ -12,8 +12,8 @@ public class MocktailDAO : BaseDAO, IMocktailDAO
     {
         // SQL query to insert a new mocktail into the Mocktail table (without the Category field)
         const string query = """
-            INSERT INTO Mocktails (Name, Description, Price, ImageUrl)
-            OUTPUT INSERTED.Id VALUES (@Name, @Description, @Price, @ImageUrl);
+            INSERT INTO Mocktails (Name, Description, Price, Quantity, ImageUrl)
+            OUTPUT INSERTED.Id VALUES (@Name, @Description, @Price, @Quantity, @ImageUrl);
             """;
 
         // Create connection and execute the query
@@ -101,10 +101,11 @@ public class MocktailDAO : BaseDAO, IMocktailDAO
     public async Task<bool> UpdateMocktailAsync(Mocktail entity)
     {
         const string query = """
-            UPDATE Mocktail 
+            UPDATE Mocktails 
             SET Name=@Name, 
             Description=@Description, 
             Price=@Price , 
+            Quantity=@Quantity,
             ImageUrl=@ImageUrl
             WHERE Id=@Id;
             """;

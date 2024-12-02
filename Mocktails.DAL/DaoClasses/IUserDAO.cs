@@ -9,7 +9,7 @@ namespace Mocktails.DAL.DaoClasses;
 public interface IUserDAO
 {
     Task<IEnumerable<User>> GetAllUsersAsync();
-    Task<int> CreateUserAsync(User entity);
+    Task<int> CreateUserAsync(User entity, string password);
     Task<bool> UpdateUserAsync(User entity);
     Task<bool> DeleteUserAsync(int id);
     Task<User> GetUserByIdAsync(int id);
@@ -17,4 +17,9 @@ public interface IUserDAO
 
     Task<IEnumerable<User>> GetUserByPartOfNameAsync(string partOfName);
 
+    Task<bool> VerifyPasswordAsync(string email, string password);
+
+
+    Task<bool> UpdatePasswordAsync(string email, string oldPassword, string newPassword);
+    Task<int> LoginAsync(string email, string password);
 }

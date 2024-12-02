@@ -46,10 +46,52 @@ public class MocktailsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateMocktail([FromBody] MocktailDTO mocktailDTO)
     {
-        var mocktail = MocktailConverter.ToModel(mocktailDTO);
-        var mocktailId = await _mocktailDAO.CreateMocktailAsync(mocktail);
+        //try
+        //{
+            var mocktail = MocktailConverter.ToModel(mocktailDTO);
+            var mocktailId = await _mocktailDAO.CreateMocktailAsync(mocktail);
 
-        // Return the newly created mocktail's location URL
-        return CreatedAtAction(nameof(GetMocktailByIdAsync), new { id = mocktailId }, mocktailDTO);
+            // Ensure the route matches the GetMocktailByIdAsync method
+            //return CreatedAtAction(nameof(GetMocktailByIdAsync), new { id = mocktailId }, mocktailDTO);
+            return Created();
+        //}
+        //catch (Exception ex)
+        //{
+        //    return StatusCode(500, $"Internal server error: {ex.Message}");
+        //}
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateMocktail([FromRoute]int id, [FromBody] MocktailDTO mocktailDTO)
+    {
+
+        if (id != mocktailDTO.Id)
+        {
+            ModelState.AddModelError(nameof(id), "Id's must match");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var mocktail = MocktailConverter.ToModel(mocktailDTO);
+        mocktail.Id = id;
+
+        var success = await _mocktailDAO.UpdateMocktailAsync(mocktail);
+        if (!success) return NotFound();
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteMocktail(int id)
+    {
+        var success = await _mocktailDAO.DeleteMocktailAsync(id);
+        if (!success) return NotFound();
+
+        return NoContent();
+    }
+
+
 }

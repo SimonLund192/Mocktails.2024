@@ -12,6 +12,8 @@ namespace Mocktails.ApiClient.Products
             _restClient = new RestClient(baseUrl);
         }
 
+        
+
         // Create a new mocktail asynchronously
         public async Task<int> CreateMocktailAsync(MocktailDTO entity)
         {
@@ -81,7 +83,7 @@ namespace Mocktails.ApiClient.Products
         // Get all mocktails asynchronously
         public async Task<IEnumerable<MocktailDTO>> GetMocktailsAsync()
         {
-            var request = new RestRequest("/api/v1/mocktails", Method.Get); // Adjust the endpoint as needed
+            var request = new RestRequest("/api/v1/mocktails", Method.Get);
             var response = await _restClient.ExecuteAsync<List<MocktailDTO>>(request);
             return response.Data ?? new List<MocktailDTO>(); // Return an empty list if no data is found
         }
@@ -105,11 +107,13 @@ namespace Mocktails.ApiClient.Products
         // Update a mocktail asynchronously
         public async Task<bool> UpdateMocktailAsync(MocktailDTO entity)
         {
-            var request = new RestRequest($"/api/v1/mocktails/{entity.Id}", Method.Put); // Adjust the endpoint as needed
+            var request = new RestRequest($"/api/v1/mocktails/{entity.Id}", Method.Put);
             request.AddJsonBody(entity); // Add the MocktailDTO as the request body
 
             var response = await _restClient.ExecuteAsync(request);
             return response.IsSuccessful; // Return true if the update was successful
         }
     }
+
+
 }

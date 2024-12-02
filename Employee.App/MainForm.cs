@@ -30,4 +30,9 @@ public partial class MainForm : Form
     {
         LoadView(new OrdersControl());
     }
+
+    private void mainPanel_Paint(object sender, PaintEventArgs e)
+    {
+
+    }
 }

@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{20EC21
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{7F698C98-A2C1-4217-8211-2AF34A71DC68}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mocktails.Shared", "Shared\Mocktails.Shared.csproj", "{B02463B2-DBE8-473E-B5AA-176C911F2D08}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{76C3679B-2819-4AFF-B231-EC6F45A16FF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76C3679B-2819-4AFF-B231-EC6F45A16FF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76C3679B-2819-4AFF-B231-EC6F45A16FF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B02463B2-DBE8-473E-B5AA-176C911F2D08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B02463B2-DBE8-473E-B5AA-176C911F2D08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B02463B2-DBE8-473E-B5AA-176C911F2D08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B02463B2-DBE8-473E-B5AA-176C911F2D08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +74,7 @@ Global
 		{4A4B6D17-2072-44E7-9A9F-F6E94B4F6F36} = {20EC2100-AC2B-4A72-B616-2162A8D8B8E7}
 		{DA26CCA3-D532-42AF-BA94-9CC16A483B97} = {7F698C98-A2C1-4217-8211-2AF34A71DC68}
 		{76C3679B-2819-4AFF-B231-EC6F45A16FF8} = {20EC2100-AC2B-4A72-B616-2162A8D8B8E7}
+		{B02463B2-DBE8-473E-B5AA-176C911F2D08} = {20EC2100-AC2B-4A72-B616-2162A8D8B8E7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {37E53176-DD4D-4001-AC2A-69A9532C5DD2}

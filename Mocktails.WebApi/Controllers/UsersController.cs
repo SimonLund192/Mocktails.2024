@@ -1,8 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Mocktails.ApiClient.Users.DTOs;
+
 using Mocktails.DAL.DaoClasses;
 using Mocktails.DAL.Model;
 using Microsoft.AspNetCore.Identity;
+using Mocktails.WebApi.DTOs.Converters;
+using Microsoft.Extensions.Logging.Abstractions;
+using System.Diagnostics.Eventing.Reader;
+using Mocktails.WebApi.DTOs;
+using Mocktails.DAL.Authentication;
 
 namespace Mocktails.WebApi.Controllers
 {
@@ -11,60 +16,106 @@ namespace Mocktails.WebApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserDAO _userDAO;
-        private readonly PasswordHasher<User> _passwordHasher;  // Add the PasswordHasher
+
 
         public UsersController(IUserDAO userDAO)
         {
             _userDAO = userDAO;
-            _passwordHasher = new PasswordHasher<User>(); // Initialize PasswordHasher
+
+        }
+
+        #region Default CRUD actions
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetByEmailAsync([FromQuery] string email)
+        {
+            IEnumerable<User> users = null;
+            if (!string.IsNullOrEmpty(email)) { users = new List<User>() { await _userDAO.GetUserByEmailAsync(email) }; }
+            else { users = await _userDAO.GetAllUsersAsync(); }
+            return Ok(users.ToDtos());
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> GetUsersBySearch([FromQuery] string partOfName)
+        {
+            var users = await _userDAO.GetUserByPartOfNameAsync(partOfName);
+            return Ok(users);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserDTO>> GetAsync(int id)
+        {
+            var user = await _userDAO.GetUserByIdAsync(id);
+            if (user == null) { return NotFound(); }
+            else { return Ok(user.ToDTO()); }
         }
 
         [HttpPost]
         public async Task<ActionResult<int>> CreateUser([FromBody] UserDTO userDTO)
         {
-            try
-            {
-                // Check if the email already exists in the database
-                var existingUser = await _userDAO.GetUserByEmailAsync(userDTO.Email);
-                if (existingUser != null)
-                {
-                    // Return a 400 Bad Request if the email already exists
-                    return BadRequest("Email is already in use.");
-                }
+            var user = UserConverter.ToModel(userDTO);
+            var userId = await _userDAO.CreateUserAsync(user, user.PasswordHash);
 
-                // Convert UserDTO to User entity
-                var user = new User
-                {
-                    FirstName = userDTO.FirstName,
-                    LastName = userDTO.LastName,
-                    Email = userDTO.Email,
-                    PasswordHash = userDTO.PasswordHash
-                };
+            return Created();
 
-                // Hash the password before saving to the database
-                user.PasswordHash = _passwordHasher.HashPassword(user, user.PasswordHash);
 
-                // Save user to the database
-                var userId = await _userDAO.CreateUserAsync(user);
-
-                // Use CreatedAtAction to return the newly created user and a link to the GetUserById action
-                return CreatedAtAction(nameof(GetUserByIdAsync), new { id = userId }, user);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error creating user: {ex.Message}");
-            }
+            //await _userDAO.CreateUserAsync(newUserDTO.ToModel(), newUserDTO.PasswordHash);
+            //return Created();
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserDTO>> GetUserByIdAsync(int id)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser([FromRoute] int id, [FromBody] UserDTO userDTO)
         {
-            var user = await _userDAO.GetUserByIdAsync(id);
-            if (user == null)
+            if (id != userDTO.Id)
             {
-                return NotFound();
+                ModelState.AddModelError(nameof(id), "Id's must match");
             }
-            return Ok(user);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = UserConverter.ToModel(userDTO);
+            user.Id = id;
+
+            var success = await _userDAO.UpdateUserAsync(user);
+            if (!success) return NotFound();
+
+            return NoContent();
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var success = await _userDAO.DeleteUserAsync(id);
+            if (!success) return NotFound();
+
+            return NoContent();
+        }
+
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
+        {
+            var user = await _userDAO.GetUserByEmailAsync(loginDTO.Email);
+
+            if (user == null || !VerifyPassword(loginDTO.Password, user.PasswordHash))
+            {
+                return Unauthorized(new { Message = "Invalid email or password" });
+            }
+
+            // Create a session or token if required
+            return Ok(new { Message = "Login successful", UserId = user.Id });
+        }
+
+        private bool VerifyPassword(string password, string passwordHash)
+        {
+            return BCryptTool.ValidatePassword(password, passwordHash);
+        }
+
+
+        #endregion
+
+
     }
 }
