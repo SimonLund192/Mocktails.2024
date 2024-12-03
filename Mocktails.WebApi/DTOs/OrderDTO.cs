@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Mocktails.WebApi.DTOs;
 
-namespace Mocktails.ApiClient.Orders.DTOs;
 public class OrderDTO
 {
     public int Id { get; set; }
@@ -16,4 +11,5 @@ public class OrderDTO
     //public string PaymentMethod { get; set; } // Implement later
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+
 }
