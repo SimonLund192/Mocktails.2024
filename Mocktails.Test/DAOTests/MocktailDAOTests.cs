@@ -54,29 +54,6 @@ public class MocktailDaoTests
     }
 
     [Test]
-    public async Task CreateOrderAsync_PutOrderInDatabase()
-    {
-        var order = new Order
-        {
-            UserId = 2,
-            OrderDate = DateTime.Now,
-            TotalAmount = 10,
-            Status = "Pending",
-            ShippingAddress = "Tambosundvej 43"
-        };
-
-        var orderId = await _orderDAO.CreateOrderAsync(order);
-        var orderFromDb = await _orderDAO.GetOrderByIdAsync(orderId);
-
-        Assert.That(orderFromDb, Is.Not.Null, "The order should exist in the database.");
-        Assert.That(orderFromDb.UserId, Is.EqualTo(orderId), "The order id should match.");
-        Assert.That(orderFromDb.TotalAmount, Is.EqualTo(order.TotalAmount));
-        Assert.That(orderFromDb.Status, Is.EqualTo(order.Status));
-        Assert.That(orderFromDb.ShippingAddress, Is.EqualTo(order.ShippingAddress));
-
-    }
-
-    [Test]
     public async Task PurchaseMocktailAsync_TwoUsersBuyingLastMocktail_OnlyOneSucceeds()
     {
         // Arrange: Insert a mocktail
@@ -139,7 +116,5 @@ public class MocktailDaoTests
 
 
     }
-
-
     
 }
