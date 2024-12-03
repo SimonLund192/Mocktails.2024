@@ -28,30 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label1 = new Label();
+            dgvOrders = new DataGridView();
+            ((System.ComponentModel.ISupportInitialize)dgvOrders).BeginInit();
             SuspendLayout();
             // 
-            // label1
+            // dgvOrders
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(48, 74);
-            label1.Name = "label1";
-            label1.Size = new Size(42, 15);
-            label1.TabIndex = 0;
-            label1.Text = "Orders";
+            dgvOrders.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvOrders.Location = new Point(138, 74);
+            dgvOrders.Name = "dgvOrders";
+            dgvOrders.Size = new Size(240, 150);
+            dgvOrders.TabIndex = 1;
+            dgvOrders.CellContentClick += dgvOrders_CellContentClick;
             // 
             // OrdersControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(label1);
+            Controls.Add(dgvOrders);
             Name = "OrdersControl";
+            Size = new Size(509, 316);
+            Load += OrdersControl_Load;
+            ((System.ComponentModel.ISupportInitialize)dgvOrders).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
-
-        private Label label1;
+        private DataGridView dgvOrders;
     }
 }
