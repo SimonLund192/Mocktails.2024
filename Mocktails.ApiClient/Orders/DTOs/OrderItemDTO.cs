@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mocktails.DAL.Model;
-public class OrderItem
+namespace Mocktails.ApiClient.Orders.DTOs;
+public class OrderItemDTO
 {
     public int Id { get; set; }
     public int OrderId { get; set; }

@@ -12,8 +12,6 @@ namespace Mocktails.ApiClient.Products
             _restClient = new RestClient(baseUrl);
         }
 
-        
-
         // Create a new mocktail asynchronously
         public async Task<int> CreateMocktailAsync(MocktailDTO entity)
         {
@@ -34,7 +32,7 @@ namespace Mocktails.ApiClient.Products
         // Delete a mocktail asynchronously
         public async Task<bool> DeleteMocktailAsync(int id)
         {
-            var request = new RestRequest($"/api/v1/mocktails/{id}", Method.Delete); // Use DELETE method
+            var request = new RestRequest($"/api/v1/mocktails/{id}", Method.Delete);
             var response = await _restClient.ExecuteAsync(request);
             return response.IsSuccessful;
         }
