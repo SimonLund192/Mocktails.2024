@@ -1,26 +1,18 @@
-﻿using Mocktails.ApiClient.Orders;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
-namespace Employee.App;
-
+namespace Mocktails.Employee.App.Orders;
 public partial class OrdersControl : UserControl
 {
-
-    private readonly IOrdersApiClient _ordersApiClient;
-
     public OrdersControl()
     {
         InitializeComponent();
-        _ordersApiClient = new OrdersApiClient("https://localhost:7203");
-        //SetupOrdersControl();
-    }
-
-    private void OrdersControl_Load(object sender, EventArgs e)
-    {
-
-    }
-
-    private void dgvOrders_CellContentClick(object sender, DataGridViewCellEventArgs e)
-    {
-
     }
 }
