@@ -93,5 +93,33 @@ public class MocktailsController : ControllerBase
         return NoContent();
     }
 
+    [HttpPost("purchase")]
+    public async Task<IActionResult> PurchaseMocktail([FromBody] PurchaseDTO purchase)
+    {
+        try
+        {
+            var mocktail = await _mocktailDAO.GetMocktailByIdAsync(purchase.MocktailId);
 
+            if (mocktail == null)
+                return NotFound("Mocktail not found.");
+
+            if (mocktail.Quantity < purchase.Quantity)
+                return BadRequest("Insufficient stock.");
+
+            var success = await _mocktailDAO.UpdateMocktailQuantityAsync(
+                purchase.MocktailId,
+                purchase.Quantity,
+                purchase.RowVersion
+            );
+
+            if (!success)
+                return Conflict("Concurrency conflict occurred. Please refresh and try again.");
+
+            return Ok("Purchase successful.");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
 }

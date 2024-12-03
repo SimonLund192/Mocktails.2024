@@ -115,4 +115,16 @@ public class MocktailDAO : BaseDAO, IMocktailDAO
         using var connection = CreateConnection();
         return await connection.ExecuteAsync(query, entity) > 0;
     }
+
+    public async Task<bool> UpdateMocktailQuantityAsync(int id, int quantity, byte[] rowVersion)
+    {
+        const string query = @"
+        UPDATE Mocktails
+        SET Quantity = Quantity - @Quantity
+        WHERE Id = @Id AND RowVersion = @RowVersion";
+
+        using var connection = CreateConnection();
+        var rowsAffected = await connection.ExecuteAsync(query, new { Id = id, Quantity = quantity, RowVersion = rowVersion });
+        return rowsAffected > 0; // Returns true if update succeeded
+    }
 }
