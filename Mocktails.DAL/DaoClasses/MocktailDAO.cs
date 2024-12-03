@@ -13,12 +13,15 @@ public class MocktailDAO : BaseDAO, IMocktailDAO
         // SQL query to insert a new mocktail into the Mocktail table (without the Category field)
         const string query = """
             INSERT INTO Mocktails (Name, Description, Price, Quantity, ImageUrl)
-            OUTPUT INSERTED.Id VALUES (@Name, @Description, @Price, @Quantity, @ImageUrl);
+            OUTPUT INSERTED.Id 
+            VALUES (@Name, @Description, @Price, @Quantity, @ImageUrl);
             """;
 
         // Create connection and execute the query
         using var connection = CreateConnection();
         return await connection.QuerySingleAsync<int>(query, entity);
+
+
     }
 
     public async Task<bool> DeleteMocktailAsync(int id)
