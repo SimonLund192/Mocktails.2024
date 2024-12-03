@@ -24,4 +24,5 @@ public class Mocktail
     [Display(Name = "ImageUrl")]
     [Required]
     public string ImageUrl { get; set; }
+    public byte[] RowVersion { get; set; }
 }
