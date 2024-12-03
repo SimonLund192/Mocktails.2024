@@ -58,11 +58,11 @@ public class MocktailDaoTests
         // Arrange: Insert a mocktail
         var mocktail = new Mocktail
         {
-            Name = "Test Mocktail",
+            Name = "Test Mocker",
             Description = "Description",
             Price = 10.00M,
             Quantity = 1,
-            ImageUrl = "http://example.com/test.jpg"
+            ImageUrl = "http://asd.jpg"
         };
 
         var mocktailId = await _mocktailDAO.CreateMocktailAsync(mocktail);
@@ -79,11 +79,11 @@ public class MocktailDaoTests
 
         // Assert: Only one purchase should succeed
         var successCount = new[] { task1.Result, task2.Result }.Count(x => x);
-        Assert.AreEqual(1, successCount, "Only one purchase should succeed.");
+        Assert.That(successCount, Is.EqualTo(1), "Only one purchase should succeed.");
 
-        // Verify the quantity in the database is 0 or not updated beyond stock
+        
         var updatedMocktail = await _mocktailDAO.GetMocktailByIdAsync(mocktailId);
-        Assert.AreEqual(0, updatedMocktail.Quantity);
+        Assert.That(updatedMocktail.Quantity, Is.EqualTo(0));
     }
 
     [Test]
