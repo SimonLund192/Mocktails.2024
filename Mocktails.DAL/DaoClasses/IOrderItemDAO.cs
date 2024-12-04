@@ -9,6 +9,7 @@ namespace Mocktails.DAL.DaoClasses;
 public interface IOrderItemDAO
 {
     Task<IEnumerable<OrderItem>> GetOrderItemsAsync();
+    Task<OrderItem> GetOrderItemByIdAsync(int id);
     Task<int> CreateOrderItemAsync(OrderItem entity);
     Task<bool> UpdateOrderItemAsync(OrderItem entity);
     Task<bool> DeleteOrderItemAsync(int id);

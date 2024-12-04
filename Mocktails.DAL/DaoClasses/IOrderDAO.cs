@@ -12,4 +12,5 @@ public interface IOrderDAO
     Task<IEnumerable<Order>> GetOrdersAsync();
     Task<Order> GetOrderByIdAsync(int id);
     Task<bool> UpdateOrderAsync(Order entity);
+    Task<IEnumerable<OrderItem>> GetOrderItemsByOrderIdAsync(int orderId);
 }

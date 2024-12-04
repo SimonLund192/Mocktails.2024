@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,17 +11,49 @@ namespace Mocktails.DAL.DaoClasses;
 public class OrderDAO : BaseDAO, IOrderDAO
 {
     public OrderDAO(string connectionString) : base(connectionString) { }
+
+    
     public async Task<int> CreateOrderAsync(Order entity)
     {
-        // SQL query to insert a new order into the Orders table
-        const string query = """
-            INSERT INTO Orders (UserId, OrderDate, TotalAmount, Status, ShippingAddress)
-            OUTPUT Inserted.Id
-            VALUES(@UserId, @OrderDate, @TotalAmount, @Status, @ShippingAddress);
-            """;
+        // Calculate total amount from OrderItems
+        entity.TotalAmount = entity.OrderItems.Sum(item => item.Price * item.Quantity);
+
+        const string insertOrderQuery = """
+        INSERT INTO Orders (UserId, OrderDate, TotalAmount, Status, ShippingAddress)
+        OUTPUT Inserted.Id
+        VALUES(@UserId, @OrderDate, @TotalAmount, @Status, @ShippingAddress);
+        """;
+
+        const string insertOrderItemQuery = """
+        INSERT INTO OrderItems (OrderId, MocktailId, Quantity, Price)
+        VALUES (@OrderId, @MocktailId, @Quantity, @Price);
+        """;
 
         using var connection = CreateConnection();
-        return await connection.QuerySingleAsync<int>(query, entity);
+
+        // Create the order and retrieve its ID
+        var orderId = await connection.QuerySingleAsync<int>(insertOrderQuery, entity);
+
+        // Insert each order item
+        foreach (var orderItem in entity.OrderItems)
+        {
+            orderItem.OrderId = orderId;
+            await connection.ExecuteAsync(insertOrderItemQuery, orderItem);
+        }
+
+        return orderId;
+    }
+
+    public async Task<IEnumerable<OrderItem>> GetOrderItemsByOrderIdAsync(int orderId)
+    {
+        const string query = """
+        SELECT *
+        FROM OrderItems
+        WHERE OrderId = @OrderId
+        """;
+
+        using var connection = CreateConnection();
+        return (await connection.QueryAsync<OrderItem>(query, new { OrderId = orderId })).ToList();
     }
 
     public async Task<Order> GetOrderByIdAsync(int id)

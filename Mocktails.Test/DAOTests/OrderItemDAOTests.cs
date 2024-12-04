@@ -34,4 +34,22 @@ public class OrderItemDAOTests
         //    Price =
         //}
     }
+
+    [Test]
+    public async Task CreateOrderItemAsync_ShouldCreateOrderItemAndReturnId()
+    {
+        var orderItem = new OrderItem
+        {
+            OrderId = 1,
+            MocktailId = 1,
+            Quantity = 2,
+            // Price will be auto-calculated
+        };
+
+        var createdId = await _orderItemDAO.CreateOrderItemAsync(orderItem);
+        var createdOrderItem = await _orderItemDAO.GetOrderItemByIdAsync(createdId);
+
+        Assert.That(createdOrderItem, Is.Not.Null);
+        Assert.That(createdOrderItem.Quantity, Is.EqualTo(orderItem.Quantity));
+    }
 }
