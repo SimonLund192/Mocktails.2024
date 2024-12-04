@@ -20,7 +20,7 @@ public static class OrderConverter
     public static Order ToModel(this OrderDTO orderDTOToConvert)
     {
         if (orderDTOToConvert == null)
-            throw new ArgumentNullException(nameof(orderDTOToConvert), "MocktailDTO object cannot be null.");
+            throw new ArgumentNullException(nameof(orderDTOToConvert), "OrderDTO object cannot be null.");
 
         var order = new Order();
         orderDTOToConvert.CopyPropertiesTo(order);

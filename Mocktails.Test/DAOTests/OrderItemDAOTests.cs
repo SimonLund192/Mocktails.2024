@@ -21,20 +21,6 @@ public class OrderItemDAOTests
         _orderItemDAO = new OrderItemDAO(connectionString);
     }
 
-    //TODO: Figure out how Orders and orderlines should work.
-    //Test first hére, to see it in practice before implementing
-    [Test]
-    public async Task CreateOrderItemAsync_ShouldCreateOrderItemAndReturnOrderItems()
-    {
-        //var orderItem = new OrderItem
-        //{
-        //    OrderId = 2,
-        //    MocktailId = 2,
-        //    Quantity = 2,
-        //    Price =
-        //}
-    }
-
     [Test]
     public async Task CreateOrderItemAsync_ShouldCreateOrderItemAndReturnId()
     {

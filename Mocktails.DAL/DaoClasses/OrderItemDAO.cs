@@ -66,17 +66,27 @@ public class OrderItemDAO : BaseDAO, IOrderItemDAO
     }
     
 
-    public async Task<IEnumerable<OrderItem>> GetOrderItemsAsync()
+    public async Task<IEnumerable<OrderItem>> GetOrderItemsFromOrderByOrderIdAsync(int id)
     {
         const string query = """
             SELECT *
             FROM OrderItems
-            WHERE OrderId = @Id
+            WHERE OrderId = 1
             """;
 
         // Create connection and execute the query
         using var connection = CreateConnection();
         return (await connection.QueryAsync<OrderItem>(query)).ToList();
+    }
+
+    public async Task<IEnumerable<OrderItem>> GetOrderItemsAsync()
+    {
+        const string query = """
+            SELECT * FROM OrderItems
+            """;
+
+        using var connection = CreateConnection();
+        return (await connection.QueryAsync <OrderItem>(query)).ToList();
     }
 
     public async Task<bool> UpdateOrderItemAsync(OrderItem entity)
@@ -91,4 +101,5 @@ public class OrderItemDAO : BaseDAO, IOrderItemDAO
         using var connection = CreateConnection();
         return await connection.ExecuteAsync(query, entity) > 0;
     }
+
 }
