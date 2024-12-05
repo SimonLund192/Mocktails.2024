@@ -1,52 +1,53 @@
 ﻿using Mocktails.ApiClient.Products.DTOs;
 using RestSharp;
 
-namespace Mocktails.ApiClient.Products;
-
-public class ShoppingCartApiClient : IShoppingCartApiClient
+namespace Mocktails.ApiClient.Products
 {
-    private readonly RestClient _restClient;
-
-    public ShoppingCartApiClient(string baseApiUrl)
+    public class ShoppingCartApiClient : IShoppingCartApiClient
     {
-        _restClient = new RestClient(baseApiUrl);
-    }
+        private readonly RestClient _restClient;
 
-    public async Task<IEnumerable<ShoppingCartDTO>> GetCartItemsAsync(string sessionId)
-    {
-        var response = await _restClient.RequestAsync<IEnumerable<ShoppingCartDTO>>(Method.Get, $"shoppingcart/{sessionId}");
-        if (!response.IsSuccessful)
+        public ShoppingCartApiClient(string baseApiUrl)
         {
-            throw new Exception($"Error fetching cart items: {response.Content}");
+            _restClient = new RestClient(baseApiUrl);
         }
-        return response.Data;
-    }
 
-    public async Task<int> AddToCartAsync(ShoppingCartDTO item)
-    {
-        var response = await _restClient.RequestAsync<int>(Method.Post, "shoppingcart", item);
-        if (!response.IsSuccessful)
+        public async Task<IEnumerable<ShoppingCartDTO>> GetCartItemsAsync()
         {
-            throw new Exception($"Error adding item to cart: {response.Content}");
+            var response = await _restClient.RequestAsync<IEnumerable<ShoppingCartDTO>>(Method.Get, "shoppingcart");
+            if (!response.IsSuccessful)
+            {
+                throw new Exception($"Error fetching cart items: {response.Content}");
+            }
+            return response.Data;
         }
-        return response.Data;
-    }
 
-    public async Task UpdateCartItemAsync(int id, ShoppingCartDTO item)
-    {
-        var response = await _restClient.RequestAsync(Method.Put, $"shoppingcart/{id}", item);
-        if (!response.IsSuccessful)
+        public async Task<int> AddToCartAsync(ShoppingCartDTO item)
         {
-            throw new Exception($"Error updating cart item: {response.Content}");
+            var response = await _restClient.RequestAsync<int>(Method.Post, "shoppingcart", item);
+            if (!response.IsSuccessful)
+            {
+                throw new Exception($"Error adding item to cart: {response.Content}");
+            }
+            return response.Data;
         }
-    }
 
-    public async Task RemoveFromCartAsync(int id)
-    {
-        var response = await _restClient.RequestAsync(Method.Delete, $"shoppingcart/{id}");
-        if (!response.IsSuccessful)
+        public async Task UpdateCartItemAsync(int id, ShoppingCartDTO item)
         {
-            throw new Exception($"Error removing cart item: {response.Content}");
+            var response = await _restClient.RequestAsync(Method.Put, $"shoppingcart/{id}", item);
+            if (!response.IsSuccessful)
+            {
+                throw new Exception($"Error updating cart item: {response.Content}");
+            }
+        }
+
+        public async Task RemoveFromCartAsync(int id)
+        {
+            var response = await _restClient.RequestAsync(Method.Delete, $"shoppingcart/{id}");
+            if (!response.IsSuccessful)
+            {
+                throw new Exception($"Error removing cart item: {response.Content}");
+            }
         }
     }
 }

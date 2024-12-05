@@ -8,11 +8,13 @@ namespace Mocktails.DAL.Model;
 public class ShoppingCartItem
 {
     public int Id { get; set; }
-    public string SessionId { get; set; }
     public int MocktailId { get; set; }
+    public string MocktailName { get; set; }
+    public string MocktailDescription { get; set; }
+    public string MocktailImageUrl { get; set; }
     public int Quantity { get; set; }
-    public string MocktailName { get; set; } // Add this
-    public decimal MocktailPrice { get; set; } // Add this
+    public decimal MocktailPrice { get; set; }
+    public decimal TotalPrice { get; set; } // Add TotalPrice to store the calculated value
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

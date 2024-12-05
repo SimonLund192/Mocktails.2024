@@ -19,7 +19,7 @@ public class OrderItemDAO : BaseDAO, IOrderItemDAO
             """;
 
         using var connection = CreateConnection();
-        var pricePerUnit = await connection.QuerySingleAsync<decimal>(fetchPriceQuery, new {entity.MocktailId});
+        var pricePerUnit = await connection.QuerySingleAsync<decimal>(fetchPriceQuery, new { entity.MocktailId });
 
         entity.Price = pricePerUnit * entity.Quantity;
 
@@ -31,7 +31,7 @@ public class OrderItemDAO : BaseDAO, IOrderItemDAO
             (@OrderId, @MocktailId, @Quantity, @Price)
             """;
 
-        
+
         return await connection.QuerySingleAsync<int>(insertQuery, entity);
     }
 
@@ -54,7 +54,7 @@ public class OrderItemDAO : BaseDAO, IOrderItemDAO
             """;
 
         using var connection = CreateConnection();
-        var result = await connection.QuerySingleOrDefaultAsync<OrderItem>(query, new {Id = id});
+        var result = await connection.QuerySingleOrDefaultAsync<OrderItem>(query, new { Id = id });
 
         if (result == null)
         {
@@ -62,31 +62,59 @@ public class OrderItemDAO : BaseDAO, IOrderItemDAO
         }
 
         return result;
-        
-    }
-    
 
-    public async Task<IEnumerable<OrderItem>> GetOrderItemsFromOrderByOrderIdAsync(int id)
+    }
+
+
+    public async Task<IEnumerable<OrderItem>> GetOrderItemsByOrderIdAsync(int orderId)
     {
         const string query = """
-            SELECT *
-            FROM OrderItems
-            WHERE OrderId = 1
-            """;
+        SELECT 
+            oi.Id AS OrderItemId,
+            oi.OrderId,
+            oi.MocktailId,
+            m.Name AS MocktailName,
+            m.Description AS MocktailDescription,
+            m.ImageUrl AS MocktailImageUrl,
+            oi.Quantity,
+            m.Price AS UnitPrice,
+            (oi.Quantity * m.Price) AS TotalPrice,
+            oi.CreatedAt,
+            oi.UpdatedAt
+        FROM 
+        OrderItems oi
+        INNER JOIN 
+        Mocktails m ON oi.MocktailId = m.Id
+        WHERE 
+        oi.OrderId = @OrderId;
+        """;
 
-        // Create connection and execute the query
         using var connection = CreateConnection();
-        return (await connection.QueryAsync<OrderItem>(query)).ToList();
+        return await connection.QueryAsync<OrderItem>(query, new { OrderId = orderId });
     }
+
 
     public async Task<IEnumerable<OrderItem>> GetOrderItemsAsync()
     {
         const string query = """
-            SELECT * FROM OrderItems
+            SELECT 
+                oi.Id,
+                oi.OrderId,
+                oi.MocktailId,
+                oi.Quantity,
+                oi.Price,
+                (oi.Quantity * oi.Price) AS TotalPrice,
+                oi.CreatedAt,
+                oi.UpdatedAt,
+                m.Name AS MocktailName,
+                m.Description AS MocktailDescription,
+                m.ImageUrl AS MocktailImageUrl
+            FROM OrderItems oi
+            INNER JOIN Mocktails m ON oi.MocktailId = m.Id;
             """;
 
         using var connection = CreateConnection();
-        return (await connection.QueryAsync <OrderItem>(query)).ToList();
+        return await connection.QueryAsync<OrderItem>(query);
     }
 
     public async Task<bool> UpdateOrderItemAsync(OrderItem entity)

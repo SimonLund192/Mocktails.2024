@@ -31,7 +31,7 @@ public class OrderItemsController : Controller
             return BadRequest("Invalid OrderId. It must be greater than zero.");
         }
 
-        var orderItems = await _orderItemDAO.GetOrderItemsFromOrderByOrderIdAsync(orderId); // Call the DAO method
+        var orderItems = await _orderItemDAO.GetOrderItemsByOrderIdAsync(orderId); // Call the DAO method
         if (orderItems == null || !orderItems.Any())
         {
             return NotFound($"No OrderItems found for OrderId {orderId}.");

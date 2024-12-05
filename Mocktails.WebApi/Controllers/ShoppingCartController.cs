@@ -2,103 +2,115 @@
 using Mocktails.DAL.DaoClasses;
 using Mocktails.DAL.Model;
 using Mocktails.WebApi.DTOs;
-using Mocktails.Shared.Services;
 
-namespace Mocktails.WebApi.Controllers;
-
-[Route("api/v1/[controller]")]
-[ApiController]
-public class ShoppingCartController : ControllerBase
+namespace Mocktails.WebApi.Controllers
 {
-    private readonly IShoppingCartDAO _cartDAO;
-    private readonly ShoppingCartService _cartService;
-
-    public ShoppingCartController(IShoppingCartDAO cartDAO, ShoppingCartService cartService)
+    [Route("api/v1/[controller]")]
+    [ApiController]
+    public class ShoppingCartController : ControllerBase
     {
-        _cartDAO = cartDAO;
-        _cartService = cartService;
-    }
+        private readonly IShoppingCartDAO _cartDAO;
+        private readonly IOrderDAO _orderDAO;
 
-    [HttpGet("{sessionId}")]
-    public async Task<ActionResult<IEnumerable<ShoppingCartItem>>> GetCartItems(string sessionId)
-    {
-        var items = await _cartDAO.GetCartItemsAsync(sessionId);
-        return Ok(items);
-    }
-
-    //[HttpPost]
-    //public async Task<ActionResult<int>> AddToCart([FromBody] ShoppingCartItem item)
-    //{
-    //    var itemId = await _cartDAO.AddToCartAsync(item);
-    //    return Ok(itemId);
-    //}
-
-    [HttpPost]
-    public async Task<IActionResult> AddToCart([FromBody] ShoppingCartDTO cartItem)
-    {
-        if (cartItem == null || cartItem.MocktailId <= 0 || cartItem.Quantity <= 0)
+        public ShoppingCartController(IShoppingCartDAO cartDAO, IOrderDAO orderDAO)
         {
-            return BadRequest("Invalid cart item. Ensure MocktailId and Quantity are valid.");
+            _cartDAO = cartDAO;
+            _orderDAO = orderDAO;
         }
 
-        var sessionId = _cartService.GetOrCreateSessionId();
-        cartItem.SessionId = sessionId;
-
-        try
+        [HttpGet("Get all CartItems")]
+        public async Task<IActionResult> GetCartItemsWithDetails()
         {
-            // Map the DTO to the database entity
-            var dbItem = new ShoppingCartItem
+            try
             {
-                SessionId = cartItem.SessionId,
-                MocktailId = cartItem.MocktailId,
-                MocktailName = cartItem.MocktailName,
-                Quantity = cartItem.Quantity,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
+                var cartItems = await _cartDAO.GetCartItemsWithDetailsAsync();
 
-            await _cartDAO.AddToCartAsync(dbItem);
-            return Ok("Item added to cart successfully.");
+                if (!cartItems.Any())
+                    return NotFound("No items found in the shopping cart.");
+
+                return Ok(cartItems);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+
+        [HttpPost]
+        public async Task<IActionResult> AddToCart([FromBody] ShoppingCartItem item)
         {
-            return StatusCode(500, $"Error adding item to cart: {ex.Message}");
+            if (item == null || item.MocktailId <= 0 || item.Quantity <= 0)
+            {
+                return BadRequest("Invalid cart item. Ensure MocktailId and Quantity are valid.");
+            }
+
+            try
+            {
+                var itemId = await _cartDAO.AddToCartAsync(item);
+                return Ok(new { Id = itemId });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error adding item to cart: {ex.Message}");
+            }
         }
-    }
 
-    [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateCartItem(int id, [FromBody] ShoppingCartItem item)
-    {
-        item.Id = id;
-        var updated = await _cartDAO.UpdateCartItemAsync(item);
-        if (!updated) return NotFound();
-        return Ok();
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> RemoveFromCart(int id)
-    {
-        var removed = await _cartDAO.RemoveFromCartAsync(id);
-        if (!removed) return NotFound();
-        return Ok();
-    }
-
-    [HttpGet("GetCartItemsWithDetails")]
-    public async Task<IActionResult> GetCartItemsWithDetails(string sessionId)
-    {
-        try
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCartItem(int id, [FromBody] ShoppingCartItem item)
         {
-            var cartItems = await _cartDAO.GetCartItemsWithDetailsAsync(sessionId);
-
-            if (!cartItems.Any())
-                return NotFound("No items found in the shopping cart.");
-
-            return Ok(cartItems);
+            item.Id = id;
+            var success = await _cartDAO.UpdateCartItemAsync(item);
+            if (!success) return NotFound("Cart item not found.");
+            return Ok("Cart item updated successfully.");
         }
-        catch (Exception ex)
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> RemoveFromCart(int id)
         {
-            return StatusCode(500, $"An error occurred: {ex.Message}");
+            var success = await _cartDAO.RemoveFromCartAsync(id);
+            if (!success) return NotFound("Cart item not found.");
+            return Ok("Cart item removed successfully.");
+        }
+
+        [HttpPost("checkout")]
+        public async Task<IActionResult> Checkout([FromBody] CheckoutRequest request)
+        {
+            if (request == null || string.IsNullOrWhiteSpace(request.ShippingAddress))
+            {
+                return BadRequest("Invalid checkout request. Shipping address is required.");
+            }
+
+            try
+            {
+                // Get the shopping cart items
+                var cartItems = await _cartDAO.GetCartItemsWithDetailsAsync();
+                if (!cartItems.Any())
+                {
+                    return BadRequest("Shopping cart is empty.");
+                }
+
+                // Create the order
+                var orderId = await _orderDAO.CreateOrderFromCartAsync(request.UserId, cartItems, request.ShippingAddress);
+
+                // Clear the shopping cart
+                await _cartDAO.ClearCartAsync();
+
+                return Ok(new { OrderId = orderId });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("clear")]
+        public async Task<IActionResult> ClearCart()
+        {
+            var success = await _cartDAO.ClearCartAsync();
+            if (!success)
+                return BadRequest("Failed to clear the shopping cart.");
+
+            return Ok("Shopping cart cleared successfully.");
         }
     }
 }
-

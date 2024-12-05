@@ -86,6 +86,61 @@ public class OrderDAO : BaseDAO, IOrderDAO
         }
     }
 
+    public async Task<int> CreateOrderFromCartAsync(int userId, IEnumerable<ShoppingCartItem> cartItems, string shippingAddress)
+    {
+        // Calculate total amount
+        var totalAmount = cartItems.Sum(item => item.Quantity * item.MocktailPrice);
+
+        // Insert the order
+        const string insertOrderQuery = """
+    INSERT INTO Orders (UserId, OrderDate, TotalAmount, Status, ShippingAddress)
+    OUTPUT Inserted.Id
+    VALUES (@UserId, GETDATE(), @TotalAmount, 'Pending', @ShippingAddress);
+    """;
+
+        const string insertOrderItemQuery = """
+    INSERT INTO OrderItems (OrderId, MocktailId, Quantity, Price)
+    VALUES (@OrderId, @MocktailId, @Quantity, @Price);
+    """;
+
+        using var connection = CreateConnection();
+        using var transaction = connection.BeginTransaction();
+
+        try
+        {
+            // Create the order
+            var orderId = await connection.QuerySingleAsync<int>(
+                insertOrderQuery,
+                new { UserId = userId, TotalAmount = totalAmount, ShippingAddress = shippingAddress },
+                transaction
+            );
+
+            // Insert order items
+            foreach (var cartItem in cartItems)
+            {
+                var orderItem = new
+                {
+                    OrderId = orderId,
+                    MocktailId = cartItem.MocktailId,
+                    Quantity = cartItem.Quantity,
+                    Price = cartItem.MocktailPrice
+                };
+
+                await connection.ExecuteAsync(insertOrderItemQuery, orderItem, transaction);
+            }
+
+            // Commit transaction
+            transaction.Commit();
+
+            return orderId;
+        }
+        catch
+        {
+            transaction.Rollback();
+            throw;
+        }
+    }
+
 
     public async Task<IEnumerable<Order>> GetOrdersAsync()
     {

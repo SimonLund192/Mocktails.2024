@@ -1,4 +1,6 @@
-﻿namespace Mocktails.WebApi.DTOs;
+﻿using Mocktails.ApiClient.Orders.DTOs;
+
+namespace Mocktails.WebApi.DTOs;
 
 public class OrderDTO
 {
@@ -11,5 +13,7 @@ public class OrderDTO
     //public string PaymentMethod { get; set; } // Implement later
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+
+    public List<OrderItemDTO> OrderItems { get; set; } = new();
 
 }
