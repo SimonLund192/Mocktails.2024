@@ -66,8 +66,6 @@ public class ShoppingCartController : ControllerBase
         }
     }
 
-
-
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateCartItem(int id, [FromBody] ShoppingCartItem item)
     {
@@ -83,6 +81,24 @@ public class ShoppingCartController : ControllerBase
         var removed = await _cartDAO.RemoveFromCartAsync(id);
         if (!removed) return NotFound();
         return Ok();
+    }
+
+    [HttpGet("GetCartItemsWithDetails")]
+    public async Task<IActionResult> GetCartItemsWithDetails(string sessionId)
+    {
+        try
+        {
+            var cartItems = await _cartDAO.GetCartItemsWithDetailsAsync(sessionId);
+
+            if (!cartItems.Any())
+                return NotFound("No items found in the shopping cart.");
+
+            return Ok(cartItems);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred: {ex.Message}");
+        }
     }
 }
 

@@ -34,6 +34,17 @@ public class OrdersController : ControllerBase
         return Created();
     }
 
+    [HttpGet("{id}")]
+    public async Task<ActionResult<OrderDTO>> GetOrderByIdAsync(int id)
+    {
+        var order = await _orderDAO.GetOrderByIdAsync(id);
+        if (order == null)
+        {
+            return NotFound();
+        }
+        return Ok(order);
+    }
+
     // GetOrderByIdAsync
 
 }

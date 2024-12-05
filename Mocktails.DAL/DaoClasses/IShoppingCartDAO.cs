@@ -12,4 +12,5 @@ public interface IShoppingCartDAO
     Task<int> AddToCartAsync(ShoppingCartItem item);
     Task<bool> UpdateCartItemAsync(ShoppingCartItem item);
     Task<bool> RemoveFromCartAsync(int itemId);
+    Task<IEnumerable<ShoppingCartItemWithDetails>> GetCartItemsWithDetailsAsync(string sessionid);
 }

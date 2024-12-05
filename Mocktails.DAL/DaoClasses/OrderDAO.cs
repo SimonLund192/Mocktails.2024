@@ -60,23 +60,32 @@ public class OrderDAO : BaseDAO, IOrderDAO
     {
         try
         {
-            var query = "SELECT * FROM Orders WHERE Id = @Id";
+            const string orderQuery = "SELECT * FROM Orders WHERE Id = @Id";
+            const string orderItemsQuery = "SELECT * FROM OrderItems WHERE OrderId = @OrderId";
 
             using var connection = CreateConnection();
-            var result = await connection.QuerySingleOrDefaultAsync<Order>(query, new { Id = id });
 
-            if (result == null)
+            // Retrieve the order
+            var order = await connection.QuerySingleOrDefaultAsync<Order>(orderQuery, new { Id = id });
+            if (order == null)
             {
                 throw new Exception("Order not found.");
             }
 
-            return result;
+            // Retrieve the associated order items
+            var orderItems = await connection.QueryAsync<OrderItem>(orderItemsQuery, new { OrderId = id });
+
+            // Attach order items to the order
+            order.OrderItems = orderItems.ToList();
+
+            return order;
         }
         catch (Exception ex)
         {
             throw new Exception($"Error getting order by Id: '{ex.Message}'.", ex);
         }
     }
+
 
     public async Task<IEnumerable<Order>> GetOrdersAsync()
     {

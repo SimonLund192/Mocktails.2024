@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.AspNet.Identity;
 using Mocktails.DAL.Model;
 
 namespace Mocktails.DAL.DaoClasses;
@@ -11,19 +12,57 @@ public class ShoppingCartDAO : BaseDAO, IShoppingCartDAO
 {
     public ShoppingCartDAO(string connectionString) : base(connectionString) { }
 
-    //public async Task<int> CreateShoppingCartAsync(ShoppingCartItem entity)
-    //{
-    //    const string query = """
-    //        INSERT INTO ShoppingCart (
-    //        """
-    //}
+    public async Task<int> CreateShoppingCartAsync(ShoppingCartItem entity)
+    {
+        const string query = @"
+        INSERT INTO ShoppingCart (SessionId, MocktailId, Quantity, Status)
+        OUTPUT INSERTED.Id
+        VALUES (@SessionId, @MocktailId, @Quantity, 'Active');
+        ";
+
+        using var connection = CreateConnection();
+        return await connection.QuerySingleAsync<int>(query, entity);
+    }
+
+    public async Task<IEnumerable<ShoppingCartItemWithDetails>> GetCartItemsWithDetailsAsync(string sessionId)
+    {
+        const string query = @"
+        SELECT 
+            sc.Id AS CartItemId,
+            sc.SessionId,
+            sc.Quantity,
+            sc.Status,
+            sc.CreatedAt,
+            sc.UpdatedAt,
+            m.Id AS MocktailId,
+            m.Name AS MocktailName,
+            m.Description AS MocktailDescription,
+            m.Price AS MocktailPrice,
+            m.ImageUrl AS MocktailImageUrl
+        FROM ShoppingCart sc
+        INNER JOIN Mocktails m ON sc.MocktailId = m.Id
+        WHERE sc.SessionId = @SessionId;
+    ";
+
+        using var connection = CreateConnection();
+        return await connection.QueryAsync<ShoppingCartItemWithDetails>(query, new { SessionId = sessionId });
+    }
+
 
     public async Task<IEnumerable<ShoppingCartItem>> GetCartItemsAsync(string sessionId)
     {
-        var query = "SELECT * FROM ShoppingCart WHERE SessionId = @SessionId";
+        const string query = """
+        SELECT sc.Id, sc.SessionId, sc.MocktailId, sc.Quantity, 
+               m.Name AS MocktailName, m.Price AS MocktailPrice
+        FROM ShoppingCart sc
+        INNER JOIN Mocktails m ON sc.MocktailId = m.Id
+        WHERE sc.SessionId = @SessionId
+    """;
+
         using var connection = CreateConnection();
         return await connection.QueryAsync<ShoppingCartItem>(query, new { SessionId = sessionId });
     }
+
 
     public async Task<int> AddToCartAsync(ShoppingCartItem item)
     {
