@@ -77,7 +77,7 @@ public class OrderItemDAO : BaseDAO, IOrderItemDAO
             m.Description AS MocktailDescription,
             m.ImageUrl AS MocktailImageUrl,
             oi.Quantity,
-            m.Price AS UnitPrice,
+            m.Price AS MocktailPrice,
             (oi.Quantity * m.Price) AS TotalPrice,
             oi.CreatedAt,
             oi.UpdatedAt
