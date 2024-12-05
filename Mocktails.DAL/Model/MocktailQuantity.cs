@@ -22,7 +22,7 @@ public class MocktailQuantity
 
     public MocktailQuantity() { }
 
-    public int GetTotalPrice()
+    public decimal GetTotalPrice()
     {
         return Price * Quantity;
     }
