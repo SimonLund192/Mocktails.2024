@@ -1,0 +1,50 @@
+﻿@model Mocktails.Website.Models.Cart
+
+<h1>Your Shopping Cart</h1>
+
+@if (!Model.MocktailQuantities.Any())
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Mocktail</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.MocktailQuantities.Values)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Price.ToString("C")</td>
+                    <td>@item.Quantity</td>
+                    <td>@(item.Price * item.Quantity).ToString("C")</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" asp-route-quantity="@(item.Quantity + 1)">Add</a> |
+                        <a asp-action="Edit" asp-route-id="@item.Id" asp-route-quantity="@(item.Quantity - 1)">Remove</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3">Total:</td>
+                <td>@Model.GetTotal().ToString("C")</td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <a asp-action="EmptyCart">Empty Cart</a> |
+                    <a asp-controller="Checkout" asp-action="Checkout">Proceed to Checkout</a>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+}

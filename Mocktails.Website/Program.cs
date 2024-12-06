@@ -36,10 +36,7 @@ builder.Services.AddSingleton<IMocktailApiClient>((_) =>
 // Register UsersApiClient
 builder.Services.AddSingleton<IUsersApiClient>((_) => new UsersApiClient("https://localhost:7203"));
 
-// Register ShoppingCartApiClient
-builder.Services.AddSingleton((_) => new ShoppingCartApiClient("https://localhost:7203")); // Replace with your actual Web API URL
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ShoppingCartService>();
+
 
 var app = builder.Build();
 

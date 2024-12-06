@@ -7,19 +7,22 @@ using Mocktails.Website.Models;
 namespace Mocktails.Website.Controllers;
 
 
-public class CartControllerCookie : Controller
+[Route("ShoppingCart")] // Route prefix for the controller
+[ApiController]
+public class CartCookieController : Controller
 {
     private readonly IMocktailApiClient _mocktailApiClient;
 
-    public CartControllerCookie(IMocktailApiClient mocktailApiClient)
+    public CartCookieController(IMocktailApiClient mocktailApiClient)
     {
         _mocktailApiClient = mocktailApiClient;
     }
 
+    [HttpGet]
     public IActionResult Index()
     {
         var cart = GetCartFromCookie();
-        return View("Cart", cart);
+        return View("Index", cart); // Ensure "Cart" matches the view file name
     }
 
     public async Task<IActionResult> Edit(int id, int quantity)
@@ -43,6 +46,7 @@ public class CartControllerCookie : Controller
 
     public async Task<IActionResult> Add(int id, int quantity)
     {
+
         var mocktail = await _mocktailApiClient.GetMocktailByIdAsync(id);
         if (mocktail == null)
         {

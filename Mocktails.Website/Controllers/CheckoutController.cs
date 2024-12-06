@@ -23,7 +23,7 @@ public class CheckoutController : Controller
     [HttpPost]
     public async Task<IActionResult> ProcessCheckout(int userId, string shippingAddress)
     {
-        var cartCookieController = new CartControllerCookie(_mocktailApiClient);
+        var cartCookieController = new CartCookieController(_mocktailApiClient);
 
         // Retrieve the cart from cookies
         var cart = cartCookieController.GetCartFromCookie();
