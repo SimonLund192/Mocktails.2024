@@ -7,7 +7,7 @@ using Mocktails.Website.Models;
 namespace Mocktails.Website.Controllers;
 
 
-[Route("ShoppingCart")] // Route prefix for the controller
+[Route("ShoppingCart")]
 [ApiController]
 public class CartCookieController : Controller
 {
@@ -25,6 +25,7 @@ public class CartCookieController : Controller
         return View("Index", cart); // Ensure "Cart" matches the view file name
     }
 
+    [HttpPut("Edit/{id}")]
     public async Task<IActionResult> Edit(int id, int quantity)
     {
         var mocktail = await _mocktailApiClient.GetMocktailByIdAsync(id);
@@ -41,7 +42,7 @@ public class CartCookieController : Controller
             }
         });
 
-        return RedirectToAction("Index");
+        return RedirectToAction("Index", cart);
     }
 
     // TODO: Figure out HOW TO FIX THIS
@@ -70,6 +71,7 @@ public class CartCookieController : Controller
     //    return RedirectToAction("Index");
     //}
 
+    [HttpGet("Add/{id}")]
     public async Task<IActionResult> Add(int id, int quantity)
     {
 
@@ -97,15 +99,17 @@ public class CartCookieController : Controller
             }
         });
 
-        return RedirectToAction("Index");
+        return RedirectToAction("Index", cart);
     }
 
+    [HttpDelete("Delete/{id}")]
     public IActionResult Delete(int id)
     {
         var cart = LoadChangeAndSaveCart(cart => cart.RemoveMocktail(id));
         return RedirectToAction("Index");
     }
 
+    [HttpDelete("Clear")]
     public IActionResult EmptyCart()
     {
         LoadChangeAndSaveCart(cart => cart.EmptyAll());
