@@ -5,6 +5,7 @@ using Mocktails.DAL.Model;
 public class MocktailDaoTests
 {
     private IMocktailDAO _mocktailDAO;
+    private IOrderDAO _orderDAO;
 
     [SetUp]
     public void Setup()
@@ -65,6 +66,8 @@ public class MocktailDaoTests
             ImageUrl = "http://asd.jpg"
         };
 
+        // Act: Call the CreateMocktailAsync method to insert the mocktail into the database
+        // and get the ID of the created record
         var mocktailId = await _mocktailDAO.CreateMocktailAsync(mocktail);
         var mocktailFromDb = await _mocktailDAO.GetMocktailByIdAsync(mocktailId);
 
@@ -84,10 +87,11 @@ public class MocktailDaoTests
         
         var updatedMocktail = await _mocktailDAO.GetMocktailByIdAsync(mocktailId);
         Assert.That(updatedMocktail.Quantity, Is.EqualTo(0));
+
     }
 
     [Test]
-    public async Task DeleteMocktailAsync_ShouldRemove()
+    public async Task DeleteMocktailAsync_ShouldRemoveMocktailFromDatabase()
     {
         var mocktail = new Mocktail
         {
@@ -112,39 +116,5 @@ public class MocktailDaoTests
 
 
     }
-
-    [Test]
-    public async Task DeleteMocktailAsync_ShouldRemoveMocktailFromDatabase()
-    {
-        // Arrange: Create a mocktail to be deleted
-        var mocktail = new Mocktail
-        {
-            Name = "Mocktail to Delete", // Name of the mocktail
-            Description = "This mocktail will be deleted.", // Description of the mocktail
-            Price = 7.99M, // Price of the mocktail
-            Quantity = 10, // Quantity in stock
-            ImageUrl = "http://example.com/delete.jpg" // URL for the image
-        };
-
-        // Act: Insert the mocktail into the database
-        var createdMocktailId = await _mocktailDAO.CreateMocktailAsync(mocktail);
-
-        // Assert: Verify the mocktail was created
-        var createdMocktail = await _mocktailDAO.GetMocktailByIdAsync(createdMocktailId);
-        Assert.That(createdMocktail, Is.Not.Null, "The mocktail should exist before deletion.");
-
-        // Act: Delete the mocktail from the database
-        var deleteSuccess = await _mocktailDAO.DeleteMocktailAsync(createdMocktailId);
-
-        // Assert: Verify that the delete operation was successful
-        Assert.That(deleteSuccess, Is.True, "The delete operation should return true.");
-
-        // Act: Attempt to retrieve the deleted mocktail
-        var deletedMocktail = await _mocktailDAO.GetMocktailByIdAsync(createdMocktailId);
-
-        // Assert: Verify that the mocktail no longer exists in the database
-        Assert.That(deletedMocktail, Is.Null, "The mocktail should no longer exist in the database after deletion.");
-    }
-
     
 }

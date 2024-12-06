@@ -10,7 +10,7 @@ public class MocktailDAO : BaseDAO, IMocktailDAO
 
     public async Task<int> CreateMocktailAsync(Mocktail entity)
     {
-        // SQL query to insert a new mocktail into the Mocktail table (without the Category field)
+        // SQL query to insert a new mocktail into the Mocktail table
         const string query = """
             INSERT INTO Mocktails (Name, Description, Price, Quantity, ImageUrl)
             OUTPUT INSERTED.Id 
@@ -65,6 +65,7 @@ public class MocktailDAO : BaseDAO, IMocktailDAO
             throw new Exception($"Error getting mocktail by ID: '{ex.Message}'.", ex);
         }
     }
+
     public async Task<IEnumerable<Mocktail>> GetMocktailByPartOfNameOrDescription(string partOfNameOrDescription)
     {
         const string query = """
@@ -116,15 +117,15 @@ public class MocktailDAO : BaseDAO, IMocktailDAO
         return await connection.ExecuteAsync(query, entity) > 0;
     }
 
-    public async Task<bool> UpdateMocktailQuantityAsync(int id, int quantity, byte[] rowVersion)
+    public async Task<bool> UpdateMocktailQuantityAsync(int id, int quantityChange, byte[] rowVersion)
     {
         const string query = @"
         UPDATE Mocktails
-        SET Quantity = Quantity - @Quantity
-        WHERE Id = @Id AND RowVersion = @RowVersion";
+        SET Quantity = Quantity + @QuantityChange
+        WHERE Id = @Id AND RowVersion = @RowVersion AND Quantity + @QuantityChange >= 0"; // Prevent negative quantities
 
         using var connection = CreateConnection();
-        var rowsAffected = await connection.ExecuteAsync(query, new { Id = id, Quantity = quantity, RowVersion = rowVersion });
+        var rowsAffected = await connection.ExecuteAsync(query, new { Id = id, QuantityChange = quantityChange, RowVersion = rowVersion });
         return rowsAffected > 0; // Returns true if update succeeded
     }
 }

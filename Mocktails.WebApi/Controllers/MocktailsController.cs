@@ -46,19 +46,12 @@ public class MocktailsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateMocktail([FromBody] MocktailDTO mocktailDTO)
     {
-        //try
-        //{
+
             var mocktail = MocktailConverter.ToModel(mocktailDTO);
             var mocktailId = await _mocktailDAO.CreateMocktailAsync(mocktail);
-
-            // Ensure the route matches the GetMocktailByIdAsync method
-            //return CreatedAtAction(nameof(GetMocktailByIdAsync), new { id = mocktailId }, mocktailDTO);
+        
             return Created();
-        //}
-        //catch (Exception ex)
-        //{
-        //    return StatusCode(500, $"Internal server error: {ex.Message}");
-        //}
+
     }
 
     [HttpPut("{id}")]

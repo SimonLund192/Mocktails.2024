@@ -23,6 +23,10 @@ builder.Services.AddSingleton<IMocktailDAO>((_) => new MocktailDAO(connectionStr
 builder.Services.AddSingleton<ICategoryDAO>((_) => new CategoryDAO(connectionString));
 builder.Services.AddSingleton<IUserDAO>((_) => new UserDAO(connectionString));
 builder.Services.AddSingleton<IShoppingCartDAO>((_) => new ShoppingCartDAO(connectionString));
+
+builder.Services.AddSingleton<IOrderDAO>((_) => new OrderDAO(connectionString));
+builder.Services.AddSingleton <IOrderItemDAO>((_) => new OrderItemDAO(connectionString));
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ShoppingCartService>();
 
