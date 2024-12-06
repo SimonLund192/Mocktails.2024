@@ -120,11 +120,13 @@ public class MocktailDAO : BaseDAO, IMocktailDAO
     public async Task<bool> UpdateMocktailQuantityAsync(int id, int quantityChange)
     {
         const string query = @"
-        UPDATE Mocktails
-        SET Quantity = Quantity + @QuantityChange
-        WHERE Id = @Id = Quantity + @QuantityChange >= 0"; // Prevent negative quantities
+    UPDATE Mocktails
+    SET Quantity = Quantity + @QuantityChange
+    WHERE Id = @Id AND Quantity + @QuantityChange >= 0"; // Prevent negative quantities
 
         using var connection = CreateConnection();
-        return await connection.ExecuteAsync(query, id, quantityChange);
+        var parameters = new { Id = id, QuantityChange = quantityChange }; // Wrap parameters in an object
+        var rowsAffected = await connection.ExecuteAsync(query, parameters);
+        return rowsAffected > 0; // Returns true if at least one row was updated
     }
 }

@@ -23,10 +23,10 @@ public class CheckoutController : Controller
     [HttpPost]
     public async Task<IActionResult> ProcessCheckout(int userId, string shippingAddress)
     {
-        var cartCookieController.
+        var cartCookieController = new CartControllerCookie(_mocktailApiClient);
 
         // Retrieve the cart from cookies
-        var cart = GetCartFromCookie();
+        var cart = cartCookieController.GetCartFromCookie();
         if (cart == null || !cart.MocktailQuantities.Any())
         {
             return BadRequest("Cart is empty.");
@@ -82,14 +82,6 @@ public class CheckoutController : Controller
         }
     }
 
-    //private Cart GetCartFromCookie()
-    //{
-    //    // Implementation for retrieving cart from cookies
-    //    Request.Cookies.TryGetValue("Cart", out string? cookie);
-    //    return string.IsNullOrEmpty(cookie)
-    //        ? new Cart()
-    //        : JsonSerializer.Deserialize<Cart>(cookie) ?? new Cart();
-    //}
 
     private void ClearCart()
     {

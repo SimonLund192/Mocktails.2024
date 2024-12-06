@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using Mocktails.ApiClient.Orders.DTOs;
 using Mocktails.ApiClient.Products;
 using Mocktails.ApiClient.Products.DTOs;
 using Mocktails.Website.Models;
@@ -20,7 +19,7 @@ public class CartControllerCookie : Controller
     public IActionResult Index()
     {
         var cart = GetCartFromCookie();
-        return Ok(cart);
+        return View("Cart", cart);
     }
 
     public async Task<IActionResult> Edit(int id, int quantity)
@@ -31,8 +30,15 @@ public class CartControllerCookie : Controller
             return NotFound($"Mocktail with ID {id} not found.");
         }
 
-        var cart = LoadChangeAndSaveCart(cart => cart.ChangeQuantity(new MocktailQuantityDTO(id, quantity)));
-        return Ok(cart);
+        var cart = LoadChangeAndSaveCart(cart =>
+        {
+            if (cart.MocktailQuantities.ContainsKey(id))
+            {
+                cart.MocktailQuantities[id].Quantity = quantity;
+            }
+        });
+
+        return RedirectToAction("Index");
     }
 
     public async Task<IActionResult> Add(int id, int quantity)
@@ -43,29 +49,37 @@ public class CartControllerCookie : Controller
             return NotFound($"Mocktail with ID {id} not found.");
         }
 
-        var cart = LoadChangeAndSaveCart(cart => cart.ChangeQuantity(new MocktailQuantity(mocktail, quantity)));
-        return Ok(cart);
-    }
-
-    public async Task<IActionResult> Delete(int id)
-    {
-        // Optionally, fetch mocktail details if needed
-        var mocktail = await _mocktailApiClient.GetMocktailByIdAsync(id);
-        if (mocktail == null)
+        var cart = LoadChangeAndSaveCart(cart =>
         {
-            return NotFound($"Mocktail with ID {id} not found.");
-        }
+            if (cart.MocktailQuantities.ContainsKey(id))
+            {
+                cart.MocktailQuantities[id].Quantity += quantity;
+            }
+            else
+            {
+                cart.MocktailQuantities[id] = new MocktailQuantity
+                {
+                    Id = mocktail.Id,
+                    Name = mocktail.Name,
+                    Price = mocktail.Price,
+                    Quantity = mocktail.Quantity
+                };
+            }
+        });
 
-        // Remove the mocktail from the cart asynchronously
-        var cart = LoadChangeAndSaveCart(cart => cart.RemoveMocktail(id));
-        return Ok(cart);
+        return RedirectToAction("Index");
     }
 
-    public async Task<IActionResult> EmptyCart()
+    public IActionResult Delete(int id)
     {
-        // Clear the entire cart asynchronously if needed
-        await Task.Run(() => LoadChangeAndSaveCart(cart => cart.EmptyAll()));
-        return Ok("Cart cleared successfully.");
+        var cart = LoadChangeAndSaveCart(cart => cart.RemoveMocktail(id));
+        return RedirectToAction("Index");
+    }
+
+    public IActionResult EmptyCart()
+    {
+        LoadChangeAndSaveCart(cart => cart.EmptyAll());
+        return RedirectToAction("Index");
     }
 
     private void SaveCartToCookie(Cart cart)
