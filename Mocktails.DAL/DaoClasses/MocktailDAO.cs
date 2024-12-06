@@ -117,15 +117,14 @@ public class MocktailDAO : BaseDAO, IMocktailDAO
         return await connection.ExecuteAsync(query, entity) > 0;
     }
 
-    public async Task<bool> UpdateMocktailQuantityAsync(int id, int quantityChange, byte[] rowVersion)
+    public async Task<bool> UpdateMocktailQuantityAsync(int id, int quantityChange)
     {
         const string query = @"
         UPDATE Mocktails
         SET Quantity = Quantity + @QuantityChange
-        WHERE Id = @Id AND RowVersion = @RowVersion AND Quantity + @QuantityChange >= 0"; // Prevent negative quantities
+        WHERE Id = @Id = Quantity + @QuantityChange >= 0"; // Prevent negative quantities
 
         using var connection = CreateConnection();
-        var rowsAffected = await connection.ExecuteAsync(query, new { Id = id, QuantityChange = quantityChange, RowVersion = rowVersion });
-        return rowsAffected > 0; // Returns true if update succeeded
+        return await connection.ExecuteAsync(query, id, quantityChange);
     }
 }

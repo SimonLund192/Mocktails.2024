@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mocktails.DAL.Model;
+namespace Mocktails.Website.Models;
 public class Cart
 {
 

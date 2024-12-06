@@ -111,6 +111,11 @@ namespace Mocktails.ApiClient.Products
             var response = await _restClient.ExecuteAsync(request);
             return response.IsSuccessful; // Return true if the update was successful
         }
+
+        public Task<bool> UpdateMocktailQuantityAsync(int id, int quantity)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

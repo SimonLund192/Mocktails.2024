@@ -24,5 +24,5 @@ public interface IMocktailDAO
 
     Task<IEnumerable<Mocktail>> GetCategoryByIdAsync(int categoryId);
     Task<Mocktail> GetMocktailByIdAsync(int id);
-    Task<bool> UpdateMocktailQuantityAsync(int id, int quantity, byte[] rowVersion);
+    Task<bool> UpdateMocktailQuantityAsync(int id, int quantity);
 }
