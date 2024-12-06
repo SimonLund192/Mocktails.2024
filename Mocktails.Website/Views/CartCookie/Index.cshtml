@@ -33,10 +33,17 @@
                     <a class="btn btn-danger" href="@Url.Action("Delete", "ShoppingCart", new { id = mocktailQuantity.Id })" title="delete product"><span class="bi-trash"></span></a>
                     
                 </div>
+
+                
             </div>
         }
     }
     <p></p>
     <h3 class="display-6">Total: $@Model.GetTotal()</h3>
     <a class="btn btn-danger" href="@Url.Action("EmptyCart", "ShoppingCart")">Empty entire cart <span class="bi bi-trash"></span></a>
+    <div class="text-center">
+        <a href="@Url.Action("Checkout", "ShoppingCart")" class="btn btn-success btn-lg">
+            Proceed to Checkout
+        </a>
+    </div>
 </div>

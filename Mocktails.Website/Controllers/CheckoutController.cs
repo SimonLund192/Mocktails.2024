@@ -8,25 +8,30 @@ using Mocktails.Website.Models;
 
 namespace Mocktails.Website.Controllers;
 
-[Route("checkout")]
+[Route("Checkout")]
+[ApiController]
 public class CheckoutController : Controller
 {
     private readonly IMocktailApiClient _mocktailApiClient;
     private readonly IOrdersApiClient _ordersApiClient;
+    private readonly CartCookieController _cartCookieController;
 
-    public CheckoutController(IMocktailApiClient mocktailApiClient, IOrdersApiClient ordersApiClient)
+    public CheckoutController(
+        IMocktailApiClient mocktailApiClient,
+        IOrdersApiClient ordersApiClient,
+        CartCookieController cartCookieController)
     {
         _mocktailApiClient = mocktailApiClient;
         _ordersApiClient = ordersApiClient;
+        _cartCookieController = cartCookieController;
     }
 
     [HttpPost]
     public async Task<IActionResult> ProcessCheckout(int userId, string shippingAddress)
     {
-        var cartCookieController = new CartCookieController(_mocktailApiClient);
 
         // Retrieve the cart from cookies
-        var cart = cartCookieController.GetCartFromCookie();
+        var cart = _cartCookieController.GetCartFromCookie();
         if (cart == null || !cart.MocktailQuantities.Any())
         {
             return BadRequest("Cart is empty.");
@@ -82,6 +87,54 @@ public class CheckoutController : Controller
         }
     }
 
+    
+
+    [HttpPost("Checkout")]
+    public async Task<IActionResult> CompleteCheckout(string shippingAddress)
+    {
+        var cart = _cartCookieController.GetCartFromCookie();
+
+        if (cart == null || !cart.MocktailQuantities.Any())
+        {
+            TempData["ErrorMessage"] = "Your cart is empty.";
+            return RedirectToAction("Index");
+        }
+
+        // Logic to save order and order items
+        try
+        {
+            // Call your API client to create an order
+            var orderDto = new OrderDTO
+            {
+                UserId = 1, // Replace with logged-in user ID
+                OrderDate = DateTime.Now,
+                TotalAmount = cart.GetTotal(),
+                Status = "Pending",
+                ShippingAddress = shippingAddress,
+                OrderItems = cart.MocktailQuantities.Values.Select(mq => new OrderItemDTO
+                {
+                    MocktailId = mq.Id,
+                    Quantity = mq.Quantity,
+                    Price = mq.Price,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
+                }).ToList()
+            };
+
+            var orderId = await _ordersApiClient.CreateOrderAsync(orderDto);
+
+            // Clear the cart after successful checkout
+            _cartCookieController.EmptyCart();
+
+            TempData["SuccessMessage"] = "Order placed successfully!";
+            return RedirectToAction("OrderConfirmation", new { orderId });
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = $"Error during checkout: {ex.Message}";
+            return RedirectToAction("Index");
+        }
+    }
 
     private void ClearCart()
     {
