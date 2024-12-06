@@ -1,50 +1,42 @@
 ﻿@model Mocktails.Website.Models.Cart
 
-<h1>Your Shopping Cart</h1>
+@{
+    ViewData["Title"] = "Cart";
+}
 
-@if (!Model.MocktailQuantities.Any())
-{
-    <p>Your cart is empty.</p>
-}
-else
-{
-    <table>
-        <thead>
-            <tr>
-                <th>Mocktail</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Total</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.MocktailQuantities.Values)
-            {
-                <tr>
-                    <td>@item.Name</td>
-                    <td>@item.Price.ToString("C")</td>
-                    <td>@item.Quantity</td>
-                    <td>@(item.Price * item.Quantity).ToString("C")</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id" asp-route-quantity="@(item.Quantity + 1)">Add</a> |
-                        <a asp-action="Edit" asp-route-id="@item.Id" asp-route-quantity="@(item.Quantity - 1)">Remove</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="3">Total:</td>
-                <td>@Model.GetTotal().ToString("C")</td>
-            </tr>
-            <tr>
-                <td colspan="5">
-                    <a asp-action="EmptyCart">Empty Cart</a> |
-                    <a asp-controller="Checkout" asp-action="Checkout">Proceed to Checkout</a>
-                </td>
-            </tr>
-        </tfoot>
-    </table>
-}
+<div class="text-center" style="width:800px; margin:0px auto;">
+    <h1 class="display-4">Cart</h1>
+    @if (Model == null || Model.MocktailQuantities.Count == 0)
+    {
+        <div class="row">
+            <div class="col-12 text-center">
+                <h3>Cart is empty</h3>
+            </div>
+        </div>
+    }
+    else
+    {
+        @foreach (var keyvalue in Model.MocktailQuantities)
+        {
+            <div class="row" style="padding-top:2px;">
+                <div class="col-6">
+                    @{MocktailQuantity mocktailQuantity = @keyvalue.Value;}
+                    @mocktailQuantity.Quantity @(mocktailQuantity.Name)(s)
+                    at $@mocktailQuantity.Price each
+                </div>
+                <div class="col-3">
+                    total $@mocktailQuantity.GetTotalPrice()
+                    </div>
+                <div class="col-3">
+                    <a class="btn btn-primary" href="@Url.Action("Add", "Cart", new { id = @mocktailQuantity.Id, quantity=-1})" title="remove one">-1</a>
+                    <a class="btn btn-primary" href="@Url.Action("Add", "Cart", new { id = @mocktailQuantity.Id, quantity=1})" title="add one">+1</a>
+                    <a class="btn btn-danger" href="@Url.Action("Delete", "Cart", new { id = @mocktailQuantity.Id})" title="delete product"><span class="bi-trash"></span></a>
+
+                </div>
+            </div>
+        }
+    }
+    <p></p>
+    <h3 class="display-6">Total: $@Model.GetTotal()</h3>
+    <a class="btn btn-danger" href="@Url.Action("EmptyCart", "Cart")">Empty entire cart <span class="bi bi-trash"></span></a>
+</div>

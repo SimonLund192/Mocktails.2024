@@ -44,6 +44,32 @@ public class CartCookieController : Controller
         return RedirectToAction("Index");
     }
 
+    // TODO: Figure out HOW TO FIX THIS
+
+    //public async Task<ActionResult> Add(int id, int quantity)
+    //{
+    //    // Fetch the mocktail from the API
+    //    var mocktail = await _mocktailApiClient.GetMocktailByIdAsync(id);
+    //    if (mocktail == null)
+    //    {
+    //        return NotFound($"Mocktail with ID {id} not found.");
+    //    }
+
+    //    // Load the cart, add the item, and save it back
+    //    var cart = LoadChangeAndSaveCart(cart =>
+    //    {
+    //        cart.ChangeQuantity(new MocktailQuantityDTO
+    //        {
+    //            Id = mocktail.Id,
+    //            Name = mocktail.Name,
+    //            Price = mocktail.Price,
+    //            Quantity = quantity
+    //        });
+    //    });
+
+    //    return RedirectToAction("Index");
+    //}
+
     public async Task<IActionResult> Add(int id, int quantity)
     {
 
