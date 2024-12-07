@@ -9,8 +9,7 @@ using Mocktails.Website.Models;
 namespace Mocktails.Website.Controllers;
 
 
-[Route("ShoppingCart")]
-[ApiController]
+[Route("Cart")]
 public class CartCookieController : Controller
 {
     private readonly IMocktailApiClient _mocktailApiClient;
@@ -22,7 +21,7 @@ public class CartCookieController : Controller
         //_ordersApiClient = ordersApiClient;
     }
 
-    [HttpGet]
+    [HttpGet("")]
     public IActionResult Index()
     {
         var cart = GetCartFromCookie();
@@ -106,7 +105,7 @@ public class CartCookieController : Controller
         return RedirectToAction("Index");
     }
 
-    [HttpDelete("Delete/{id}")]
+    [HttpGet("Delete/{id}")]
     public IActionResult Delete(int id)
     {
         var cart = LoadChangeAndSaveCart(cart => cart.RemoveMocktail(id));
@@ -128,11 +127,13 @@ public class CartCookieController : Controller
         return View("Checkout", cart); // Ensure there's a "Checkout" view.
     }
 
+    [HttpPost("EmptyCart")]
     public IActionResult EmptyCart()
     {
-        var cart = LoadChangeAndSaveCart(cart => cart.EmptyAll());
-        return RedirectToAction("Index", cart);
+        LoadChangeAndSaveCart(cart => cart.EmptyAll());
+        return RedirectToAction("Index");
     }
+
 
     private void SaveCartToCookie(Cart cart)
     {
