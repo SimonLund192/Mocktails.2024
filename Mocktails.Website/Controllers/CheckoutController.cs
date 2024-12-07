@@ -89,7 +89,7 @@ public class CheckoutController : Controller
 
     
 
-    [HttpPost("Checkout")]
+    [HttpPost("OrderConfirmation")]
     public async Task<IActionResult> CompleteCheckout(string shippingAddress)
     {
         var cart = _cartCookieController.GetCartFromCookie();
@@ -127,7 +127,7 @@ public class CheckoutController : Controller
             _cartCookieController.EmptyCart();
 
             TempData["SuccessMessage"] = "Order placed successfully!";
-            return RedirectToAction("OrderConfirmation", new { orderId });
+            return RedirectToAction("OrderConfirmation", cart/*new { orderId }*/);
         }
         catch (Exception ex)
         {
