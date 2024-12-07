@@ -46,7 +46,7 @@ public class CartCookieController : Controller
             }
         });
 
-        return RedirectToAction("Index", cart);
+        return View("Index", cart);
     }
 
     // TODO: Figure out HOW TO FIX THIS
@@ -98,12 +98,12 @@ public class CartCookieController : Controller
                     Id = mocktail.Id,
                     Name = mocktail.Name,
                     Price = mocktail.Price,
-                    Quantity = mocktail.Quantity
+                    Quantity = quantity
                 };
             }
         });
 
-        return RedirectToAction("Index", cart);
+        return RedirectToAction("Index");
     }
 
     [HttpDelete("Delete/{id}")]
@@ -130,8 +130,8 @@ public class CartCookieController : Controller
 
     public IActionResult EmptyCart()
     {
-        LoadChangeAndSaveCart(cart => cart.EmptyAll());
-        return RedirectToAction("Index");
+        var cart = LoadChangeAndSaveCart(cart => cart.EmptyAll());
+        return RedirectToAction("Index", cart);
     }
 
     private void SaveCartToCookie(Cart cart)

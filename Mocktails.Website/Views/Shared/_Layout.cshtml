@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Text.Json;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -55,7 +56,7 @@
                     </ul>
                 </div>
             </div>
-            @* @{
+            @{
                 Context.Request.Cookies.TryGetValue("Cart", out string? cookie);
                 Cart cart = null;
                 if (cookie != null)
@@ -67,7 +68,7 @@
                     <a class="text-light" style="width:220px" href="@Url.Action("Index", "Cart")">Cart: @cart.GetNumberOfProducts() products ($@cart.GetTotal())<span class="bi-cart" style="margin-left:10px;"></span></a>
                 }
 
-            } *@
+            }
         </nav>
     </header>
 
