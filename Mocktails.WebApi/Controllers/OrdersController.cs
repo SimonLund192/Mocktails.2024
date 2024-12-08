@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mocktails.DAL.DaoClasses;
+using Mocktails.DAL.Model;
 using Mocktails.WebApi.DTOs;
 using Mocktails.WebApi.DTOs.Converters;
 
@@ -10,94 +11,67 @@ namespace Mocktails.WebApi.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly IOrderDAO _orderDAO;
-    private readonly IOrderItemDAO _orderItemDAO;
+    private readonly IMocktailDAO _mocktailDAO;
 
-    public OrdersController(IOrderDAO orderDAO, IOrderItemDAO orderItemDAO)
+    public OrdersController(
+        IOrderDAO orderDAO,
+        IMocktailDAO mocktailDAO)
     {
         _orderDAO = orderDAO;
-        _orderItemDAO = orderItemDAO;
+        _mocktailDAO = mocktailDAO;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetOrders()
+    public async Task<ActionResult<List<OrderDTO>>> GetOrders(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20)
     {
-        try
-        {
-            var orders = await _orderDAO.GetOrdersAsync();
-            var orderDTOs = orders.Select(OrderConverter.ToDTO).ToList();
-            return Ok(orderDTOs);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"An error occurred: {ex.Message}");
-        }
+        var orders = await _orderDAO.GetOrdersAsync();
+        var orderDTOs = orders.Select(OrderConverter.ToDTO).ToList();
+        return orderDTOs;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateOrder([FromBody] OrderDTO orderDTO)
+    public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest request)
     {
-        try
-        {
-            var order = OrderConverter.ToModel(orderDTO);
-            var orderId = await _orderDAO.CreateOrderAsync(order);
+        var orderItems = new List<OrderItem>();
 
-            return CreatedAtAction(nameof(GetOrderByIdAsync), new { id = orderId }, null);
-        }
-        catch (Exception ex)
+        foreach (var item in request.Products)
         {
-            return StatusCode(500, $"An error occurred: {ex.Message}");
+            var mocktail = await _mocktailDAO.GetMocktailByIdAsync(item.Id);
+            var orderItem = new OrderItem()
+            {
+                MocktailId = item.Id,
+                Quantity = item.Quantity,
+                Price = mocktail.Price
+            };
+            orderItems.Add(orderItem);
         }
+
+        var order = new Order()
+        {
+            UserId = request.UserId,
+            OrderDate = DateTime.Now,
+            ShippingAddress = request.ShippingAddress,
+            OrderItems = orderItems
+        };
+
+        var orderId = await _orderDAO.CreateOrderAsync(order);
+
+        //return CreatedAtAction(nameof(GetOrderByIdAsync), new { id = orderId }, null);
+
+        return Ok(orderId);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<OrderDTO>> GetOrderByIdAsync(int id)
+    public async Task<ActionResult<OrderDTO>> GetOrderByIdAsync([FromRoute] int id)
     {
-        try
-        {
-            // Fetch the order
-            var order = await _orderDAO.GetOrderByIdAsync(id);
-            if (order == null)
-            {
-                return NotFound($"Order with ID {id} not found.");
-            }
+        var order = await _orderDAO.GetOrderByIdAsync(id);
+        if (order is null)
+            return NotFound();
 
-            // Fetch detailed order items
-            var orderItems = await _orderItemDAO.GetOrderItemsByOrderIdAsync(id);
+        var orderDTO = OrderConverter.ToDTO(order);
 
-            // Convert the order and its items to DTOs
-            var orderDTO = OrderConverter.ToDTO(order);
-            orderDTO.OrderItems = orderItems.Select(OrderItemConverter.ToDTO).ToList();
-
-            return Ok(orderDTO);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"An error occurred: {ex.Message}");
-        }
-    }
-
-    [HttpGet("OrderItemsFromOrderId")]
-    public async Task<IActionResult> GetOrderItemsByOrderIdAsync([FromQuery] int orderId)
-    {
-        if (orderId <= 0)
-        {
-            return BadRequest("Invalid OrderId. It must be greater than zero.");
-        }
-
-        try
-        {
-            var orderItems = await _orderItemDAO.GetOrderItemsByOrderIdAsync(orderId);
-            if (orderItems == null || !orderItems.Any())
-            {
-                return NotFound($"No OrderItems found for OrderId {orderId}.");
-            }
-
-            var orderItemDTOs = orderItems.Select(OrderItemConverter.ToDTO).ToList();
-            return Ok(orderItemDTOs);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"An error occurred: {ex.Message}");
-        }
+        return Ok(orderDTO);
     }
 }

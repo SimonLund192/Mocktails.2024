@@ -18,14 +18,12 @@
         <p>Discover refreshing mocktail drinks to suit every taste. Browse our selection below!</p>
     </div>
 
-    
-
     <!-- Search Bar -->
     <div class="row justify-content-center mb-4">
         <div class="col-md-8 col-lg-6">
-            <form method="get" action="@Url.Action("Search", "Home")">
+            <form method="get" action="@Url.Action("Index", "Home")">
                 <div class="input-group input-group-lg">
-                    <input type="text" name="query" class="form-control rounded-pill" placeholder="Search for mocktails..." aria-label="Search for mocktails">
+                    <input type="search" name="q" class="form-control rounded-pill" placeholder="Search for mocktails..." aria-label="Search for mocktails">
                     <div class="input-group-append">
                         <button class="btn btn-primary rounded-pill" type="submit"><i class="fas fa-search"></i> Search</button>
                     </div>
@@ -59,7 +57,9 @@
 
                             <div class="d-flex justify-content-between">
                                 <a href="@Url.Action("Details", "Mocktails", new { id = mocktail.Id })" class="btn btn-outline-primary btn-sm">View Details</a>
-                                <button class="btn btn-success btn-sm add-to-cart" data-id="@mocktail.Id"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                                <td>
+                                    <a class="btn-sm btn-primary" href="@Url.Action("Add", "Cart", new { id = mocktail.Id, quantity = 1 })">Add to cart<span class="bi-cart-plus" style="margin-left:10px;"></span></a>
+                                </td>
                             </div>
                         </div>
                     </div>

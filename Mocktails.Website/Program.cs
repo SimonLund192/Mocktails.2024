@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Mocktails.ApiClient.Orders;
 using Mocktails.ApiClient.Products;
 using Mocktails.ApiClient.Users;
-using Mocktails.Shared.Services;
+using Mocktails.Website.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 
 // Add authentication services and configure cookie authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -27,19 +29,11 @@ builder.Services.AddSession(options =>
 });
 
 // Register the correct RestClient implementation
-builder.Services.AddSingleton<IMocktailApiClient>((_) =>
-{
-    // Assuming this is the correct base URL
-    return new MocktailsApiClient("https://localhost:7203");
-});
-
-// Register UsersApiClient
+builder.Services.AddSingleton<IMocktailApiClient>((_) => new MocktailsApiClient("https://localhost:7203"));
 builder.Services.AddSingleton<IUsersApiClient>((_) => new UsersApiClient("https://localhost:7203"));
+builder.Services.AddSingleton<IOrdersApiClient>((_) => new OrdersApiClient("https://localhost:7203"));
 
-// Register ShoppingCartApiClient
-builder.Services.AddSingleton((_) => new ShoppingCartApiClient("https://localhost:7203")); // Replace with your actual Web API URL
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ShoppingCartService>();
+builder.Services.AddSingleton<ICartService, CookieCartService>();
 
 var app = builder.Build();
 

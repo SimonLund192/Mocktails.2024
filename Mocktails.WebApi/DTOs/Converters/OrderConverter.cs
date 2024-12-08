@@ -1,4 +1,5 @@
-﻿using Mocktails.DAL.Model;
+﻿using Mocktails.ApiClient.Orders.DTOs;
+using Mocktails.DAL.Model;
 using Mocktails.WebApi.Converters;
 using Mocktails.WebApi.DTOs;
 
@@ -14,6 +15,14 @@ public static class OrderConverter
 
         var orderDTO = new OrderDTO();
         orderToConvert.CopyPropertiesTo(orderDTO);
+
+        orderDTO.OrderItems = orderToConvert.OrderItems.Select(o =>
+        {
+            var orderItemDTO = new OrderItemDTO();
+            o.CopyPropertiesTo(orderItemDTO);
+            return orderItemDTO;
+        }).ToList();
+
         return orderDTO;
     }
 

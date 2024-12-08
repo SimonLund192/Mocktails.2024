@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using System.Text.Json;
+@inject Mocktails.Website.Services.ICartService CartService
+
+@{
+    Cart cart = CartService.GetCart();
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,7 +14,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Mocktails.Website.styles.css" asp-append-version="true" />
-    
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -27,6 +34,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Mocktails" asp-action="Index">Mocktails</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Cart">
+                                Cart
+                                <span class="badge bg-primary">
+                                    @cart.GetNumberOfProducts()
+                                </span>
+                            </a>
+                        </li>
+
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
@@ -44,17 +60,15 @@
                             </li>
                         }
 
-                        <!-- Shopping Cart Button moved to the right -->
+                        @* <!-- Shopping Cart Button moved to the right -->
                         <a href="/ShoppingCart" class="btn btn-outline-primary ml-auto">
                             <i class="fas fa-shopping-cart"></i> Cart <span id="cart-count">0</span>
-                        </a>
+                        </a> *@
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-
-
 
     <!-- Main Content Section -->
     <div class="container flex-grow-1">
@@ -90,50 +104,3 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Mocktails.Website.styles.css" asp-append-version="true" />
 </head>
-
-@* @if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-}
-
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
-} *@
-
-<script>
-        document.addEventListener('DOMContentLoaded', () => {
-        const buttons = document.querySelectorAll('.add-to-cart');
-        buttons.forEach(button => {
-            button.addEventListener('click', async (event) => {
-                const mocktailId = event.target.closest('.add-to-cart').getAttribute('data-id');
-
-                // Ensure mocktailId is valid
-                if (!mocktailId || isNaN(mocktailId) || parseInt(mocktailId) <= 0) {
-                    alert('Invalid MocktailId');
-                    return;
-                }
-
-                try {
-                    const response = await fetch('/ShoppingCart/AddToCart', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ mocktailId: parseInt(mocktailId), quantity: 1 }) // Default quantity is 1
-                    });
-
-                    if (response.ok) {
-                        alert('Item added to cart successfully!');
-                    } else {
-                        const errorText = await response.text();
-                        alert(`Failed to add item to cart: ${errorText}`);
-                    }
-                } catch (error) {
-                    console.error('Error adding to cart:', error);
-                    alert('An error occurred while adding the item to the cart.');
-                }
-            });
-        });
-    });
-</script>

@@ -7,9 +7,9 @@ using Dapper;
 using Mocktails.DAL.Model;
 
 namespace Mocktails.DAL.DaoClasses;
+
 public class OrderItemDAO : BaseDAO, IOrderItemDAO
 {
-
     public OrderItemDAO(string connectionString) : base(connectionString) { }
 
     public async Task<int> CreateOrderItemAsync(OrderItem entity)

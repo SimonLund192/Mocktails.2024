@@ -7,6 +7,7 @@ using Mocktails.ApiClient.Orders.DTOs;
 using RestSharp;
 
 namespace Mocktails.ApiClient.Orders;
+
 public class OrderItemsApiClient : IOrderItemsApiClient
 {
     private readonly RestClient _restClient;
@@ -15,6 +16,7 @@ public class OrderItemsApiClient : IOrderItemsApiClient
     {
         _restClient = new RestClient(baseUrl);
     }
+
     public async Task<int> CreateOrderItemAsync(OrderItemDTO entity)
     {
         var request = new RestRequest("api/v1/orderItems", Method.Post);

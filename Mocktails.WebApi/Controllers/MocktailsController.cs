@@ -101,12 +101,12 @@ public class MocktailsController : ControllerBase
 
             var success = await _mocktailDAO.UpdateMocktailQuantityAsync(
                 purchase.MocktailId,
-                purchase.Quantity,
-                purchase.RowVersion
+                purchase.Quantity
             );
 
             if (!success)
-                return Conflict("Concurrency conflict occurred. Please refresh and try again.");
+                // TODO: Removed RowVersion - figure out what to do instead
+                return Conflict("Something something...MocktailsController ");
 
             return Ok("Purchase successful.");
         }

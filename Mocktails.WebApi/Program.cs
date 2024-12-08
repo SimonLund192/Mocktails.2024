@@ -22,13 +22,13 @@ const string connectionString = "Data Source=.;Initial Catalog=MocktailsDB;Integ
 builder.Services.AddSingleton<IMocktailDAO>((_) => new MocktailDAO(connectionString));
 builder.Services.AddSingleton<ICategoryDAO>((_) => new CategoryDAO(connectionString));
 builder.Services.AddSingleton<IUserDAO>((_) => new UserDAO(connectionString));
-builder.Services.AddSingleton<IShoppingCartDAO>((_) => new ShoppingCartDAO(connectionString));
+
 
 builder.Services.AddSingleton<IOrderDAO>((_) => new OrderDAO(connectionString));
 builder.Services.AddSingleton <IOrderItemDAO>((_) => new OrderItemDAO(connectionString));
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ShoppingCartService>();
+
 
 
 //// Add DbContext for Entity Framework (MocktailsDbContext)
