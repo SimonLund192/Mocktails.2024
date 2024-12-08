@@ -10,7 +10,7 @@
         </div>
 
         <h3>Your Order</h3>
-        @foreach (var item in Model.MocktailQuantities.Values)
+        @foreach (var item in Model.Products)
         {
             <div>
                 <strong>@item.Name</strong> x @item.Quantity - $@item.GetTotalPrice()

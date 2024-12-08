@@ -1,4 +1,10 @@
 ﻿@using System.Text.Json;
+@inject Mocktails.Website.Services.ICartService CartService
+
+@{
+    Cart cart = CartService.GetCart();
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +14,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Mocktails.Website.styles.css" asp-append-version="true" />
-    
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -29,7 +35,12 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Mocktails" asp-action="Index">Mocktails</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Cart">Cart</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Cart">
+                                Cart
+                                <span class="badge bg-primary">
+                                    @cart.GetNumberOfProducts()
+                                </span>
+                            </a>
                         </li>
 
                         @if (User.Identity.IsAuthenticated)
@@ -56,23 +67,8 @@
                     </ul>
                 </div>
             </div>
-            @{
-                Context.Request.Cookies.TryGetValue("Cart", out string? cookie);
-                Cart cart = null;
-                if (cookie != null)
-                {
-                    cart = ViewBag.Cart ?? JsonSerializer.Deserialize<Cart>(cookie ?? "");
-                }
-                if (cart != null && cookie != null)
-                {
-                    <a class="text-light" style="width:220px" href="@Url.Action("Index", "Cart")">Cart: @cart.GetNumberOfProducts() products ($@cart.GetTotal())<span class="bi-cart" style="margin-left:10px;"></span></a>
-                }
-
-            }
         </nav>
     </header>
-
-
 
     <!-- Main Content Section -->
     <div class="container flex-grow-1">

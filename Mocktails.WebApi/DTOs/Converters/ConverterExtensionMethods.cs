@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 
 namespace Mocktails.WebApi.DTOs.Converters;
+
 public static class ConverterExtensionMethods
 {
     /// <summary>
@@ -17,13 +13,11 @@ public static class ConverterExtensionMethods
     /// <param name="sourceObject">The object to copy attribute values from</param>
     /// <param name="destinationObject">The object to copy attribute values to</param>
     /// <returns></returns>
-    /// 
-
     public static T CopyPropertiesTo<T>(this object sourceObject, T destinationObject)
     {
-        foreach(PropertyInfo destinationProperty in destinationObject.GetType().GetProperties().Where(p => p.CanWrite))
+        foreach (PropertyInfo destinationProperty in destinationObject.GetType().GetProperties().Where(p => p.CanWrite))
         {
-            if (!sourceObject.GetType().GetProperties().Any(sourceProp => sourceProp.Name == 
+            if (!sourceObject.GetType().GetProperties().Any(sourceProp => sourceProp.Name ==
             destinationProperty.Name && sourceProp.PropertyType == destinationProperty.PropertyType)) continue;
 
             var sourceProp = sourceObject.GetType().GetProperty(destinationProperty.Name);

@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Mocktails.ApiClient.Orders;
 using Mocktails.ApiClient.Products;
 using Mocktails.ApiClient.Users;
+using Mocktails.Website.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 
 // Add authentication services and configure cookie authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -30,6 +32,8 @@ builder.Services.AddSession(options =>
 builder.Services.AddSingleton<IMocktailApiClient>((_) => new MocktailsApiClient("https://localhost:7203"));
 builder.Services.AddSingleton<IUsersApiClient>((_) => new UsersApiClient("https://localhost:7203"));
 builder.Services.AddSingleton<IOrdersApiClient>((_) => new OrdersApiClient("https://localhost:7203"));
+
+builder.Services.AddSingleton<ICartService, CookieCartService>();
 
 var app = builder.Build();
 

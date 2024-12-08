@@ -135,10 +135,4 @@
 //            return RedirectToAction("Checkout");
 //        }
 //    }
-
-//    private void ClearCart()
-//    {
-//        // Clear the cart by deleting the cookie
-//        Response.Cookies.Delete("Cart");
-//    }
 //}
