@@ -23,31 +23,48 @@ public class OrderDAO : BaseDAO, IOrderDAO
             VALUES (@OrderId, @MocktailId, @Quantity, @Price);
             """;
 
+        const string updateProductStockQuery = """
+            UPDATE Mocktails
+            SET Quantity = Quantity - @Quantity
+            WHERE Id = @MocktailId AND Quantity >= @Quantity;
+            """;
 
         using var connection = CreateConnection();
-        //using var transaction = connection.BeginTransaction();
+        connection.Open();
+        using var transaction = connection.BeginTransaction();
 
         try
         {
             // Create the order and retrieve its ID
-            var orderId = await connection.QuerySingleAsync<int>(insertOrderQuery, entity);
+            var orderId = await connection.QuerySingleAsync<int>(insertOrderQuery, entity, transaction);
 
             // Insert each order item
             foreach (var orderItem in entity.OrderItems)
             {
                 orderItem.OrderId = orderId;
-                await connection.ExecuteAsync(insertOrderItemQuery, orderItem);
+
+                // Update stock
+                var rowsAffected = await connection.ExecuteAsync(
+                    updateProductStockQuery,
+                    new { MocktailId = orderItem.MocktailId, Quantity = orderItem.Quantity },
+                    transaction
+                );
+
+                if (rowsAffected == 0)
+                {
+                    throw new Exception($"Insufficient stock for Mocktail ID: {orderItem.MocktailId}");
+                }
+
+                await connection.ExecuteAsync(insertOrderItemQuery, orderItem, transaction);
             }
 
-            //transaction.Commit();
-            
-            
+            transaction.Commit();
 
             return orderId;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            //transaction.Rollback();
+            transaction.Rollback();
             throw;
         }
     }

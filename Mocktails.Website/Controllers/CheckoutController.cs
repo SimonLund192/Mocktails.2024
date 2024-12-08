@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mocktails.ApiClient.Orders;
 using Mocktails.ApiClient.Orders.DTOs;
-using Mocktails.Website.Models;
 using Mocktails.Website.Services;
 
 namespace Mocktails.Website.Controllers;
@@ -59,14 +58,15 @@ public class CheckoutController : Controller
 
             _cartService.LoadChangeAndSaveCart(cart => cart.EmptyAll());
 
+
             return RedirectToAction("Receipt", new { orderId });
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = $"An error occurred while placing the order: {ex.Message}";
+            return RedirectToAction("Index", "Cart");
+        }
     }
-    catch (Exception ex)
-    {
-        TempData["ErrorMessage"] = $"An error occurred while placing the order: {ex.Message}";
-        return RedirectToAction("Index", "Cart");
-    }
-}
 
     [HttpGet("order-receipt/{orderId}")]
     public IActionResult Receipt([FromRoute] int orderId)
