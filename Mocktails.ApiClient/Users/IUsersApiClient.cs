@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Mocktails.ApiClient.Users.DTOs;
 
 namespace Mocktails.ApiClient.Users;
+
 public interface IUsersApiClient
 {
     Task<IEnumerable<UserDTO>> GetUserByPartOfNameAsync(string partOfName);

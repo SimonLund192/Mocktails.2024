@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Mocktails.ApiClient.Orders.DTOs;
 
 namespace Mocktails.ApiClient.Orders;
+
 public interface IOrdersApiClient
 {
     Task<int> CreateOrderAsync(OrderDTO entity);

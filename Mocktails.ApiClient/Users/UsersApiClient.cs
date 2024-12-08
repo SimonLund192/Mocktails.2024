@@ -7,6 +7,7 @@ using Mocktails.ApiClient.Users.DTOs;
 using RestSharp;
 
 namespace Mocktails.ApiClient.Users;
+
 public class UsersApiClient : IUsersApiClient
 {
 

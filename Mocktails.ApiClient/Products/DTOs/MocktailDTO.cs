@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Mocktails.ApiClient.Products.DTOs;
+
 public class MocktailDTO
 {
     public int Id { get; set; }

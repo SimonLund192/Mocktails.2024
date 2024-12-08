@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Mocktails.ApiClient.Orders;
 using Mocktails.ApiClient.Products;
 using Mocktails.ApiClient.Users;
-using Mocktails.Shared.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,16 +27,9 @@ builder.Services.AddSession(options =>
 });
 
 // Register the correct RestClient implementation
-builder.Services.AddSingleton<IMocktailApiClient>((_) =>
-{
-    // Assuming this is the correct base URL
-    return new MocktailsApiClient("https://localhost:7203");
-});
-
-// Register UsersApiClient
+builder.Services.AddSingleton<IMocktailApiClient>((_) => new MocktailsApiClient("https://localhost:7203"));
 builder.Services.AddSingleton<IUsersApiClient>((_) => new UsersApiClient("https://localhost:7203"));
-
-
+builder.Services.AddSingleton<IOrdersApiClient>((_) => new OrdersApiClient("https://localhost:7203"));
 
 var app = builder.Build();
 
