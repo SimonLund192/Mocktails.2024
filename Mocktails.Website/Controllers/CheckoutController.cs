@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mocktails.ApiClient.Orders;
+using Mocktails.ApiClient.Orders.DTOs;
 using Mocktails.Website.Services;
 
 namespace Mocktails.Website.Controllers;
@@ -23,13 +24,47 @@ public class CheckoutController : Controller
     {
         var cart = _cartService.GetCart();
 
-        var isSuccess = true;
-        var orderId = 1337;
+        if (cart is null || cart.IsEmpty)
+        {
+            TempData["ErrorMessage"] = "Your cart is ??";
+            return RedirectToAction("Index");
+        }
 
-        return isSuccess
-            ? RedirectToAction("Receipt", new { orderId = orderId })
-            : RedirectToAction("Index", "Cart");
+        #region UserIdClaim
+        //var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        //if (userIdClaim is null)
+        //{
+        //    TempData["ErrorMessage"] = "You must be logged in";
+        //    return RedirectToAction("Index");
+        //}
+
+        //var userId = int.Parse(userIdClaim.Value);
+        #endregion
+
+        var orderRequest = new CreateOrderRequest
+        {
+            ShippingAddress = shippingAddress,
+            Products = cart.Products.Select(p => new CreateOrderRequest.Product
+            {
+                Id = p.Id,
+                Quantity = p.Quantity,
+            }).ToList()
+        };
+
+        try
+        {
+            // Pass the OrderDTO to CreateOrderAsync
+            var orderId = await _ordersApiClient.CreateOrderAsync(orderRequest);
+
+
+           return RedirectToAction("Receipt", new { orderId });
     }
+    catch (Exception ex)
+    {
+        TempData["ErrorMessage"] = $"An error occurred while placing the order: {ex.Message}";
+        return RedirectToAction("Index", "Cart");
+    }
+}
 
     [HttpGet("order-receipt/{orderId}")]
     public IActionResult Receipt([FromRoute] int orderId)

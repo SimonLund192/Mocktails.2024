@@ -17,10 +17,10 @@ public class OrdersApiClient : IOrdersApiClient
         _restClient = new RestClient(baseUrl);
     }
 
-    public async Task<int> CreateOrderAsync(OrderDTO entity)
+    public async Task<int> CreateOrderAsync(CreateOrderRequest orderRequest)
     {
         var request = new RestRequest("api/v1/orders", Method.Post);
-        request.AddJsonBody(entity);
+        request.AddJsonBody(orderRequest);
 
         var response = await _restClient.ExecuteAsync<int>(request);
         if (response.IsSuccessful)
@@ -29,7 +29,7 @@ public class OrdersApiClient : IOrdersApiClient
         }
         else
         {
-            throw new Exception($"Failed to create order: {response.ErrorMessage}");
+            throw new Exception($"Failed to create order: {response.ErrorMessage}. Response: {response.Content}");
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mocktails.DAL.DaoClasses;
+using Mocktails.DAL.Model;
 using Mocktails.WebApi.DTOs;
 using Mocktails.WebApi.DTOs.Converters;
 
@@ -21,22 +22,37 @@ public class OrdersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetOrders(
+    public async Task<ActionResult<List<OrderDTO>>> GetOrders(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20)
     {
         var orders = await _orderDAO.GetOrdersAsync();
         var orderDTOs = orders.Select(OrderConverter.ToDTO).ToList();
-        return Ok(orderDTOs);
+        return orderDTOs;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateOrder([FromBody] OrderDTO orderDTO)
+    public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest orderDTO)
     {
-        var order = OrderConverter.ToModel(orderDTO);
+        var order = new Order()
+        {
+            UserId = 1,
+            OrderDate = DateTime.Now,
+            ShippingAddress = orderDTO.ShippingAddress,
+            OrderItems = orderDTO.Products
+                .Select(p => new OrderItem()
+                {
+                    MocktailId = p.Id,
+                    Quantity = p.Quantity,
+                })
+                .ToList(),
+        };
+
         var orderId = await _orderDAO.CreateOrderAsync(order);
 
-        return CreatedAtAction(nameof(GetOrderByIdAsync), new { id = orderId }, null);
+        //return CreatedAtAction(nameof(GetOrderByIdAsync), new { id = orderId }, null);
+
+        return Ok(orderId);
     }
 
     [HttpGet("{id}")]
