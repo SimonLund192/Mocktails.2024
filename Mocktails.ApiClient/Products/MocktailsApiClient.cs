@@ -55,7 +55,7 @@ namespace Mocktails.ApiClient.Products
 
         public async Task<IEnumerable<MocktailDTO>> GetMocktailByPartOfNameOrDescription(string partOfNameOrDescription)
         {
-            var request = new RestRequest("/api/v1/mocktails", Method.Get);
+            var request = new RestRequest("/api/v1/mocktails/search", Method.Get);
             request.AddQueryParameter("partOfNameOrDescription", partOfNameOrDescription);
 
             var response = await _restClient.ExecuteAsync<List<MocktailDTO>>(request);

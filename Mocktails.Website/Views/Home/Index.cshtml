@@ -18,14 +18,12 @@
         <p>Discover refreshing mocktail drinks to suit every taste. Browse our selection below!</p>
     </div>
 
-    
-
     <!-- Search Bar -->
     <div class="row justify-content-center mb-4">
         <div class="col-md-8 col-lg-6">
-            <form method="get" action="@Url.Action("Search", "Home")">
+            <form method="get" action="@Url.Action("Index", "Home")">
                 <div class="input-group input-group-lg">
-                    <input type="text" name="query" class="form-control rounded-pill" placeholder="Search for mocktails..." aria-label="Search for mocktails">
+                    <input type="search" name="q" class="form-control rounded-pill" placeholder="Search for mocktails..." aria-label="Search for mocktails">
                     <div class="input-group-append">
                         <button class="btn btn-primary rounded-pill" type="submit"><i class="fas fa-search"></i> Search</button>
                     </div>

@@ -14,25 +14,13 @@ namespace Mocktails.Website.Controllers
             _apiClient = apiClient;
         }
 
-        public async Task<IActionResult> Search(string query)
-        {
-            var mocktails = await _apiClient.GetMocktailByPartOfNameOrDescription(query);
-
-            if (mocktails != null && mocktails.Any())
-            {
-                return RedirectToAction("Details", "Mocktails", new { id = mocktails.First().Id });
-            }
-
-            TempData["ErrorMessage"] = "No mocktails found with that name or description";
-
-            return RedirectToAction("Index");
-        }
-
-        // Mark Index method as async
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? q = null)
         {
             // Get the list of mocktails from the API asynchronously
-            var mocktails = await _apiClient.GetMocktailsAsync(); // Use await for async method
+
+            var mocktails = string.IsNullOrEmpty(q)
+                ? await _apiClient.GetMocktailsAsync()
+                : await _apiClient.GetMocktailByPartOfNameOrDescription(q); // Use await for async method
 
             // Return the view with the list of mocktails
             return View(mocktails);
