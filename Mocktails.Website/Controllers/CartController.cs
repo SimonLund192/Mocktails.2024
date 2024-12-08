@@ -25,18 +25,6 @@ public class CartController : Controller
         return View(cart);
     }
 
-    [HttpPut("Edit/{id}")]
-    public async Task<IActionResult> Edit(int id, int quantity)
-    {
-        var mocktail = await _mocktailApiClient.GetMocktailByIdAsync(id);
-        if (mocktail is null)
-            return NotFound($"Mocktail with ID {id} not found.");
-
-        var cart = _cartService.LoadChangeAndSaveCart(cart => cart.ChangeQuantity(new(mocktail, quantity)));
-
-        return View("Index", cart);
-    }
-
     [HttpGet("Add/{id}")]
     public async Task<IActionResult> Add(int id, int quantity = 1)
     {
@@ -46,7 +34,7 @@ public class CartController : Controller
 
         var cart = _cartService.LoadChangeAndSaveCart(cart => cart.ChangeQuantity(new(mocktail, quantity)));
 
-        return RedirectToAction("Index");
+        return RedirectToAction(nameof(Index));
     }
 
     [HttpGet("Delete/{id}")]
@@ -54,7 +42,7 @@ public class CartController : Controller
     {
         var cart = _cartService.LoadChangeAndSaveCart(cart => cart.RemoveMocktail(id));
 
-        return RedirectToAction("Index");
+        return RedirectToAction(nameof(Index));
     }
 
     [HttpGet("Checkout")]
@@ -65,11 +53,11 @@ public class CartController : Controller
         if (cart == null || cart.IsEmpty)
         {
             TempData["ErrorMessage"] = "Your cart is empty. Add some mocktails to proceed!";
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         // Provide the cart to the checkout view
-        return View("Checkout", cart);
+        return View(cart);
     }
 
     [HttpPost("EmptyCart")]
@@ -77,7 +65,7 @@ public class CartController : Controller
     {
         _cartService.LoadChangeAndSaveCart(cart => cart.EmptyAll());
 
-        return RedirectToAction("Index");
+        return RedirectToAction(nameof(Index));
     }
 
     #region Move to Checkoutcontroller
