@@ -31,18 +31,19 @@ public class CheckoutController : Controller
         }
 
         #region UserIdClaim
-        //var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
-        //if (userIdClaim is null)
-        //{
-        //    TempData["ErrorMessage"] = "You must be logged in";
-        //    return RedirectToAction("Index");
-        //}
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        if (userIdClaim is null)
+        {
+            TempData["ErrorMessage"] = "You must be logged in";
+            return RedirectToAction("Index");
+        }
 
-        //var userId = int.Parse(userIdClaim.Value);
+        var userId = int.Parse(userIdClaim.Value);
         #endregion
 
         var orderRequest = new CreateOrderRequest
         {
+            UserId = userId,
             ShippingAddress = shippingAddress,
             Products = cart.Products.Select(p => new CreateOrderRequest.Product
             {

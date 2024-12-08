@@ -11,14 +11,14 @@ namespace Mocktails.WebApi.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly IOrderDAO _orderDAO;
-    private readonly IOrderItemDAO _orderItemDAO;
+    private readonly IMocktailDAO _mocktailDAO;
 
     public OrdersController(
         IOrderDAO orderDAO,
-        IOrderItemDAO orderItemDAO)
+        IMocktailDAO mocktailDAO)
     {
         _orderDAO = orderDAO;
-        _orderItemDAO = orderItemDAO;
+        _mocktailDAO = mocktailDAO;
     }
 
     [HttpGet]
@@ -32,20 +32,28 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest orderDTO)
+    public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest request)
     {
+        var orderItems = new List<OrderItem>();
+
+        foreach (var item in request.Products)
+        {
+            var mocktail = await _mocktailDAO.GetMocktailByIdAsync(item.Id);
+            var orderItem = new OrderItem()
+            {
+                MocktailId = item.Id,
+                Quantity = item.Quantity,
+                Price = mocktail.Price
+            };
+            orderItems.Add(orderItem);
+        }
+
         var order = new Order()
         {
-            UserId = 1,
+            UserId = request.UserId,
             OrderDate = DateTime.Now,
-            ShippingAddress = orderDTO.ShippingAddress,
-            OrderItems = orderDTO.Products
-                .Select(p => new OrderItem()
-                {
-                    MocktailId = p.Id,
-                    Quantity = p.Quantity,
-                })
-                .ToList(),
+            ShippingAddress = request.ShippingAddress,
+            OrderItems = orderItems
         };
 
         var orderId = await _orderDAO.CreateOrderAsync(order);

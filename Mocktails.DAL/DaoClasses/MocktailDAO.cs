@@ -20,8 +20,6 @@ public class MocktailDAO : BaseDAO, IMocktailDAO
         // Create connection and execute the query
         using var connection = CreateConnection();
         return await connection.QuerySingleAsync<int>(query, entity);
-
-
     }
 
     public async Task<bool> DeleteMocktailAsync(int id)
