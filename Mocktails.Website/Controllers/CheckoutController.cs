@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mocktails.ApiClient.Orders;
 using Mocktails.ApiClient.Orders.DTOs;
+using Mocktails.Website.Models;
 using Mocktails.Website.Services;
 
 namespace Mocktails.Website.Controllers;
@@ -56,8 +57,9 @@ public class CheckoutController : Controller
             // Pass the OrderDTO to CreateOrderAsync
             var orderId = await _ordersApiClient.CreateOrderAsync(orderRequest);
 
+            _cartService.LoadChangeAndSaveCart(cart => cart.EmptyAll());
 
-           return RedirectToAction("Receipt", new { orderId });
+            return RedirectToAction("Receipt", new { orderId });
     }
     catch (Exception ex)
     {
