@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -6,12 +7,25 @@ namespace Employee.App
 {
     public class ProductForm : Form
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public TextBox txtProductName { get; private set; }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public TextBox txtPrice { get; private set; }
+        
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public TextBox txtQuantity { get; private set; }
+        
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public TextBox txtDescription { get; private set; }
+        
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public TextBox txtImageUrl { get; private set; }
+        
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Button btnSave { get; private set; }
+        
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Button btnCancel { get; private set; }
 
         public ProductForm(string title = "Edit Product")
