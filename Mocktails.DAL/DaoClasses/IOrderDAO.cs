@@ -39,14 +39,5 @@ namespace Mocktails.DAL.DaoClasses
         /// <param name="orderId">The ID of the order.</param>
         /// <returns>A list of order items.</returns>
         Task<IEnumerable<OrderItem>> GetOrderItemsByOrderIdAsync(int orderId);
-
-        /// <summary>
-        /// Creates an order from the shopping cart items.
-        /// </summary>
-        /// <param name="userId">The ID of the user creating the order.</param>
-        /// <param name="cartItems">The shopping cart items to include in the order.</param>
-        /// <param name="shippingAddress">The shipping address for the order.</param>
-        /// <returns>The ID of the created order.</returns>
-        Task<int> CreateOrderFromCartAsync(int userId, IEnumerable<ShoppingCartItem> cartItems, string shippingAddress);
     }
 }

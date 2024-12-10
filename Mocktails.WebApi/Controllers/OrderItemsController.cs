@@ -16,14 +16,14 @@ public class OrderItemsController : Controller
     {
         _orderItemDAO = orderItemDAO;
     }
-    [HttpGet("Get all OrderItems")]
+    [HttpGet]
     public async Task<IActionResult> GetOrderItems()
     {
         var orderItems = await _orderItemDAO.GetOrderItemsAsync();
         return Ok(orderItems);
     }
 
-    [HttpGet("OrderItemsFromOrderId")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetOrderItemsFromOrderByOrderIdAsync([FromQuery] int orderId)
     {
         if (orderId <= 0)
@@ -49,7 +49,7 @@ public class OrderItemsController : Controller
         return Created();
     }
 
-    [HttpPut("Update OrderItem")]
+    [HttpPut("{id}")]
     public async Task<IActionResult> UpdateOrderItemAsync([FromRoute]int id, [FromBody] OrderItemDTO orderItemDTO)
     {
         if (id != orderItemDTO.Id)

@@ -74,4 +74,26 @@ public class OrdersController : ControllerBase
 
         return Ok(orderDTO);
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateOrder([FromRoute]int id, [FromBody] OrderDTO orderDTO)
+    {
+        if (id != orderDTO.Id)
+        {
+            ModelState.AddModelError(nameof(id), "Id's must match.");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var order = OrderConverter.ToModel(orderDTO);
+        order.Id = id;
+
+        var success = await _orderDAO.UpdateOrderAsync(order);
+        if (!success) return NotFound();
+
+        return NoContent();
+    }
 }
