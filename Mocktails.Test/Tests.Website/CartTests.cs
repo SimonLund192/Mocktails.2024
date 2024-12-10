@@ -71,13 +71,22 @@ namespace Mocktails.Test.Tests.Website
         [Test]
         public void EmptyCart_RemovesAllItems()
         {
+            var mocktail = new MocktailQuantity { Id = 1, Name = "Mojito", Price = 10.0m, Quantity = 1 };
+            _cart.ChangeQuantity(mocktail);
 
+            _cart.EmptyAll();
+
+            var cartMocktail = _cart.Products.Find(p => p.Id == 1);
+            Assert.That(cartMocktail, Is.Null);
         }
 
         [Test]
         public void IsEmpty_ReturnsFalse_WhenCartHasItems()
         {
+            var mocktail = new MocktailQuantity { Id = 2, Name = "Piña Colada", Price = 10.0m, Quantity = 1 };
+            _cart.ChangeQuantity(mocktail);
 
+            Assert.That(_cart.IsEmpty, Is.False);
         }
 
 
