@@ -9,29 +9,27 @@ public class OrderDAO : BaseDAO, IOrderDAO
     {
         // Calculate total amount from OrderItems
         entity.TotalAmount = entity.OrderItems.Sum(item => item.Price * item.Quantity);
-
+        
         const string insertOrderQuery = """
             INSERT INTO Orders (UserId, OrderDate, TotalAmount, Status, ShippingAddress)
             OUTPUT Inserted.Id
             VALUES(@UserId, @OrderDate, @TotalAmount, @Status, @ShippingAddress);
             """;
-
         const string insertOrderItemQuery = """
             INSERT INTO OrderItems (OrderId, MocktailId, Quantity, Price)
             VALUES (@OrderId, @MocktailId, @Quantity, @Price);
             """;
-
         const string updateProductStockQuery = """
             UPDATE Mocktails
             SET Quantity = Quantity - @Quantity
             WHERE Id = @MocktailId AND Quantity >= @Quantity;
             """;
-
         using var connection = CreateConnection();
         connection.Open();
-        using var transaction = connection.BeginTransaction(System.Data.IsolationLevel.Serializable);
+        // ANOMALI = LOST UPDATES
+        using var transaction = connection.BeginTransaction(System.Data.IsolationLevel.RepeatableRead);
 
-        Thread.Sleep(8000);
+        //Thread.Sleep(8000);
 
         try
         {
@@ -42,24 +40,21 @@ public class OrderDAO : BaseDAO, IOrderDAO
             foreach (var orderItem in entity.OrderItems)
             {
                 orderItem.OrderId = orderId;
-
                 // Update stock
                 var rowsAffected = await connection.ExecuteAsync(
                     updateProductStockQuery,
                     new { MocktailId = orderItem.MocktailId, Quantity = orderItem.Quantity },
                     transaction
                 );
-
                 if (rowsAffected == 0)
                 {
+                    // Lars Fy fy
+                    // Ingen exception her
                     throw new Exception($"Insufficient stock for Mocktail ID: {orderItem.MocktailId}");
                 }
-
                 await connection.ExecuteAsync(insertOrderItemQuery, orderItem, transaction);
             }
-
             transaction.Commit();
-
             return orderId;
         }
         catch (Exception ex)
