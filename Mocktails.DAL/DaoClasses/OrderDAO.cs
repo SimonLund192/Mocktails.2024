@@ -31,8 +31,10 @@ public class OrderDAO : BaseDAO, IOrderDAO
 
         using var connection = CreateConnection();
         connection.Open();
-        using var transaction = connection.BeginTransaction();
+        using var transaction = connection.BeginTransaction(System.Data.IsolationLevel.Serializable);
 
+        Thread.Sleep(8000);
+        
         try
         {
             // Create the order and retrieve its ID

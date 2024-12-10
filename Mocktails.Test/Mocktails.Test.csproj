@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Mocktails.ApiClient\Mocktails.ApiClient.csproj" />
     <ProjectReference Include="..\Mocktails.WebApi\Mocktails.WebApi.csproj" />
+    <ProjectReference Include="..\Mocktails.Website\Mocktails.Website.csproj" />
   </ItemGroup>
 
   <ItemGroup>

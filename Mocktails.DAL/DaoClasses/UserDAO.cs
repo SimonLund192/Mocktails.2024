@@ -30,7 +30,6 @@ public class UserDAO : BaseDAO, IUserDAO
         using var connection = CreateConnection();
         return (await connection.QueryAsync<User>(query)).ToList();
     }
-
     public async Task<int> CreateUserAsync(User entity, string password)
     {
         try
@@ -47,7 +46,6 @@ public class UserDAO : BaseDAO, IUserDAO
 
         //throw new NotImplementedException();
     }
-
     //public async Task<int> CreateUserAsync(User entity, string password)
     //{
     //    try
@@ -158,7 +156,6 @@ public class UserDAO : BaseDAO, IUserDAO
         using var connection = CreateConnection();
         return await connection.QueryAsync<User>(query, new { partOfName = $"%{partOfName}%" });
     }
-
     public async Task<bool> VerifyPasswordAsync(string email, string password)
     {
         var query = "SELECT * FROM Users WHERE Email = @Email";
@@ -175,14 +172,10 @@ public class UserDAO : BaseDAO, IUserDAO
         var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
         return result == Microsoft.AspNetCore.Identity.PasswordVerificationResult.Success;
     }
-
     public Task<bool> UpdatePasswordAsync(string email, string oldPassword, string newPassword)
     {
         throw new NotImplementedException();
     }
-
-
-
     public async Task<int> LoginAsync(string email, string password)
     {
         try
