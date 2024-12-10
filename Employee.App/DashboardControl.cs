@@ -1,4 +1,6 @@
-﻿using Mocktails.ApiClient.Products;
+﻿using Mocktails.ApiClient.Orders;
+using Mocktails.ApiClient.Orders.DTOs;
+using Mocktails.ApiClient.Products;
 
 namespace Employee.App;
 
@@ -6,24 +8,41 @@ public partial class DashboardControl : UserControl
 {
 
     private readonly MocktailsApiClient _mocktailsApiClient;
+    private readonly OrdersApiClient _ordersApiClient;
 
     public DashboardControl()
     {
         InitializeComponent();
         _mocktailsApiClient = new MocktailsApiClient("https://localhost:7203");
+        _ordersApiClient = new OrdersApiClient("https://localhost:7203");
         SetupDashboard();
     }
 
     // Method to setup the Dashboard
-    private void SetupDashboard()
+    private async void SetupDashboard()
     {
-        // Add panels for statistics with meaningful data
-        ConfigureStatPanel(panel1, "Total Orders", "150", Color.LightSeaGreen);
-        ConfigureStatPanel(panel2, "Total Products", "45", Color.LightSkyBlue);
-        ConfigureStatPanel(panel3, "Pending Shipments", "30", Color.LightCoral);
+        try
+        {
+            // Fetch data from API
+            var orders = await _ordersApiClient.GetOrdersAsync();
 
-        // Set up DataGridView for recent orders
-        SetupRecentOrdersGrid();
+            // Calculate statistics
+            int totalOrders = orders.Count();
+            int pendingShipments = orders.Count(o => o.Status == "Pending");
+            int shippedOrders = orders.Count(o => o.Status == "Shipped");
+
+            // Configure panels with real data
+            ConfigureStatPanel(panel1, "Total Orders", totalOrders.ToString(), Color.LightSeaGreen);
+            ConfigureStatPanel(panel2, "Shipped Orders", shippedOrders.ToString(), Color.LightSkyBlue);
+            ConfigureStatPanel(panel3, "Pending Shipments", pendingShipments.ToString(), Color.LightCoral);
+
+            // Set up DataGridView for recent orders
+            SetupRecentOrdersGrid(orders);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to load dashboard data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 
     // Method to configure a statistics panel
@@ -59,8 +78,8 @@ public partial class DashboardControl : UserControl
         panel.Controls.Add(lblTitle);
     }
 
-    // Method to setup the DataGridView
-    private void SetupRecentOrdersGrid()
+    // Method to setup the DataGridView with real data
+    private void SetupRecentOrdersGrid(IEnumerable<OrderDTO> orders)
     {
         dgvRecentOrders.Columns.Clear();
         dgvRecentOrders.AutoGenerateColumns = false;
@@ -71,7 +90,7 @@ public partial class DashboardControl : UserControl
         dgvRecentOrders.Columns.Add(new DataGridViewTextBoxColumn
         {
             HeaderText = "Order ID",
-            DataPropertyName = "OrderId",
+            DataPropertyName = "Id",
             AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
         });
 
@@ -89,10 +108,12 @@ public partial class DashboardControl : UserControl
             AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
         });
 
-        // Add some dummy data
-        dgvRecentOrders.Rows.Add("1024", "Bobby", "Shipped");
-        dgvRecentOrders.Rows.Add("1025", "Lars", "Pending");
-        dgvRecentOrders.Rows.Add("1026", "Karsten", "Delivered");
+        // Populate DataGridView with real data
+        dgvRecentOrders.Rows.Clear();
+        foreach (var order in orders.Take(10)) // Limit to the 10 most recent orders
+        {
+            dgvRecentOrders.Rows.Add(order.Id, order.UserId, order.Status);
+        }
 
         // Apply styling
         dgvRecentOrders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -101,18 +122,7 @@ public partial class DashboardControl : UserControl
         dgvRecentOrders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
     }
 
-    private void panel1_Paint(object sender, PaintEventArgs e)
-    {
-
-    }
-
-    private void flowStats_Paint(object sender, PaintEventArgs e)
-    {
-
-    }
-
-    private void dgvRecentOrders_CellContentClick(object sender, DataGridViewCellEventArgs e)
-    {
-
-    }
+    private void panel1_Paint(object sender, PaintEventArgs e) { }
+    private void flowStats_Paint(object sender, PaintEventArgs e) { }
+    private void dgvRecentOrders_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
 }

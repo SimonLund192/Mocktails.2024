@@ -114,46 +114,59 @@ public partial class OrdersControl : UserControl
 
     private async void BtnEdit_Click(object sender, EventArgs e)
     {
-        //if (dgvOrders.SelectedRows.Count == 0)
-        //{
-        //    MessageBox.Show("Please select an order to edit.", "Edit Order", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //    return;
-        //}
+        if (dgvOrders.SelectedRows.Count == 0)
+        {
+            MessageBox.Show("Please select an order to edit.", "Edit Order", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
 
-        //var selectedRow = dgvOrders.SelectedRows[0];
-        //var orderId = selectedRow.Cells[0].Value?.ToString();
+        var selectedRow = dgvOrders.SelectedRows[0];
+        var orderId = selectedRow.Cells[0].Value?.ToString();
 
-        //if (!int.TryParse(orderId, out var orderIdInt))
-        //{
-        //    MessageBox.Show("Invalid order ID.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    return;
-        //}
+        if (!int.TryParse(orderId, out var orderIdInt))
+        {
+            MessageBox.Show("Invalid order ID.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
 
-        //try
-        //{
-        //    var order = await _ordersApiClient.GetOrderByIdAsync(orderIdInt);
-        //    using var form = new OrderForm("Edit Order")
-        //    {
-        //        TotalAmount = order.TotalAmount,
-        //        Status = order.Status,
-        //        ShippingAddress = order.ShippingAddress
-        //    };
+        try
+        {
+            // Fetch the selected order
+            var order = await _ordersApiClient.GetOrderByIdAsync(orderIdInt);
+            if (order == null)
+            {
+                MessageBox.Show("Order not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
-        //    if (form.ShowDialog() == DialogResult.OK && ValidateOrderInput(form))
-        //    {
-        //        order.TotalAmount = form.TotalAmount;
-        //        order.Status = form.Status;
-        //        order.ShippingAddress = form.ShippingAddress;
+            // Open the form to edit the order status
+            using var form = new OrderForm("Edit Order")
+            {
+                //txtStatus = { Text = order.Status },
+            };
 
-        //        await _ordersApiClient.UpdateOrderAsync(order);
-        //        LoadOrdersFromApi();
-        //        MessageBox.Show("Order updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        //    }
-        //}
-        //catch (Exception ex)
-        //{
-        //    MessageBox.Show($"Failed to edit order: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //}
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                // Update the order status
+                //order.Status = form.txtStatus.Text;
+
+                // Ensure status is valid
+                if (order.Status != "Pending" && order.Status != "Shipped")
+                {
+                    MessageBox.Show("Invalid status. Please enter 'Pending' or 'Shipped'.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Save the updated order
+                await _ordersApiClient.UpdateOrderAsync(order);
+                LoadOrdersFromApi();
+                MessageBox.Show("Order updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to edit order: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 
     private async void BtnDelete_Click(object sender, EventArgs e)
