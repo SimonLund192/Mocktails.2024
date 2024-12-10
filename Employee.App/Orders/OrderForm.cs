@@ -11,7 +11,7 @@ using System.Windows.Forms;
 namespace Mocktails.Employee.App.Orders;
 public partial class OrderForm : Form
 {
-    public OrderForm()
+    public OrderForm(string v)
     {
         InitializeComponent();
     }

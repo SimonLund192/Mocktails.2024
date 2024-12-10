@@ -110,4 +110,9 @@ public partial class DashboardControl : UserControl
     {
 
     }
+
+    private void dgvRecentOrders_CellContentClick(object sender, DataGridViewCellEventArgs e)
+    {
+
+    }
 }

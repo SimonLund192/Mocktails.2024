@@ -1,3 +1,5 @@
+using Mocktails.Employee.App;
+
 namespace Employee.App;
 
 public partial class MainForm : Form
@@ -28,10 +30,15 @@ public partial class MainForm : Form
 
     private void btnOrders_Click(object sender, EventArgs e)
     {
-        //LoadView(new OrdersControl());
+        LoadView(new OrdersControl());
     }
 
     private void mainPanel_Paint(object sender, PaintEventArgs e)
+    {
+
+    }
+
+    private void panel1_Paint(object sender, PaintEventArgs e)
     {
 
     }
