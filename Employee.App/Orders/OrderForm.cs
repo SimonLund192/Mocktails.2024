@@ -15,4 +15,9 @@ public partial class OrderForm : Form
     {
         InitializeComponent();
     }
+
+    private void OrderForm_Load(object sender, EventArgs e)
+    {
+
+    }
 }
