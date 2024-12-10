@@ -5,8 +5,6 @@ namespace Mocktails.DAL.DaoClasses;
 public class OrderDAO : BaseDAO, IOrderDAO
 {
     public OrderDAO(string connectionString) : base(connectionString) { }
-
-
     public async Task<int> CreateOrderAsync(Order entity)
     {
         // Calculate total amount from OrderItems
@@ -70,7 +68,6 @@ public class OrderDAO : BaseDAO, IOrderDAO
             throw;
         }
     }
-
     public async Task<IEnumerable<OrderItem>> GetOrderItemsByOrderIdAsync(int orderId)
     {
         const string query = """
@@ -82,7 +79,6 @@ public class OrderDAO : BaseDAO, IOrderDAO
         using var connection = CreateConnection();
         return (await connection.QueryAsync<OrderItem>(query, new { OrderId = orderId })).ToList();
     }
-
     public async Task<Order> GetOrderByIdAsync(int id)
     {
         try
@@ -112,7 +108,6 @@ public class OrderDAO : BaseDAO, IOrderDAO
             throw new Exception($"Error getting order by Id: '{ex.Message}'.", ex);
         }
     }
-
     public async Task<int> CreateOrderFromCartAsync(int userId, IEnumerable<ShoppingCartItem> cartItems, string shippingAddress)
     {
         // Calculate total amount
@@ -167,8 +162,6 @@ public class OrderDAO : BaseDAO, IOrderDAO
             throw;
         }
     }
-
-
     public async Task<IEnumerable<Order>> GetOrdersAsync()
     {
         const string query = """

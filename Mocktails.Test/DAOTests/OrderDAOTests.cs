@@ -12,7 +12,7 @@ public class OrderDAOTests
     public void Setup()
     {
         // Use a test database connection string
-        var connectionString = "Server=MSI\\SQLEXPRESS;Database=MocktailsDB;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true;";
+        var connectionString = "Data Source=hildur.ucn.dk;Initial Catalog=DMA-CSD-S231_10462161;User ID=DMA-CSD-S231_10462161;Password=Password1!;TrustServerCertificate=True;";
         _orderDAO = new OrderDAO(connectionString);
     }
 
