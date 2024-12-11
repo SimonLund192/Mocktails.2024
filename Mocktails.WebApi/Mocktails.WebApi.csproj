@@ -17,7 +17,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Mocktails.ApiClient\Mocktails.ApiClient.csproj" />
     <ProjectReference Include="..\Mocktails.DAL\Mocktails.DAL.csproj" />
-    <ProjectReference Include="..\Shared\Mocktails.Shared.csproj" />
   </ItemGroup>
 
 </Project>

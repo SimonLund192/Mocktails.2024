@@ -101,6 +101,7 @@
             dgvRecentOrders.Name = "dgvRecentOrders";
             dgvRecentOrders.Size = new Size(702, 105);
             dgvRecentOrders.TabIndex = 2;
+            dgvRecentOrders.CellContentClick += dgvRecentOrders_CellContentClick;
             // 
             // btnInspectOrder
             // 

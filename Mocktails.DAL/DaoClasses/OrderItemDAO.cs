@@ -11,7 +11,6 @@ namespace Mocktails.DAL.DaoClasses;
 public class OrderItemDAO : BaseDAO, IOrderItemDAO
 {
     public OrderItemDAO(string connectionString) : base(connectionString) { }
-
     public async Task<int> CreateOrderItemAsync(OrderItem entity)
     {
         const string fetchPriceQuery = """
@@ -34,7 +33,6 @@ public class OrderItemDAO : BaseDAO, IOrderItemDAO
 
         return await connection.QuerySingleAsync<int>(insertQuery, entity);
     }
-
     public async Task<bool> DeleteOrderItemAsync(int id)
     {
         const string query = """
@@ -45,7 +43,6 @@ public class OrderItemDAO : BaseDAO, IOrderItemDAO
         using var connection = CreateConnection();
         return await connection.ExecuteAsync(query, new { id }) > 0;
     }
-
     public async Task<OrderItem> GetOrderItemByIdAsync(int id)
     {
         var query = """
@@ -64,8 +61,6 @@ public class OrderItemDAO : BaseDAO, IOrderItemDAO
         return result;
 
     }
-
-
     public async Task<IEnumerable<OrderItem>> GetOrderItemsByOrderIdAsync(int orderId)
     {
         const string query = """
@@ -92,8 +87,6 @@ public class OrderItemDAO : BaseDAO, IOrderItemDAO
         using var connection = CreateConnection();
         return await connection.QueryAsync<OrderItem>(query, new { OrderId = orderId });
     }
-
-
     public async Task<IEnumerable<OrderItem>> GetOrderItemsAsync()
     {
         const string query = """
@@ -116,7 +109,6 @@ public class OrderItemDAO : BaseDAO, IOrderItemDAO
         using var connection = CreateConnection();
         return await connection.QueryAsync<OrderItem>(query);
     }
-
     public async Task<bool> UpdateOrderItemAsync(OrderItem entity)
     {
         const string query = """

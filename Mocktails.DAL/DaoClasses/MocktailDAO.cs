@@ -5,7 +5,6 @@ namespace Mocktails.DAL.DaoClasses;
 
 public class MocktailDAO : BaseDAO, IMocktailDAO
 {
-    // Constructor to initialize the connection string
     public MocktailDAO(string connectionString) : base(connectionString) { }
 
     public async Task<int> CreateMocktailAsync(Mocktail entity)

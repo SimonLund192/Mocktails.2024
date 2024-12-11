@@ -1,8 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Mocktails.DAL.DaoClasses;
-using Mocktails.WebApi.Data;
-using Mocktails.Shared.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +23,7 @@ builder.Services.AddSingleton<IUserDAO>((_) => new UserDAO(connectionString));
 
 
 builder.Services.AddSingleton<IOrderDAO>((_) => new OrderDAO(connectionString));
-builder.Services.AddSingleton <IOrderItemDAO>((_) => new OrderItemDAO(connectionString));
+builder.Services.AddSingleton<IOrderItemDAO>((_) => new OrderItemDAO(connectionString));
 
 builder.Services.AddHttpContextAccessor();
 

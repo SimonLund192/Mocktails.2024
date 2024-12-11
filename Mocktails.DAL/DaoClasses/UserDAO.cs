@@ -19,7 +19,6 @@ public class UserDAO : BaseDAO, IUserDAO
     }
 
     #region CRUD
-
     public async Task<IEnumerable<User>> GetAllUsersAsync()
     {
         const string query = """
