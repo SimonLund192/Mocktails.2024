@@ -29,7 +29,6 @@ public class OrderItemDAOTests
             OrderId = 1,
             MocktailId = 1,
             Quantity = 2,
-            // Price will be auto-calculated
         };
 
         var createdId = await _orderItemDAO.CreateOrderItemAsync(orderItem);
