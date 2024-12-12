@@ -17,7 +17,7 @@ public class OrderDAOTests
     }
 
     [Test]
-    public async Task CreateOrderAsync_ShouldCreateOrderAndReturnId_WithOrderItems()
+    public async Task CreateOrderAsync_ShouldCreateOrderAndReturnId()
     {
         
     }
