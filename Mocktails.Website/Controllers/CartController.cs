@@ -35,6 +35,7 @@ public class CartController : Controller
         var cart = _cartService.LoadChangeAndSaveCart(cart => cart.ChangeQuantity(new(mocktail, quantity)));
 
         return RedirectToAction(nameof(Index));
+        //return NoContent();
     }
 
     [HttpGet("Delete/{id}")]

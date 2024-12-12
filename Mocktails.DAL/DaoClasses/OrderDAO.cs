@@ -123,4 +123,16 @@ public class OrderDAO : BaseDAO, IOrderDAO
         using var connection = CreateConnection();
         return await connection.ExecuteAsync(query, entity) > 0;
     }
+    public async Task<bool> UpdateOrderStatusAsync(int orderId, string status)
+    {
+        const string query = """
+            UPDATE Orders
+            SET Status = @Status
+            WHERE Id = @OrderId;
+            """;
+
+        using var connection = CreateConnection();
+        var rowsAffected = await connection.ExecuteAsync(query, new { OrderId = orderId, Status = status });
+        return rowsAffected > 0;
+    }
 }

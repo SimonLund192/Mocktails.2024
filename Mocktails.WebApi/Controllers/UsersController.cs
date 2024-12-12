@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
+using Mocktails.ApiClient.Products.DTOs;
+using Mocktails.DAL.Authentication;
 using Mocktails.DAL.DaoClasses;
 using Mocktails.DAL.Model;
-using Microsoft.AspNetCore.Identity;
-using Mocktails.WebApi.DTOs.Converters;
-using Microsoft.Extensions.Logging.Abstractions;
-using System.Diagnostics.Eventing.Reader;
 using Mocktails.WebApi.DTOs;
-using Mocktails.DAL.Authentication;
+using Mocktails.WebApi.DTOs.Converters;
 
 namespace Mocktails.WebApi.Controllers
 {
@@ -25,13 +22,22 @@ namespace Mocktails.WebApi.Controllers
         }
 
         #region Default CRUD actions
-        [HttpGet]
+        
+
+        [HttpGet("by-email")]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetByEmailAsync([FromQuery] string email)
         {
             IEnumerable<User> users = null;
             if (!string.IsNullOrEmpty(email)) { users = new List<User>() { await _userDAO.GetUserByEmailAsync(email) }; }
             else { users = await _userDAO.GetAllUsersAsync(); }
             return Ok(users.ToDtos());
+        }
+
+        [HttpGet("get-users")]
+        public async Task<IActionResult> GetUsers()
+        {
+            var users = await _userDAO.GetAllUsersAsync();
+            return Ok(users);
         }
 
         [HttpGet("search")]

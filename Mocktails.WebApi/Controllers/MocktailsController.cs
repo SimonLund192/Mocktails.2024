@@ -47,15 +47,15 @@ public class MocktailsController : ControllerBase
     public async Task<IActionResult> CreateMocktail([FromBody] MocktailDTO mocktailDTO)
     {
 
-            var mocktail = MocktailConverter.ToModel(mocktailDTO);
-            var mocktailId = await _mocktailDAO.CreateMocktailAsync(mocktail);
-        
-            return Created();
+        var mocktail = MocktailConverter.ToModel(mocktailDTO);
+        var mocktailId = await _mocktailDAO.CreateMocktailAsync(mocktail);
+
+        return Created();
 
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateMocktail([FromRoute]int id, [FromBody] MocktailDTO mocktailDTO)
+    public async Task<IActionResult> UpdateMocktail([FromRoute] int id, [FromBody] MocktailDTO mocktailDTO)
     {
 
         if (id != mocktailDTO.Id)
