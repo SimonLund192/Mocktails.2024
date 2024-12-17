@@ -12,10 +12,10 @@ using Mocktails.DAL.Model;
 namespace Mocktails.DAL.DaoClasses;
 public class UserDAO : BaseDAO, IUserDAO
 {
-    private readonly PasswordHasher<User> _passwordHasher;
+    //private readonly PasswordHasher<User> _passwordHasher;
     public UserDAO(string connectionString) : base(connectionString)
     {
-        _passwordHasher = new PasswordHasher<User>();
+        //_passwordHasher = new PasswordHasher<User>();
     }
 
     #region CRUD
@@ -157,19 +157,17 @@ public class UserDAO : BaseDAO, IUserDAO
     }
     public async Task<bool> VerifyPasswordAsync(string email, string password)
     {
-        var query = "SELECT * FROM Users WHERE Email = @Email";
+        const string query = "SELECT Id, PasswordHash FROM Users WHERE Email = @Email";
 
         using var connection = CreateConnection();
-        var user = await connection.QuerySingleOrDefaultAsync<User>(query, new { Email = email });
+        var userTuple = await connection.QuerySingleOrDefaultAsync<UserTuple>(query, new { Email = email });
 
-        if (user == null)
+        if (userTuple == null)
         {
             return false;
         }
 
-        // Verifying the password using PasswordHasher
-        var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
-        return result == Microsoft.AspNetCore.Identity.PasswordVerificationResult.Success;
+        return BCryptTool.ValidatePassword(password, userTuple.PasswordHash);
     }
     public Task<bool> UpdatePasswordAsync(string email, string oldPassword, string newPassword)
     {
@@ -179,7 +177,7 @@ public class UserDAO : BaseDAO, IUserDAO
     {
         try
         {
-            var query = "SELECT Id, PasswordHash FROM Users WHERE Email=@Email";
+            var query = "SELECT Id, PasswordHash FROM Users WHERE Email=@Email";    
             using var connection = CreateConnection();
 
             var userTuple = await connection.QueryFirstOrDefaultAsync<UserTuple>(query, new { Email = email });

@@ -18,9 +18,8 @@ const string connectionString = "Data Source=hildur.ucn.dk;Initial Catalog=DMA-C
 //const string connectionString = "Data Source=.;Initial Catalog=MocktailsDB;Integrated Security=True;Trusted_Connection=True;Encrypt=false;TrustServerCertificate=true;";
 
 builder.Services.AddSingleton<IMocktailDAO>((_) => new MocktailDAO(connectionString));
-builder.Services.AddSingleton<ICategoryDAO>((_) => new CategoryDAO(connectionString));
 builder.Services.AddSingleton<IUserDAO>((_) => new UserDAO(connectionString));
-
+builder.Services.AddSingleton<ICategoryDAO>((_) => new CategoryDAO(connectionString));
 
 builder.Services.AddSingleton<IOrderDAO>((_) => new OrderDAO(connectionString));
 builder.Services.AddSingleton<IOrderItemDAO>((_) => new OrderItemDAO(connectionString));
@@ -45,7 +44,6 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// Add remaining middleware
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
