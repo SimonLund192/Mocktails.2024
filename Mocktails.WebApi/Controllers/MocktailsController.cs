@@ -14,7 +14,6 @@ public class MocktailsController : ControllerBase
         _mocktailDAO = mocktailDAO;
     }
 
-    // GET: api/mocktails
     [HttpGet]
     public async Task<IActionResult> GetMocktails()
     {
@@ -22,7 +21,6 @@ public class MocktailsController : ControllerBase
         return Ok(mocktails);
     }
 
-    // GET: api/mocktails/search?partOfNameOrDescription=orange
     [HttpGet("search")]
     public async Task<IActionResult> GetMocktailsBySearch([FromQuery] string partOfNameOrDescription)
     {
@@ -30,7 +28,6 @@ public class MocktailsController : ControllerBase
         return Ok(mocktails);
     }
 
-    // GET: api/mocktails/{id}
     [HttpGet("{id}")]
     public async Task<ActionResult<MocktailDTO>> GetMocktailByIdAsync(int id)
     {
@@ -42,7 +39,6 @@ public class MocktailsController : ControllerBase
         return Ok(mocktail);
     }
 
-    // POST: api/mocktails
     [HttpPost]
     public async Task<IActionResult> CreateMocktail([FromBody] MocktailDTO mocktailDTO)
     {

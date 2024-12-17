@@ -14,18 +14,18 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Account/Login"; // Redirect to this path for unauthorized requests
-        options.LogoutPath = "/Account/Logout"; // Optional logout path
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Session expiration time
-        options.SlidingExpiration = true; // Reset expiration if the user is active
-        options.AccessDeniedPath = "/Account/AccessDenied"; // Path to handle 403 Forbidden
+        options.LoginPath = "/Account/Login"; 
+        options.LogoutPath = "/Account/Logout"; 
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30); 
+        options.SlidingExpiration = true; 
+        options.AccessDeniedPath = "/Account/AccessDenied"; 
     });
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout
-    options.Cookie.HttpOnly = true; // Secure the session cookie
-    options.Cookie.IsEssential = true; // Essential for GDPR compliance
+    options.IdleTimeout = TimeSpan.FromMinutes(30); 
+    options.Cookie.HttpOnly = true; 
+    options.Cookie.IsEssential = true;
 });
 
 // Register the correct RestClient implementation

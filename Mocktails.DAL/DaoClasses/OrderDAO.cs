@@ -26,7 +26,6 @@ public class OrderDAO : BaseDAO, IOrderDAO
             """;
         using var connection = CreateConnection();
         connection.Open();
-        // ANOMALI = LOST UPDATES
         using var transaction = connection.BeginTransaction(System.Data.IsolationLevel.RepeatableRead);
 
         //Thread.Sleep(8000);
@@ -83,7 +82,6 @@ public class OrderDAO : BaseDAO, IOrderDAO
 
             using var connection = CreateConnection();
 
-            // Retrieve the order
             var order = await connection.QuerySingleOrDefaultAsync<Order>(orderQuery, new { Id = id });
             if (order == null)
             {

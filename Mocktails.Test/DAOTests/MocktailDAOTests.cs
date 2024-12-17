@@ -1,6 +1,8 @@
 using Mocktails.DAL.DaoClasses;
 using Mocktails.DAL.Model;
 
+namespace Mocktails.Test.DaoTests;
+
 [TestFixture]
 public class MocktailDaoTests
 {
@@ -14,37 +16,88 @@ public class MocktailDaoTests
         _mocktailDAO = new MocktailDAO(connectionString);
     }
     [Test]
-    public void RandomTestingToSeeIfItWorksAtAll()
+    public async Task CreateMocktail_ReturnId()
     {
-        _mocktailDAO.GetMocktailsAsync();
+        var mocktail = new Mocktail
+        {
+            Name = "Margarita",
+            Description = "Refreshing citrus cocktail",
+            Price = 12.99m,
+            Quantity = 5,
+            ImageUrl = "https://example.com/margarita.jpg"
+        };
+
+        // Act
+        var generatedId = await _mocktailDAO.CreateMocktailAsync(mocktail);
+
+        // Assert
+        Assert.That(generatedId, Is.GreaterThan(0));
     }
     [Test]
-    public void CreateMocktail_FindId()
+    public async Task GetMocktailsAsync_ReturnsAllMocktails()
+    {
+        // Act
+        var mocktails = await _mocktailDAO.GetMocktailsAsync();
+
+        // Assert
+        Assert.That(mocktails, Is.Not.Null);
+        Assert.That(mocktails, Is.InstanceOf<IEnumerable<Mocktail>>());
+    }
+    [Test]
+    public async Task UpdateMocktail_UpdatesMocktailDetails()
     {
         // Arrange
-        var mocktail = new Mocktail { Id = 30, Name = "Piña Colada", Description = "Møj fin", Price = 5.0m, Quantity = 1, ImageUrl = "https:/testimage.jpg" };
+        var mocktail = new Mocktail
+        {
+            Name = "Old Fashioned",
+            Description = "Whiskey-based classic",
+            Price = 15.99m,
+            Quantity = 10,
+            ImageUrl = "https://example.com/oldfashioned.jpg"
+        };
+        var mocktailId = await _mocktailDAO.CreateMocktailAsync(mocktail);
+
+        mocktail.Id = mocktailId;
+        mocktail.Description = "Updated Description";
+        mocktail.Price = 18.99m;
+
         // Act
-        _mocktailDAO.CreateMocktailAsync(mocktail);
+        var updateResult = await _mocktailDAO.UpdateMocktailAsync(mocktail);
+        var updatedMocktail = await _mocktailDAO.GetMocktailByIdAsync(mocktailId);
+
         // Assert
-        Assert.That(mocktail.Id, Is.EqualTo(30));
-    }        
-    [Test]
-    public void SearchMocktailById()
-    {
-        var mocktail = new Mocktail { Id = 31, Name = "Piña Colada", Description = "Møj fin", Price = 5.0m, Quantity = 1, ImageUrl = "https:/testimage.jpg" };
-        _mocktailDAO.CreateMocktailAsync(mocktail);
-
-        _mocktailDAO.GetMocktailByIdAsync(mocktail.Id);
-        Assert.That(mocktail.Id, Is.EqualTo(31));
+        Assert.That(updatedMocktail.Id, Is.EqualTo(mocktailId));
+        Assert.That(updatedMocktail.Description, Is.EqualTo("Updated Description"));
+        Assert.That(updatedMocktail.Price, Is.EqualTo(18.99m));
     }
     [Test]
-    public async Task UpdateMocktail_WithNewName()
+    public async Task CreateMocktail_DeleteMocktail()
     {
-        //var mocktail = new Mocktail { Id = 30, Name = "Piña Colada", Description = "Møj fin", Price = 5.0m, Quantity = 1, ImageUrl = "https:/testimage.jpg" };
+        var mocktail = new Mocktail
+        {
+            Name = "ChaiTail",
+            Description = "Chai latte style mocktail",
+            Price = 12.99m,
+            Quantity = 5,
+            ImageUrl = "https://example.com/chaitail.jpg"
+        };
 
-        //_mocktailDAO.UpdateMocktailAsync(mocktail);
+        // Act
+        var generatedId = await _mocktailDAO.CreateMocktailAsync(mocktail);
+        Assert.That(generatedId, Is.GreaterThan(0), "Mocktail creation should return a valid ID.");
 
-        //Assert.That(mocktail.Name, Is.EqualTo("Test name"));
+        var deleteResult = await _mocktailDAO.DeleteMocktailAsync(generatedId);
+        Assert.That(deleteResult, Is.True, "Mocktail deletion should return true.");
+
+        // Verify that the mocktail no longer exists
+        try
+        {
+            var deletedMocktail = await _mocktailDAO.GetMocktailByIdAsync(generatedId);
+            Assert.Fail("Expected an exception when fetching a deleted mocktail, but none was thrown.");
+        }
+        catch (Exception ex)
+        {
+            Assert.That(ex.Message, Does.Contain("Mocktail not found."), "Expected exception message to contain 'Mocktail not found.'");
+        }
     }
-
 }
