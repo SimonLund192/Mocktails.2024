@@ -14,12 +14,8 @@ public interface IUserDAO
     Task<bool> DeleteUserAsync(int id);
     Task<User> GetUserByIdAsync(int id);
     Task<User> GetUserByEmailAsync(string email);
-
     Task<IEnumerable<User>> GetUserByPartOfNameAsync(string partOfName);
-
-    Task<bool> VerifyPasswordAsync(string email, string password);
-
-
+    //Task<bool> VerifyPasswordAsync(string email, string password);
     Task<bool> UpdatePasswordAsync(string email, string oldPassword, string newPassword);
     Task<int> LoginAsync(string email, string password);
 }

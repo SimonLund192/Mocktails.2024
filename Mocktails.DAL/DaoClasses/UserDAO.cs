@@ -155,20 +155,20 @@ public class UserDAO : BaseDAO, IUserDAO
         using var connection = CreateConnection();
         return await connection.QueryAsync<User>(query, new { partOfName = $"%{partOfName}%" });
     }
-    public async Task<bool> VerifyPasswordAsync(string email, string password)
-    {
-        const string query = "SELECT Id, PasswordHash FROM Users WHERE Email = @Email";
+    //public async Task<bool> VerifyPasswordAsync(string email, string password)
+    //{
+    //    const string query = "SELECT Id, PasswordHash FROM Users WHERE Email = @Email";
 
-        using var connection = CreateConnection();
-        var userTuple = await connection.QuerySingleOrDefaultAsync<UserTuple>(query, new { Email = email });
+    //    using var connection = CreateConnection();
+    //    var userTuple = await connection.QuerySingleOrDefaultAsync<UserTuple>(query, new { Email = email });
 
-        if (userTuple == null)
-        {
-            return false;
-        }
+    //    if (userTuple == null)
+    //    {
+    //        return false;
+    //    }
 
-        return BCryptTool.ValidatePassword(password, userTuple.PasswordHash);
-    }
+    //    return BCryptTool.ValidatePassword(password, userTuple.PasswordHash);
+    //}
     public Task<bool> UpdatePasswordAsync(string email, string oldPassword, string newPassword)
     {
         throw new NotImplementedException();
