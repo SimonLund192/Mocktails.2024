@@ -13,21 +13,18 @@ namespace Mocktails.Website.Controllers
             _apiClient = apiClient;
         }
 
-        // Mark Index method as async
         public async Task<IActionResult> Index()
         {
             // Get the list of mocktails from the API asynchronously
-            var mocktails = await _apiClient.GetMocktailsAsync(); // Use await for async method
+            var mocktails = await _apiClient.GetMocktailsAsync(); //
 
-            // Return the view with the list of mocktails
-            return View(mocktails); // The view expects an IEnumerable<MocktailDTO> model
+            return View(mocktails); //
         }
 
         // Mark Details method as async
         public async Task<IActionResult> Details(int id)
         {
-            // Get the specific mocktail by ID asynchronously
-            var mocktails = await _apiClient.GetMocktailByIdAsync(id); // Use await for async method
+            var mocktails = await _apiClient.GetMocktailByIdAsync(id);
 
             if (mocktails == null)
             {
@@ -35,7 +32,7 @@ namespace Mocktails.Website.Controllers
             }
 
             // Return the view with the mocktail details
-            return View(mocktails); // The view expects a MocktailDTO model
+            return View(mocktails);
         }
     }
 }
