@@ -15,5 +15,4 @@ public class OrderDTO
     public DateTime UpdatedAt { get; set; }
 
     public List<OrderItemDTO> OrderItems { get; set; } = new();
-
 }

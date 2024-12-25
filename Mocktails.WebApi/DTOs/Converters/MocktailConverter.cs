@@ -6,8 +6,7 @@ public static class MocktailConverter
 {
     public static MocktailDTO ToDTO(this Mocktail mocktailToConvert)
     {
-        if (mocktailToConvert == null)
-            throw new ArgumentNullException(nameof(mocktailToConvert), "Mocktail object cannot be null.");
+        ArgumentNullException.ThrowIfNull(mocktailToConvert);
 
         var mocktailDTO = new MocktailDTO();
         mocktailToConvert.CopyPropertiesTo(mocktailDTO);
@@ -16,8 +15,7 @@ public static class MocktailConverter
 
     public static Mocktail ToModel(this MocktailDTO mocktailDTOToConvert)
     {
-        if (mocktailDTOToConvert == null)
-            throw new ArgumentNullException(nameof(mocktailDTOToConvert), "MocktailDTO object cannot be null.");
+        ArgumentNullException.ThrowIfNull(mocktailDTOToConvert);
 
         var mocktail = new Mocktail();
         mocktailDTOToConvert.CopyPropertiesTo(mocktail);
@@ -26,16 +24,14 @@ public static class MocktailConverter
 
     public static IEnumerable<MocktailDTO> ToDtos(this IEnumerable<Mocktail> mocktailsToConvert)
     {
-        if (mocktailsToConvert == null)
-            throw new ArgumentNullException(nameof(mocktailsToConvert), "Mocktails collection cannot be null.");
+        ArgumentNullException.ThrowIfNull(mocktailsToConvert);
 
         return mocktailsToConvert.Select(mocktail => mocktail.ToDTO());
     }
 
     public static IEnumerable<Mocktail> ToModels(this IEnumerable<MocktailDTO> mocktailDtosToConvert)
     {
-        if (mocktailDtosToConvert == null)
-            throw new ArgumentNullException(nameof(mocktailDtosToConvert), "MocktailDTOs collection cannot be null.");
+        ArgumentNullException.ThrowIfNull(mocktailDtosToConvert);
 
         return mocktailDtosToConvert.Select(mocktailDTO => mocktailDTO.ToModel());
     }

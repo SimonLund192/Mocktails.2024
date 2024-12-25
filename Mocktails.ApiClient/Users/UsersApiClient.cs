@@ -5,7 +5,6 @@ namespace Mocktails.ApiClient.Users;
 
 public class UsersApiClient : IUsersApiClient
 {
-
     private readonly RestClient _restClient;
 
     public UsersApiClient(string baseUrl)

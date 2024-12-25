@@ -18,5 +18,4 @@ public interface IMocktailApiClient
     Task<IEnumerable<MocktailDTO>> GetMocktailByPartOfNameOrDescription(string partOfNameOrDescription);
 
     Task<bool> UpdateMocktailQuantityAsync(int id, int quantity);
-
 }

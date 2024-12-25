@@ -1,7 +1,6 @@
 using Microsoft.OpenApi.Models;
 using Mocktails.DAL.DaoClasses;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -25,8 +24,6 @@ builder.Services.AddSingleton<IOrderDAO>((_) => new OrderDAO(connectionString));
 builder.Services.AddSingleton<IOrderItemDAO>((_) => new OrderItemDAO(connectionString));
 
 builder.Services.AddHttpContextAccessor();
-
-
 
 //// Add DbContext for Entity Framework (MocktailsDbContext)
 //builder.Services.AddDbContext<MocktailsDbContext>(options =>

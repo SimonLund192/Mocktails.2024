@@ -84,6 +84,7 @@ public class UserDAO : BaseDAO, IUserDAO
         using var connection = CreateConnection();
         return await connection.ExecuteAsync(query, entity) > 0;
     }
+
     public async Task<bool> DeleteUserAsync(int id)
     {
         const string query = """
@@ -94,6 +95,7 @@ public class UserDAO : BaseDAO, IUserDAO
         using var connection = CreateConnection();
         return await connection.ExecuteAsync(query, new { id }) > 0;
     }
+
     public async Task<User> GetUserByIdAsync(int id)
     {
         try
@@ -167,11 +169,12 @@ public class UserDAO : BaseDAO, IUserDAO
     {
         throw new NotImplementedException();
     }
+
     public async Task<int> LoginAsync(string email, string password)
     {
         try
         {
-            var query = "SELECT Id, PasswordHash FROM Users WHERE Email=@Email";
+            const string query = "SELECT Id, PasswordHash FROM Users WHERE Email=@Email";
             using var connection = CreateConnection();
 
             var userTuple = await connection.QueryFirstOrDefaultAsync<UserTuple>(query, new { Email = email });
