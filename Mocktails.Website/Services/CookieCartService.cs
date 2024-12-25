@@ -42,7 +42,7 @@ public class CookieCartService : ICartService
 
         foreach (var product in cookieCart.Products)
         {
-            cart.ChangeQuantity(new MocktailQuantity()
+            cart.AddOrAdjustProduct(new MocktailQuantity()
             {
                 Id = product.Id,
                 Quantity = product.Quantity,
@@ -66,8 +66,11 @@ public class CookieCartService : ICartService
 }
 
 /// <summary>
-/// Used for cart cookie serialization.
+/// Used for cart cookie serialization, since the <see cref="Cart"/> isn't serializable.
 /// </summary>
+/// <remarks>
+/// Has file access modifier, to make it accessible only to this file.
+/// </remarks>
 file class CookieCart
 {
     public CookieCart()
@@ -87,6 +90,9 @@ file class CookieCart
 /// <summary>
 /// Used for cart cookie serialization.
 /// </summary>
+/// <remarks>
+/// Has file access modifier, to make it accessible only to this file.
+/// </remarks>
 file class CookieCartProduct
 {
     public CookieCartProduct()

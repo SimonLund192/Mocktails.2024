@@ -32,7 +32,7 @@ public class CartController : Controller
         if (mocktail is null)
             return NotFound($"Mocktail with ID {id} not found.");
 
-        var cart = _cartService.LoadChangeAndSaveCart(cart => cart.ChangeQuantity(new(mocktail, quantity)));
+        var cart = _cartService.LoadChangeAndSaveCart(cart => cart.AddOrAdjustProduct(new(mocktail, quantity)));
 
         return RedirectToAction(nameof(Index));
         //return NoContent();
@@ -41,7 +41,7 @@ public class CartController : Controller
     [HttpGet("Delete/{id}")]
     public IActionResult Delete(int id)
     {
-        var cart = _cartService.LoadChangeAndSaveCart(cart => cart.RemoveMocktail(id));
+        var cart = _cartService.LoadChangeAndSaveCart(cart => cart.RemoveProduct(id));
 
         return RedirectToAction(nameof(Index));
     }

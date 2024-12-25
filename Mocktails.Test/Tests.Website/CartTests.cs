@@ -22,8 +22,8 @@ namespace Mocktails.Test.Tests.Website
             var mocktail = new MocktailQuantity { Id = 1, Name = "Mojito", Price = 10.0m, Quantity = 1 };
 
             // Act
-            _cart.ChangeQuantity(mocktail);
-            _cart.ChangeQuantity(new MocktailQuantity { Id = 1, Quantity = 2 });
+            _cart.AddOrAdjustProduct(mocktail);
+            _cart.AddOrAdjustProduct(new MocktailQuantity { Id = 1, Quantity = 2 });
 
             // Assert
             var cartMocktail = _cart.Products.Find(p => p.Id == 1);
@@ -36,7 +36,7 @@ namespace Mocktails.Test.Tests.Website
         {
             var mocktail = new MocktailQuantity { Id = 1, Name = "Mojito", Price = 10.0m, Quantity = 1 };
 
-            _cart.ChangeQuantity(mocktail);
+            _cart.AddOrAdjustProduct(mocktail);
 
             var cartMocktail = _cart.Products.Find(p => p.Id == 1);
             Assert.That(cartMocktail.Quantity, Is.EqualTo(1));
@@ -47,10 +47,10 @@ namespace Mocktails.Test.Tests.Website
         {
             // Arrange
             var mocktail = new MocktailQuantity { Id = 1, Name = "Mojito", Price = 10.0m, Quantity = 1 };
-            _cart.ChangeQuantity(mocktail);
+            _cart.AddOrAdjustProduct(mocktail);
 
             // Act
-            _cart.RemoveMocktail(1);
+            _cart.RemoveProduct(1);
 
             // Assert
             var cartMocktail = _cart.Products.Find(p => p.Id == 1);
@@ -60,8 +60,8 @@ namespace Mocktails.Test.Tests.Website
         [Test]
         public void GetTotal_ReturnsCorrectTotal()
         {
-            _cart.ChangeQuantity(new MocktailQuantity { Id = 1, Name = "Mojito", Price = 10.0M, Quantity = 2 });
-            _cart.ChangeQuantity(new MocktailQuantity { Id = 2, Name = "Piña Colada", Price = 5.0m, Quantity = 2 });
+            _cart.AddOrAdjustProduct(new MocktailQuantity { Id = 1, Name = "Mojito", Price = 10.0M, Quantity = 2 });
+            _cart.AddOrAdjustProduct(new MocktailQuantity { Id = 2, Name = "Piña Colada", Price = 5.0m, Quantity = 2 });
 
             var total = _cart.GetTotal();
 
@@ -72,7 +72,7 @@ namespace Mocktails.Test.Tests.Website
         public void EmptyCart_RemovesAllItems()
         {
             var mocktail = new MocktailQuantity { Id = 1, Name = "Mojito", Price = 10.0m, Quantity = 1 };
-            _cart.ChangeQuantity(mocktail);
+            _cart.AddOrAdjustProduct(mocktail);
 
             _cart.EmptyAll();
 
@@ -84,7 +84,7 @@ namespace Mocktails.Test.Tests.Website
         public void IsEmpty_ReturnsFalse_WhenCartHasItems()
         {
             var mocktail = new MocktailQuantity { Id = 2, Name = "Piña Colada", Price = 10.0m, Quantity = 1 };
-            _cart.ChangeQuantity(mocktail);
+            _cart.AddOrAdjustProduct(mocktail);
 
             Assert.That(_cart.IsEmpty, Is.False);
         }
