@@ -29,7 +29,7 @@
                 <div class="col-3">
                     <a class="btn btn-primary" href="@Url.Action("Add", "Cart", new { id = mocktailQuantity.Id, quantity = -1 })" title="remove one">-1</a>
                     <a class="btn btn-primary" href="@Url.Action("Add", "Cart", new { id = mocktailQuantity.Id, quantity = 1 })" title="add one">+1</a>
-                    <a class="btn btn-danger" href="@Url.Action("Delete", "Cart", new { id = mocktailQuantity.Id })" title="delete product"><span class="bi-trash"></span></a>
+                    <a class="btn btn-danger" href="@Url.Action("Delete", "Cart", new { id = mocktailQuantity.Id })" title="delete product"><i class="fa-solid fa-trash"></i></a>
                 </div>
             </div>
         }
