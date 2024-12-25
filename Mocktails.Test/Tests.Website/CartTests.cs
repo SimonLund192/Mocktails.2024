@@ -18,11 +18,11 @@ internal class CartTests
     public void AddMocktailToCart_IncreasesQuantity_WhenMocktailExists()
     {
         // Arrange
-        var mocktail = new MocktailQuantity { Id = 1, Name = "Mojito", Price = 10.0m, Quantity = 1 };
+        var mocktail = new MocktailQuantity(1, 1, 10.0m, "Mojito");
 
         // Act
         _cart.AddOrAdjustProduct(mocktail);
-        _cart.AddOrAdjustProduct(new MocktailQuantity { Id = 1, Quantity = 2 });
+        _cart.AddOrAdjustProduct(new MocktailQuantity(1, 2, 10.0m, "Mojito"));
 
         // Assert
         var cartMocktail = _cart.Products.Find(p => p.Id == 1);
@@ -33,7 +33,7 @@ internal class CartTests
     [Test]
     public void AddNewMocktailToCart_AddsItem()
     {
-        var mocktail = new MocktailQuantity { Id = 1, Name = "Mojito", Price = 10.0m, Quantity = 1 };
+        var mocktail = new MocktailQuantity(1, 1, 10.0m, "Mojito");
 
         _cart.AddOrAdjustProduct(mocktail);
 
@@ -45,7 +45,7 @@ internal class CartTests
     public void RemoveMocktail_RemovesItemFromCart()
     {
         // Arrange
-        var mocktail = new MocktailQuantity { Id = 1, Name = "Mojito", Price = 10.0m, Quantity = 1 };
+        var mocktail = new MocktailQuantity(1, 1, 10.0m, "Mojito");
         _cart.AddOrAdjustProduct(mocktail);
 
         // Act
@@ -59,8 +59,8 @@ internal class CartTests
     [Test]
     public void GetTotal_ReturnsCorrectTotal()
     {
-        _cart.AddOrAdjustProduct(new MocktailQuantity { Id = 1, Name = "Mojito", Price = 10.0M, Quantity = 2 });
-        _cart.AddOrAdjustProduct(new MocktailQuantity { Id = 2, Name = "Piña Colada", Price = 5.0m, Quantity = 2 });
+        _cart.AddOrAdjustProduct(new MocktailQuantity(1, 2, 10.0m, "Mojito"));
+        _cart.AddOrAdjustProduct(new MocktailQuantity(2, 2, 5.0m, "Piña Colada"));
 
         var total = _cart.GetTotal();
 
@@ -70,7 +70,7 @@ internal class CartTests
     [Test]
     public void EmptyCart_RemovesAllItems()
     {
-        var mocktail = new MocktailQuantity { Id = 1, Name = "Mojito", Price = 10.0m, Quantity = 1 };
+        var mocktail = new MocktailQuantity(1, 1, 10.0m, "Mojito");
         _cart.AddOrAdjustProduct(mocktail);
 
         _cart.EmptyAll();
@@ -82,7 +82,7 @@ internal class CartTests
     [Test]
     public void IsEmpty_ReturnsFalse_WhenCartHasItems()
     {
-        var mocktail = new MocktailQuantity { Id = 2, Name = "Piña Colada", Price = 10.0m, Quantity = 1 };
+        var mocktail = new MocktailQuantity(2, 1, 10.0m, "Piña Colada");
         _cart.AddOrAdjustProduct(mocktail);
 
         Assert.That(_cart.IsEmpty, Is.False);

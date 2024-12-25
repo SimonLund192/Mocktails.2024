@@ -42,13 +42,12 @@ public class CookieCartService : ICartService
 
         foreach (var product in cookieCart.Products)
         {
-            cart.AddOrAdjustProduct(new MocktailQuantity()
-            {
-                Id = product.Id,
-                Quantity = product.Quantity,
-                Price = product.Price,
-                Name = product.Name,
-            });
+            cart.AddOrAdjustProduct(new MocktailQuantity(
+                product.Id,
+                product.Quantity,
+                product.Price,
+                product.Name
+            ));
         }
 
         return cart;

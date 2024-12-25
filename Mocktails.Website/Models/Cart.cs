@@ -25,8 +25,13 @@ public class Cart
     {
         if (_products.TryGetValue(product.Id, out MocktailQuantity? p))
         {
-            p.Quantity += product.Quantity;
-            if (_products[product.Id].Quantity <= 0)
+            var newQuantity = p.Quantity + product.Quantity;
+
+            if (newQuantity > 0)
+            {
+                _products[product.Id].UpdateQuantity(newQuantity);
+            }
+            else
             {
                 _products.Remove(product.Id);
             }
