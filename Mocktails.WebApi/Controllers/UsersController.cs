@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Mocktails.ApiClient.Products.DTOs;
 using Mocktails.DAL.Authentication;
 using Mocktails.DAL.DaoClasses;
 using Mocktails.DAL.Model;
@@ -14,15 +13,12 @@ public class UsersController : ControllerBase
 {
     private readonly IUserDAO _userDAO;
 
-
     public UsersController(IUserDAO userDAO)
     {
         _userDAO = userDAO;
-
     }
 
     #region Default CRUD actions
-    
 
     [HttpGet("by-email")]
     public async Task<ActionResult<IEnumerable<UserDTO>>> GetByEmailAsync([FromQuery] string email)
@@ -63,7 +59,6 @@ public class UsersController : ControllerBase
 
         return Created();
 
-
         //await _userDAO.CreateUserAsync(newUserDTO.ToModel(), newUserDTO.PasswordHash);
         //return Created();
     }
@@ -99,7 +94,6 @@ public class UsersController : ControllerBase
         return NoContent();
     }
 
-
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
     {
@@ -119,8 +113,5 @@ public class UsersController : ControllerBase
         return BCryptTool.ValidatePassword(password, passwordHash);
     }
 
-
     #endregion
-
-
 }

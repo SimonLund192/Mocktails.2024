@@ -1,11 +1,6 @@
 ﻿using Mocktails.ApiClient.Products;
 using Mocktails.ApiClient.Products.DTOs;
 using Mocktails.Employee.App;
-using System;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Employee.App;
 

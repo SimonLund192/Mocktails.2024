@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mocktails.ApiClient.Products;
-using System.Threading.Tasks;
 
 namespace Mocktails.Website.Controllers;
 

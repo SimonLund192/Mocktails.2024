@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dapper;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNetCore.Identity;
+﻿using Dapper;
 using Mocktails.DAL.Authentication;
 using Mocktails.DAL.Model;
 
 namespace Mocktails.DAL.DaoClasses;
+
 public class UserDAO : BaseDAO, IUserDAO
 {
     //private readonly PasswordHasher<User> _passwordHasher;
@@ -177,7 +171,7 @@ public class UserDAO : BaseDAO, IUserDAO
     {
         try
         {
-            var query = "SELECT Id, PasswordHash FROM Users WHERE Email=@Email";    
+            var query = "SELECT Id, PasswordHash FROM Users WHERE Email=@Email";
             using var connection = CreateConnection();
 
             var userTuple = await connection.QueryFirstOrDefaultAsync<UserTuple>(query, new { Email = email });

@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using Mocktails.Website.Models;
+﻿using Mocktails.Website.Models;
 
 namespace Mocktails.Test.Tests.Website;
 
@@ -88,6 +87,4 @@ internal class CartTests
 
         Assert.That(_cart.IsEmpty, Is.False);
     }
-
-
 }

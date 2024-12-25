@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Mocktails.DAL.Authentication;
 
-namespace Mocktails.DAL.Authentication;
 public static class BCryptTool
 {
     // Utility class for hashing passwords and validating hashes using BCrypt.

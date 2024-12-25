@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using Mocktails.DAL.Model;
 
 namespace Mocktails.DAL.DaoClasses;
+
 public class CategoryDAO : BaseDAO, ICategoryDAO
 {
-
     // Constructor to initialize the connection string
     public CategoryDAO(string connectionString) : base(connectionString) { }
 

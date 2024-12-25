@@ -2,6 +2,7 @@
 using Mocktails.DAL.Model;
 
 namespace Mocktails.DAL.DaoClasses;
+
 public class OrderDAO : BaseDAO, IOrderDAO
 {
     public OrderDAO(string connectionString) : base(connectionString) { }
@@ -9,7 +10,7 @@ public class OrderDAO : BaseDAO, IOrderDAO
     {
         // Calculate total amount from OrderItems
         entity.TotalAmount = entity.OrderItems.Sum(item => item.Price * item.Quantity);
-        
+
         const string insertOrderQuery = """
             INSERT INTO Orders (UserId, OrderDate, TotalAmount, Status, ShippingAddress)
             OUTPUT Inserted.Id

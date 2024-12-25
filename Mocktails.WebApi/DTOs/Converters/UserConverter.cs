@@ -1,5 +1,4 @@
-﻿using Mocktails.ApiClient.Users.DTOs;
-using Mocktails.DAL.Model;
+﻿using Mocktails.DAL.Model;
 
 namespace Mocktails.WebApi.DTOs.Converters;
 

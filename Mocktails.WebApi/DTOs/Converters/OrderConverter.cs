@@ -1,13 +1,10 @@
 ﻿using Mocktails.ApiClient.Orders.DTOs;
 using Mocktails.DAL.Model;
-using Mocktails.WebApi.Converters;
-using Mocktails.WebApi.DTOs;
 
 namespace Mocktails.WebApi.DTOs.Converters;
 
 public static class OrderConverter
 {
-
     public static OrderDTO ToDTO(this Order orderToConvert)
     {
         if (orderToConvert == null)

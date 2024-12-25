@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mocktails.ApiClient.Users.DTOs;
+﻿using Mocktails.ApiClient.Users.DTOs;
 
 namespace Mocktails.ApiClient.Users;
 
@@ -16,5 +11,4 @@ public interface IUsersApiClient
     Task<bool> DeleteUserAsync(int id);
     Task<UserDTO> GetUserByIdAsync(int id);
     Task<int> LoginAsync(UserDTO user);
-
 }

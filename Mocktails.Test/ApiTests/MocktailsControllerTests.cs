@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mocktails.DAL.DaoClasses;
-
-namespace Mocktails.Test.ApiTests;
+﻿namespace Mocktails.Test.ApiTests;
 
 [TestFixture]
 public class MocktailsControllerTests

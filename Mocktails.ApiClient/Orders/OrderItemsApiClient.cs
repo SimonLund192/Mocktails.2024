@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mocktails.ApiClient.Orders.DTOs;
+﻿using Mocktails.ApiClient.Orders.DTOs;
 using RestSharp;
 
 namespace Mocktails.ApiClient.Orders;
@@ -23,7 +18,7 @@ public class OrderItemsApiClient : IOrderItemsApiClient
         request.AddJsonBody(entity);
 
         var response = await _restClient.ExecuteAsync<int>(request);
-        if(response.IsSuccessful)
+        if (response.IsSuccessful)
         {
             return response.Data;
         }
