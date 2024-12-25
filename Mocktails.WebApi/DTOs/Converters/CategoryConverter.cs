@@ -1,7 +1,7 @@
 ﻿using Mocktails.DAL.Model;
 using Mocktails.WebApi.DTOs;
 
-namespace Mocktails.WebApi.Converters;
+namespace Mocktails.WebApi.DTOs.Converters;
 
 public static class CategoryConverter
 {

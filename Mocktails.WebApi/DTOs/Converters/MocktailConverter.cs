@@ -1,8 +1,7 @@
 ﻿using Mocktails.DAL.Model;
 using Mocktails.WebApi.DTOs;
-using Mocktails.WebApi.DTOs.Converters;
 
-namespace Mocktails.WebApi.Converters;
+namespace Mocktails.WebApi.DTOs.Converters;
 
 public static class MocktailConverter
 {

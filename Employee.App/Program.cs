@@ -1,4 +1,6 @@
-namespace Employee.App;
+using Employee.App;
+
+namespace Mocktails.Employee.App;
 
 internal static class Program
 {
