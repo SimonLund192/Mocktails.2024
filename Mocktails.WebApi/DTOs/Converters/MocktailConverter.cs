@@ -1,45 +1,38 @@
 ﻿using Mocktails.DAL.Model;
-using Mocktails.WebApi.DTOs;
-using Mocktails.WebApi.DTOs.Converters;
 
-namespace Mocktails.WebApi.Converters
+namespace Mocktails.WebApi.DTOs.Converters;
+
+public static class MocktailConverter
 {
-    public static class MocktailConverter
+    public static MocktailDTO ToDTO(this Mocktail mocktailToConvert)
     {
-        public static MocktailDTO ToDTO(this Mocktail mocktailToConvert)
-        {
-            if (mocktailToConvert == null)
-                throw new ArgumentNullException(nameof(mocktailToConvert), "Mocktail object cannot be null.");
+        ArgumentNullException.ThrowIfNull(mocktailToConvert);
 
-            var mocktailDTO = new MocktailDTO();
-            mocktailToConvert.CopyPropertiesTo(mocktailDTO);
-            return mocktailDTO;
-        }
+        var mocktailDTO = new MocktailDTO();
+        mocktailToConvert.CopyPropertiesTo(mocktailDTO);
+        return mocktailDTO;
+    }
 
-        public static Mocktail ToModel(this MocktailDTO mocktailDTOToConvert)
-        {
-            if (mocktailDTOToConvert == null)
-                throw new ArgumentNullException(nameof(mocktailDTOToConvert), "MocktailDTO object cannot be null.");
+    public static Mocktail ToModel(this MocktailDTO mocktailDTOToConvert)
+    {
+        ArgumentNullException.ThrowIfNull(mocktailDTOToConvert);
 
-            var mocktail = new Mocktail();
-            mocktailDTOToConvert.CopyPropertiesTo(mocktail);
-            return mocktail;
-        }
+        var mocktail = new Mocktail();
+        mocktailDTOToConvert.CopyPropertiesTo(mocktail);
+        return mocktail;
+    }
 
-        public static IEnumerable<MocktailDTO> ToDtos(this IEnumerable<Mocktail> mocktailsToConvert)
-        {
-            if (mocktailsToConvert == null)
-                throw new ArgumentNullException(nameof(mocktailsToConvert), "Mocktails collection cannot be null.");
+    public static IEnumerable<MocktailDTO> ToDtos(this IEnumerable<Mocktail> mocktailsToConvert)
+    {
+        ArgumentNullException.ThrowIfNull(mocktailsToConvert);
 
-            return mocktailsToConvert.Select(mocktail => mocktail.ToDTO());
-        }
+        return mocktailsToConvert.Select(mocktail => mocktail.ToDTO());
+    }
 
-        public static IEnumerable<Mocktail> ToModels(this IEnumerable<MocktailDTO> mocktailDtosToConvert)
-        {
-            if (mocktailDtosToConvert == null)
-                throw new ArgumentNullException(nameof(mocktailDtosToConvert), "MocktailDTOs collection cannot be null.");
+    public static IEnumerable<Mocktail> ToModels(this IEnumerable<MocktailDTO> mocktailDtosToConvert)
+    {
+        ArgumentNullException.ThrowIfNull(mocktailDtosToConvert);
 
-            return mocktailDtosToConvert.Select(mocktailDTO => mocktailDTO.ToModel());
-        }
+        return mocktailDtosToConvert.Select(mocktailDTO => mocktailDTO.ToModel());
     }
 }

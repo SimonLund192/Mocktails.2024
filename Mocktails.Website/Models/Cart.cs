@@ -2,48 +2,81 @@
 
 public class Cart
 {
-    private readonly Dictionary<int, MocktailQuantity> _mocktailQuantities;
+    /// <summary>
+    /// The cart state.
+    /// </summary>
+    /// <remarks>
+    /// Made private to protect/hide cart state.
+    /// State can only be manipulated through the defined cart methods.
+    /// </remarks>
+    private readonly Dictionary<int, MocktailQuantity> _products;
 
-    public Cart(Dictionary<int, MocktailQuantity>? mocktailQuantities = null)
+    public Cart(Dictionary<int, MocktailQuantity>? products = null)
     {
-        _mocktailQuantities = mocktailQuantities ?? [];
+        _products = products ?? [];
     }
 
-    public void ChangeQuantity(MocktailQuantity mocktailQuantity)
+    /// <summary>
+    /// Tries to adjust the product quantity.
+    /// If not found, the product is added to the cart.
+    /// </summary>
+    /// <param name="product">The product with quantity.</param>
+    public void AddOrAdjustProduct(MocktailQuantity product)
     {
-        if (_mocktailQuantities.TryGetValue(mocktailQuantity.Id, out MocktailQuantity? product))
+        if (_products.TryGetValue(product.Id, out MocktailQuantity? p))
         {
-            product.Quantity += mocktailQuantity.Quantity;
-            if (_mocktailQuantities[mocktailQuantity.Id].Quantity <= 0)
+            var newQuantity = p.Quantity + product.Quantity;
+
+            if (newQuantity > 0)
             {
-                _mocktailQuantities.Remove(mocktailQuantity.Id);
+                _products[product.Id].UpdateQuantity(newQuantity);
+            }
+            else
+            {
+                _products.Remove(product.Id);
             }
         }
         else
         {
-            _mocktailQuantities[mocktailQuantity.Id] = mocktailQuantity;
+            _products[product.Id] = product;
         }
     }
 
-    public void RemoveMocktail(int mocktailId) => _mocktailQuantities.Remove(mocktailId);
+    /// <summary>
+    /// Removes a product from the cart, if it exists.
+    /// </summary>
+    /// <param name="productId">The product ID.</param>
+    public void RemoveProduct(int productId) => _products.Remove(productId);
 
-    public void Update(int mocktailId, int quantity) => _mocktailQuantities[mocktailId].Quantity = quantity;
-
+    /// <summary>
+    /// Calculates the carts total price.
+    /// </summary>
+    /// <returns>The total price as <see cref="decimal"/>.</returns>
     public decimal GetTotal()
     {
         decimal total = 0;
-        foreach (MocktailQuantity mocktailQuantity in _mocktailQuantities.Values)
+        foreach (MocktailQuantity mocktailQuantity in _products.Values)
         {
             total += mocktailQuantity.GetTotalPrice();
         }
         return total;
     }
 
-    public int GetNumberOfProducts() => _mocktailQuantities.Sum(mq => mq.Value.Quantity);
+    /// <summary>
+    /// Gets the number of items in the cart.
+    /// </summary>
+    /// <returns>The number of items as <see cref="int"/>.</returns>
+    public int GetNumberOfProducts() => _products.Sum(mq => mq.Value.Quantity);
 
-    public void EmptyAll() => _mocktailQuantities.Clear();
+    /// <summary>
+    /// Empties the cart.
+    /// </summary>
+    public void EmptyAll() => _products.Clear();
 
-    public bool IsEmpty => _mocktailQuantities.Count == 0;
+    /// <summary>
+    /// <see langword="true"/> if the cart is empty; Otherwise, <see langword="false"/>.
+    /// </summary>
+    public bool IsEmpty => _products.Count == 0;
 
-    public List<MocktailQuantity> Products => _mocktailQuantities.Select(mq => mq.Value).ToList();
+    public List<MocktailQuantity> Products => _products.Select(mq => mq.Value).ToList();
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Mocktails.DAL.Exceptions;
+﻿namespace Mocktails.DAL.Exceptions;
 
 /// <summary>
 /// Represents an exception that occurs when a concurrency conflict is detected.

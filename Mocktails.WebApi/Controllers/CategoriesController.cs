@@ -1,65 +1,64 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mocktails.DAL.DaoClasses;
-using Mocktails.WebApi.Converters;
 using Mocktails.WebApi.DTOs;
+using Mocktails.WebApi.DTOs.Converters;
 
-namespace Mocktails.WebApi.Controllers
+namespace Mocktails.WebApi.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class CategoriesController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class CategoriesController : ControllerBase
+    private readonly ICategoryDAO _categoryDAO;
+
+    public CategoriesController(ICategoryDAO categoryDAO)
     {
-        private readonly ICategoryDAO _categoryDAO;
+        _categoryDAO = categoryDAO;
+    }
 
-        public CategoriesController(ICategoryDAO categoryDAO)
-        {
-            _categoryDAO = categoryDAO;
-        }
+    [HttpGet]
+    public async Task<IActionResult> GetCategories()
+    {
+        var categories = await _categoryDAO.GetCategoriesAsync();
+        var categoryDTOs = categories.Select(CategoryConverter.ToDTO);
+        return Ok(categoryDTOs);
+    }
 
-        [HttpGet]
-        public async Task<IActionResult> GetCategories()
-        {
-            var categories = await _categoryDAO.GetCategoriesAsync();
-            var categoryDTOs = categories.Select(CategoryConverter.ToDTO);
-            return Ok(categoryDTOs);
-        }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCategoryById(int id)
+    {
+        var category = await _categoryDAO.GetCategoryByIdAsync(id);
+        if (category == null) return NotFound();
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCategoryById(int id)
-        {
-            var category = await _categoryDAO.GetCategoryByIdAsync(id);
-            if (category == null) return NotFound();
+        return Ok(CategoryConverter.ToDTO(category));
+    }
 
-            return Ok(CategoryConverter.ToDTO(category));
-        }
+    [HttpPost]
+    public async Task<IActionResult> CreateCategory([FromBody] CategoryDTO categoryDTO)
+    {
+        var category = CategoryConverter.ToModel(categoryDTO);
+        var categoryId = await _categoryDAO.CreateCategoryAsync(category);
+        return CreatedAtAction(nameof(GetCategoryById), new { id = categoryId }, categoryDTO);
+    }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromBody] CategoryDTO categoryDTO)
-        {
-            var category = CategoryConverter.ToModel(categoryDTO);
-            var categoryId = await _categoryDAO.CreateCategoryAsync(category);
-            return CreatedAtAction(nameof(GetCategoryById), new { id = categoryId }, categoryDTO);
-        }
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryDTO categoryDTO)
+    {
+        var category = CategoryConverter.ToModel(categoryDTO);
+        category.Id = id;
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryDTO categoryDTO)
-        {
-            var category = CategoryConverter.ToModel(categoryDTO);
-            category.Id = id;
+        var success = await _categoryDAO.UpdateCategoryAsync(category);
+        if (!success) return NotFound();
 
-            var success = await _categoryDAO.UpdateCategoryAsync(category);
-            if (!success) return NotFound();
+        return NoContent();
+    }
 
-            return NoContent();
-        }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteCategory(int id)
+    {
+        var success = await _categoryDAO.DeleteCategoryAsync(id);
+        if (!success) return NotFound();
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategory(int id)
-        {
-            var success = await _categoryDAO.DeleteCategoryAsync(id);
-            if (!success) return NotFound();
-
-            return NoContent();
-        }
+        return NoContent();
     }
 }

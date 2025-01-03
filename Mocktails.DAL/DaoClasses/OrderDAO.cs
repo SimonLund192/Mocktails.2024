@@ -2,14 +2,16 @@
 using Mocktails.DAL.Model;
 
 namespace Mocktails.DAL.DaoClasses;
+
 public class OrderDAO : BaseDAO, IOrderDAO
 {
     public OrderDAO(string connectionString) : base(connectionString) { }
+
     public async Task<int> CreateOrderAsync(Order entity)
     {
         // Calculate total amount from OrderItems
         entity.TotalAmount = entity.OrderItems.Sum(item => item.Price * item.Quantity);
-        
+
         const string insertOrderQuery = """
             INSERT INTO Orders (UserId, OrderDate, TotalAmount, Status, ShippingAddress)
             OUTPUT Inserted.Id
@@ -62,6 +64,7 @@ public class OrderDAO : BaseDAO, IOrderDAO
             throw;
         }
     }
+
     public async Task<IEnumerable<OrderItem>> GetOrderItemsByOrderIdAsync(int orderId)
     {
         const string query = """
@@ -73,6 +76,7 @@ public class OrderDAO : BaseDAO, IOrderDAO
         using var connection = CreateConnection();
         return (await connection.QueryAsync<OrderItem>(query, new { OrderId = orderId })).ToList();
     }
+
     public async Task<Order> GetOrderByIdAsync(int id)
     {
         try
@@ -101,6 +105,7 @@ public class OrderDAO : BaseDAO, IOrderDAO
             throw new Exception($"Error getting order by Id: '{ex.Message}'.", ex);
         }
     }
+
     public async Task<IEnumerable<Order>> GetOrdersAsync()
     {
         const string query = """
@@ -111,6 +116,7 @@ public class OrderDAO : BaseDAO, IOrderDAO
         using var connection = CreateConnection();
         return (await connection.QueryAsync<Order>(query)).ToList();
     }
+
     public async Task<bool> UpdateOrderAsync(Order entity)
     {
         const string query = """
@@ -121,6 +127,7 @@ public class OrderDAO : BaseDAO, IOrderDAO
         using var connection = CreateConnection();
         return await connection.ExecuteAsync(query, entity) > 0;
     }
+
     public async Task<bool> UpdateOrderStatusAsync(int orderId, string status)
     {
         const string query = """

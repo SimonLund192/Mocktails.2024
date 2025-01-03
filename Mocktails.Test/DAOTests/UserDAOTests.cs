@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mocktails.DAL.DaoClasses;
+﻿using Mocktails.DAL.DaoClasses;
 using Mocktails.DAL.Model;
 
 namespace Mocktails.Test.DAOTests;
@@ -20,6 +15,7 @@ public class UserDAOTests
         var connectionString = "Data Source=hildur.ucn.dk;Initial Catalog=DMA-CSD-S231_10462161;User ID=DMA-CSD-S231_10462161;Password=Password1!;TrustServerCertificate=True;";
         _userDAO = new UserDAO(connectionString);
     }
+
     [Test]
     public async Task GetAllUsers()
     {
@@ -28,6 +24,7 @@ public class UserDAOTests
         Assert.That(users, Is.Not.Null);
         Assert.That(users, Is.InstanceOf<IEnumerable<User>>());
     }
+
     [Test]
     public async Task CreateUserAsync_ReturnUserId()
     {
@@ -47,6 +44,7 @@ public class UserDAOTests
 
         Assert.That(generatedUserId, Is.GreaterThan(0));
     }
+
     [Test]
     public async Task DeleteUserAsync()
     {
@@ -75,8 +73,8 @@ public class UserDAOTests
         {
             Assert.That(ex.Message, Does.Contain("User not found."), "Expected exception message to contain 'User not found.'");
         }
-
     }
+
     [Test]
     public async Task CreateAnd_GetUserByEmailAsync()
     {
@@ -99,8 +97,8 @@ public class UserDAOTests
         Assert.That(fetchedUser.Email, Is.EqualTo(randomEmail));
         Assert.That(fetchedUser.FirstName, Is.EqualTo("TestCreateAnd_GetUserByEmail"));
         Assert.That(fetchedUser.LastName, Is.EqualTo("Test"));
-        
     }
+
     [Test]
     public async Task LogInAsync_ValidCredentials_ReturnsUserId()
     {

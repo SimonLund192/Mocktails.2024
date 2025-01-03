@@ -1,5 +1,4 @@
-﻿using Mocktails.ApiClient.Users.DTOs;
-using Mocktails.DAL.Model;
+﻿using Mocktails.DAL.Model;
 
 namespace Mocktails.WebApi.DTOs.Converters;
 
@@ -7,8 +6,7 @@ public static class UserConverter
 {
     public static UserDTO ToDTO(this User userToConvert)
     {
-        if (userToConvert == null)
-            throw new ArgumentNullException(nameof(userToConvert), "User object cannot be null.");
+        ArgumentNullException.ThrowIfNull(userToConvert);
 
         var userDTO = new UserDTO();
         userToConvert.CopyPropertiesTo(userDTO);
@@ -17,8 +15,7 @@ public static class UserConverter
 
     public static User ToModel(this UserDTO userDTOToConvert)
     {
-        if (userDTOToConvert == null)
-            throw new ArgumentNullException(nameof(userDTOToConvert), "UserDTO object cannot be null.");
+        ArgumentNullException.ThrowIfNull(userDTOToConvert);
 
         var user = new User();
         userDTOToConvert.CopyPropertiesTo(user);
@@ -27,16 +24,14 @@ public static class UserConverter
 
     public static IEnumerable<UserDTO> ToDtos(this IEnumerable<User> usersToConvert)
     {
-        if (usersToConvert == null)
-            throw new ArgumentNullException(nameof(usersToConvert), "Users collection cannot be null.");
+        ArgumentNullException.ThrowIfNull(usersToConvert);
 
         return usersToConvert.Select(user => user.ToDTO());
     }
 
     public static IEnumerable<User> ToModels(this IEnumerable<UserDTO> userDtosToConvert)
     {
-        if (userDtosToConvert == null)
-            throw new ArgumentNullException(nameof(userDtosToConvert), "UserDTOs collection cannot be null.");
+        ArgumentNullException.ThrowIfNull(userDtosToConvert);
 
         return userDtosToConvert.Select(userDTO => userDTO.ToModel());
     }

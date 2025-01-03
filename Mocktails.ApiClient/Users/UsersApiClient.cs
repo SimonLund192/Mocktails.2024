@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mocktails.ApiClient.Users.DTOs;
+﻿using Mocktails.ApiClient.Users.DTOs;
 using RestSharp;
 
 namespace Mocktails.ApiClient.Users;
 
 public class UsersApiClient : IUsersApiClient
 {
-
     private readonly RestClient _restClient;
 
     public UsersApiClient(string baseUrl)
@@ -80,7 +74,7 @@ public class UsersApiClient : IUsersApiClient
         }
     }
 
-    public async Task<bool> UpdateUserAsync(UserDTO entity)   
+    public async Task<bool> UpdateUserAsync(UserDTO entity)
     {
         var request = new RestRequest($"/api/v1/users/{entity.Id}", Method.Put);
         request.AddJsonBody(entity);

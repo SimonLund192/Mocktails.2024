@@ -2,62 +2,61 @@
 using Mocktails.ApiClient.Users;
 using Mocktails.ApiClient.Users.DTOs;
 
-namespace Mocktails.Website.Controllers
+namespace Mocktails.Website.Controllers;
+
+public class UserController : Controller
 {
-    public class UserController : Controller
+    private readonly IUsersApiClient _userApiClient;
+
+    public UserController(IUsersApiClient usersApiClient)
     {
-        private readonly IUsersApiClient _userApiClient;
+        _userApiClient = usersApiClient;
+    }
 
-        public UserController(IUsersApiClient usersApiClient)
+    // Login GET action: Show the login page
+    [HttpGet]
+    public IActionResult Login()
+    {
+        return View(); // This view will contain your login form
+    }
+
+    // Login POST action: Handle login form submission
+    [HttpPost]
+    public async Task<IActionResult> Login(UserDTO userDTO)
+    {
+        if (!ModelState.IsValid)
         {
-            _userApiClient = usersApiClient;
+            return View(userDTO);
         }
 
-        // Login GET action: Show the login page
-        [HttpGet]
-        public IActionResult Login()
+        try
         {
-            return View(); // This view will contain your login form
-        }
+            var response = await _userApiClient.LoginAsync(userDTO);
 
-        // Login POST action: Handle login form submission
-        [HttpPost]
-        public async Task<IActionResult> Login(UserDTO userDTO)
-        {
-            if (!ModelState.IsValid)
+            if (response != null)
             {
-                return View(userDTO);
+                TempData["SuccessMessage"] = "Login successful!";
+                // Redirect to home or user dashboard after login
+                return RedirectToAction("Index", "Home");
             }
 
-            try
-            {
-                var response = await _userApiClient.LoginAsync(userDTO);
-
-                if (response != null)
-                {
-                    TempData["SuccessMessage"] = "Login successful!";
-                    // Redirect to home or user dashboard after login
-                    return RedirectToAction("Index", "Home");
-                }
-
-                ModelState.AddModelError("", "Invalid email or password.");
-                return View(userDTO);
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", "An error occurred while processing your request.");
-                Console.WriteLine(ex.Message);
-                return View(userDTO);
-            }
+            ModelState.AddModelError("", "Invalid email or password.");
+            return View(userDTO);
         }
-
-        // Optional: Logout action
-        [HttpPost]
-        public IActionResult Logout()
+        catch (Exception ex)
         {
-            // Clear session or authentication cookie
-            TempData["SuccessMessage"] = "You have been logged out.";
-            return RedirectToAction("Login");
+            ModelState.AddModelError("", "An error occurred while processing your request.");
+            Console.WriteLine(ex.Message);
+            return View(userDTO);
         }
+    }
+
+    // Optional: Logout action
+    [HttpPost]
+    public IActionResult Logout()
+    {
+        // Clear session or authentication cookie
+        TempData["SuccessMessage"] = "You have been logged out.";
+        return RedirectToAction("Login");
     }
 }

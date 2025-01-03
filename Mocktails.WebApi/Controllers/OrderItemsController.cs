@@ -10,12 +10,13 @@ namespace Mocktails.WebApi.Controllers;
 public class OrderItemsController : Controller
 {
     private readonly IOrderItemDAO _orderItemDAO;
-    private readonly IOrderDAO _orderDAO;
 
-    public OrderItemsController(IOrderItemDAO orderItemDAO)
+    public OrderItemsController(
+        IOrderItemDAO orderItemDAO)
     {
         _orderItemDAO = orderItemDAO;
     }
+
     [HttpGet]
     public async Task<IActionResult> GetOrderItems()
     {
@@ -50,7 +51,7 @@ public class OrderItemsController : Controller
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateOrderItemAsync([FromRoute]int id, [FromBody] OrderItemDTO orderItemDTO)
+    public async Task<IActionResult> UpdateOrderItemAsync([FromRoute] int id, [FromBody] OrderItemDTO orderItemDTO)
     {
         if (id != orderItemDTO.Id)
         {

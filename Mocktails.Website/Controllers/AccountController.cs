@@ -5,60 +5,59 @@ using Microsoft.AspNetCore.Mvc;
 using Mocktails.ApiClient.Users;
 using Mocktails.ApiClient.Users.DTOs;
 
-namespace Mocktails.Website.Controllers
+namespace Mocktails.Website.Controllers;
+
+public class AccountController : Controller
 {
-    public class AccountController : Controller
+    private readonly IUsersApiClient _userApiClient;
+
+    public AccountController(IUsersApiClient userApiClient)
     {
-        private readonly IUsersApiClient _userApiClient;
+        _userApiClient = userApiClient;
+    }
 
-        public AccountController(IUsersApiClient userApiClient)
-        {
-            _userApiClient = userApiClient;
-        }
+    [HttpGet]
+    public IActionResult Login()
+    {
+        return View(); // Displays the login form
+    }
 
-        [HttpGet]
-        public IActionResult Login()
+    [HttpPost]
+    public async Task<IActionResult> Login([FromForm] UserDTO loginInfo, [FromQuery] string returnUrl)
+    {
+        try
         {
-            return View(); // Displays the login form
-        }
+            int userId = await _userApiClient.LoginAsync(loginInfo);
+            var user = await _userApiClient.GetUserByIdAsync(userId);
 
-        [HttpPost]
-        public async Task<IActionResult> Login([FromForm] UserDTO loginInfo, [FromQuery] string returnUrl)
-        {
-            try
+            var claims = new List<Claim>()
             {
-                int userId = await _userApiClient.LoginAsync(loginInfo);
-                var user = await _userApiClient.GetUserByIdAsync(userId);
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName),
+                new Claim(ClaimTypes.Role, "User") // Set user roles as needed
+            };
 
-                var claims = new List<Claim>()
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName),
-                    new Claim(ClaimTypes.Role, "User") // Set user roles as needed
-                };
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity));
 
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity));
-
-                return string.IsNullOrEmpty(returnUrl) ? RedirectToAction("Index", "Home") : Redirect(returnUrl);
-            }
-            catch (Exception ex)
-            {
-                ViewBag.ErrorMessage = ex.Message;
-                return View();
-            }
+            return string.IsNullOrEmpty(returnUrl) ? RedirectToAction("Index", "Home") : Redirect(returnUrl);
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout()
+        catch (Exception ex)
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            TempData["SuccessMessage"] = "You have been logged out.";
-            return RedirectToAction("Index", "Home");
+            ViewBag.ErrorMessage = ex.Message;
+            return View();
         }
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        TempData["SuccessMessage"] = "You have been logged out.";
+        return RedirectToAction("Index", "Home");
     }
 }

@@ -12,8 +12,7 @@ public static class OrderItemConverter
     /// <returns>The converted OrderItemDTO.</returns>
     public static OrderItemDTO ToDTO(this OrderItem orderItemToConvert)
     {
-        if (orderItemToConvert == null)
-            throw new ArgumentNullException(nameof(orderItemToConvert), "OrderItem object cannot be null.");
+        ArgumentNullException.ThrowIfNull(orderItemToConvert);
 
         var orderItemDTO = new OrderItemDTO();
         orderItemToConvert.CopyPropertiesTo(orderItemDTO);
@@ -27,8 +26,7 @@ public static class OrderItemConverter
     /// <returns>The converted OrderItem entity.</returns>
     public static OrderItem ToModel(this OrderItemDTO orderItemDTOToConvert)
     {
-        if (orderItemDTOToConvert == null)
-            throw new ArgumentNullException(nameof(orderItemDTOToConvert), "OrderItemDTO cannot be null.");
+        ArgumentNullException.ThrowIfNull(orderItemDTOToConvert);
 
         var orderItem = new OrderItem();
         orderItemDTOToConvert.CopyPropertiesTo(orderItem);
@@ -42,8 +40,7 @@ public static class OrderItemConverter
     /// <returns>A collection of OrderItemDTOs.</returns>
     public static IEnumerable<OrderItemDTO> ToDtos(this IEnumerable<OrderItem> orderItemsToConvert)
     {
-        if (orderItemsToConvert == null)
-            throw new ArgumentNullException(nameof(orderItemsToConvert), "OrderItem collection cannot be null.");
+        ArgumentNullException.ThrowIfNull(orderItemsToConvert);
 
         return orderItemsToConvert.Select(orderItem => orderItem.ToDTO());
     }
@@ -55,8 +52,7 @@ public static class OrderItemConverter
     /// <returns>A collection of OrderItem entities.</returns>
     public static IEnumerable<OrderItem> ToModels(this IEnumerable<OrderItemDTO> orderItemDtosToConvert)
     {
-        if (orderItemDtosToConvert == null)
-            throw new ArgumentNullException(nameof(orderItemDtosToConvert), "OrderItemDTO collection cannot be null.");
+        ArgumentNullException.ThrowIfNull(orderItemDtosToConvert);
 
         return orderItemDtosToConvert.Select(orderItemDTO => orderItemDTO.ToModel());
     }

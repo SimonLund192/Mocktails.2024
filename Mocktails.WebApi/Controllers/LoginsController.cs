@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Mocktails.DAL.DaoClasses;
-using Mocktails.WebApi.DTOs;
-
-namespace Mocktails.WebApi.Controllers;
+﻿namespace Mocktails.WebApi.Controllers;
 
 //[Route("api/v1/[controller]")]
 //[ApiController]

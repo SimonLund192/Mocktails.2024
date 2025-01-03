@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Mocktails.DAL.DaoClasses;
 
-namespace Mocktails.DAL.DaoClasses;
 public static class DAOFactory
 {
     /// <summary>
@@ -16,7 +11,7 @@ public static class DAOFactory
     /// <param name="connectionstring"></param>
     /// <returns></returns>
     /// 
-    public static T CreateRepository<T> (string connectionString) where T : class
+    public static T CreateRepository<T>(string connectionString) where T : class
     {
         if (typeof(T) == typeof(IMocktailDAO)) return new MocktailDAO(connectionString) as T;
         if (typeof(T) == typeof(ICategoryDAO)) return new CategoryDAO(connectionString) as T;

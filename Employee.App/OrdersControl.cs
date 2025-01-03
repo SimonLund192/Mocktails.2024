@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Employee.App;
+﻿using System.Data;
 using Mocktails.ApiClient.Orders;
-using Mocktails.ApiClient.Products;
 using Mocktails.Employee.App.Orders;
 
 namespace Mocktails.Employee.App;
+
 public partial class OrdersControl : UserControl
 {
     private readonly OrdersApiClient _ordersApiClient;
+
     public OrdersControl()
     {
         InitializeComponent();

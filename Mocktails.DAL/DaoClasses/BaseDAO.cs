@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using Microsoft.Data.SqlClient;
 
 namespace Mocktails.DAL.DaoClasses;
+
 public abstract class BaseDAO
 {
     private string _connectionString;

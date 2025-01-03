@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Mocktails.DAL.DaoClasses;
 
-namespace Mocktails.DAL.DaoClasses;
 internal class UserTuple
 {
     public int Id { get; set; }

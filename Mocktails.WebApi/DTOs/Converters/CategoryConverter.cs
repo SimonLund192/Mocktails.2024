@@ -1,26 +1,24 @@
 ﻿using Mocktails.DAL.Model;
-using Mocktails.WebApi.DTOs;
 
-namespace Mocktails.WebApi.Converters
+namespace Mocktails.WebApi.DTOs.Converters;
+
+public static class CategoryConverter
 {
-    public static class CategoryConverter
+    public static CategoryDTO ToDTO(Category category)
     {
-        public static CategoryDTO ToDTO(Category category)
+        return new CategoryDTO
         {
-            return new CategoryDTO
-            {
-                Id = category.Id,
-                CategoryName = category.CategoryName
-            };
-        }
+            Id = category.Id,
+            CategoryName = category.CategoryName
+        };
+    }
 
-        public static Category ToModel(CategoryDTO categoryDTO)
+    public static Category ToModel(CategoryDTO categoryDTO)
+    {
+        return new Category
         {
-            return new Category
-            {
-                Id = categoryDTO.Id,
-                CategoryName = categoryDTO.CategoryName
-            };
-        }
+            Id = categoryDTO.Id,
+            CategoryName = categoryDTO.CategoryName
+        };
     }
 }

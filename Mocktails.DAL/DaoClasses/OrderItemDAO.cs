@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using Mocktails.DAL.Model;
 
 namespace Mocktails.DAL.DaoClasses;
@@ -11,6 +6,7 @@ namespace Mocktails.DAL.DaoClasses;
 public class OrderItemDAO : BaseDAO, IOrderItemDAO
 {
     public OrderItemDAO(string connectionString) : base(connectionString) { }
+
     public async Task<int> CreateOrderItemAsync(OrderItem entity)
     {
         const string fetchPriceQuery = """

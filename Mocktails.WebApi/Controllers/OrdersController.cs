@@ -76,7 +76,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateOrder([FromRoute]int id, [FromBody] OrderDTO orderDTO)
+    public async Task<IActionResult> UpdateOrder([FromRoute] int id, [FromBody] OrderDTO orderDTO)
     {
         if (id != orderDTO.Id)
         {
